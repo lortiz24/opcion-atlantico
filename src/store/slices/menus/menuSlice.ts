@@ -1,17 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { getModules } from './thunks';
+import { IModules } from './interface/modules-interface';
 
 
 interface MenuState {
-    page: number,
-    modules: string[],
+    modules: IModules[],
     isLoading: boolean,
     error: string | undefined
 }
 const initialState: MenuState = {
-    page: 0,
-    modules: ['Dashboard', 'Asistencia'],
+    modules: [],
     isLoading: false,
     error: undefined
 }
@@ -25,7 +24,6 @@ export const menusSlice = createSlice({
         },
         setModules: (state, action) => {
             state.modules = action.payload.modules
-            state.page = action.payload.page
             state.isLoading = false;
         },
     },
