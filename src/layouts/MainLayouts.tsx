@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
+import { Button, MenuProps, Row, Space } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import './MainLayout.style.css'
 import { LayoutCss } from './MainLayout.style';
@@ -46,17 +46,23 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     dispatch(getModules())
   }, [])
 
-  if(isLoading){
+  if (isLoading) {
     return (<>Esta cargando......</>)
   }
-  if(modules.length === 0) return <>No hay modules</> 
+  if (modules.length === 0) return <>No hay modules</>
   return (
     <Layout style={LayoutCss}>
-      <Header className="header">
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} />
+      <Header className="header" >
+        <Menu mode="horizontal">
+          <Menu.Item key="login" style={{ float: 'right' }}>
+            <Row justify={'end'} style={{width:'100%',margin:10}} >
+              <Button type="primary">Iniciar sesión</Button>
+            </Row>
+          </Menu.Item>
+        </Menu>
       </Header>
       <Layout>
-        <Sider width={200} style={{ background: colorBgContainer }}>
+        <Sider width={200} >
           <Menu
             mode="inline"
             defaultSelectedKeys={['1']}

@@ -14,9 +14,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <ErrorBoundary>
-        <ConfigProvider theme={{
-          token: AntDesingTheme
-        }}>
+        <ConfigProvider theme={AntDesingTheme}>
           <MainLayout>
             <HashRouter>
               <AppRouter />
