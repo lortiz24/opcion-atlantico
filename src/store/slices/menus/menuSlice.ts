@@ -8,11 +8,13 @@ interface MenuState {
     modules: IModules[],
     isLoading: boolean,
     error: string | undefined
+    isCreating: boolean
 }
 const initialState: MenuState = {
     modules: [],
     isLoading: false,
-    error: undefined
+    error: undefined,
+    isCreating: false
 }
 
 export const menusSlice = createSlice({
@@ -26,6 +28,13 @@ export const menusSlice = createSlice({
             state.modules = action.payload.modules
             state.isLoading = false;
         },
+        startCreating: (state, /* action */) => {
+            state.isCreating = true;
+        },
+        stopCreating: (state, /* action */) => {
+            state.isCreating = false;
+        },
+
     },
     /* 
     Esto es si hacemos los thunks con createAsyncThunk
@@ -47,6 +56,6 @@ export const menusSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { setModules, startLoading } = menusSlice.actions;
+export const { setModules, startLoading, startCreating, stopCreating } = menusSlice.actions;
 
 export const selectMenus = (state: RootState) => state.menu

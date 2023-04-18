@@ -20,7 +20,7 @@ export const menuApi = createApi({
             query: (todoId) => `/todos/${todoId}`
         }),
 
-        setModule: builder.query({
+        setModule: builder.mutation({
             query: () => ''
         }),
         getPokemonByName: builder.query({
@@ -30,4 +30,4 @@ export const menuApi = createApi({
     })
 })
 
-export const { useGetModuleQuery, useGetModulesQuery, useSetModuleQuery, useGetPokemonByNameQuery } = menuApi;
+export const { useGetModuleQuery, useGetModulesQuery, useSetModuleMutation, useGetPokemonByNameQuery } = menuApi;

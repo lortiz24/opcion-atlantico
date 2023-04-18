@@ -4,6 +4,8 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import React, { Fragment, useEffect, useState } from 'react'
 import { IChildrensModules, IModules } from '../../../../interfaces/modules-interface'
 import { useForm } from 'antd/es/form/Form'
+import { useAppDispatch, useAppSelector } from '../../../../store/store'
+import { createModule } from '../../../../store/slices/menus/thunks'
 
 const CreateModules = () => {
     const [haveChildrens, setHaveChildrens] = useState(false)
@@ -11,7 +13,8 @@ const CreateModules = () => {
     const [subMenus, setSubMenus] = useState<number[]>([1])
     const [sumando, setSumando] = useState<boolean | string>('initial')
     const [form] = useForm();
-
+    const dispatch = useAppDispatch()
+    const { isLoading, modules, isCreating } = useAppSelector(selector => selector.menu)
 
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
@@ -36,15 +39,13 @@ const CreateModules = () => {
             path: values.pathMenu
         }
         if (haveChildrens) newModules.children = childrens
-        console.log('newModules', newModules)
+        dispatch(createModule(newModules))
     }
 
     const onAddSubMenu = () => {
         setCantSubMenus(cantSubMenus + 1)
         setSubMenus(current => [...current, Math.max(...current) + 1])
     }
-    console.log('subMenus=>', subMenus)
-    console.log('cantSubMenus=>', cantSubMenus)
 
     const onLessSubMenuSelected = (subMenuSelected: number) => {
         if (subMenus.length > 1) {
@@ -53,9 +54,6 @@ const CreateModules = () => {
             const cloneArray = [...subMenus]
 
             const subMenusFiltrados = cloneArray.filter(submenu => submenu !== subMenuSelected)
-            console.log('subMenuSelected=>', subMenuSelected)
-            console.log('cloneArray=>', cloneArray)
-            console.log('subMenusFiltrados=>', subMenusFiltrados)
             setSubMenus(subMenusFiltrados)
         }
     }
@@ -107,7 +105,7 @@ const CreateModules = () => {
                             )
                             }
                             <Row>
-                                <Button icon={<SaveOutlined />} type='primary' htmlType='submit'>Guardar</Button>
+                                <Button loading={isCreating} icon={<SaveOutlined />} type='primary' htmlType='submit'>Guardar</Button>
                             </Row>
                         </Form>
                     </Col>
