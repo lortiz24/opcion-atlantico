@@ -1,22 +1,19 @@
-import { Tabs, Typography } from 'antd'
+import { Card, Col, Row, Space, Tabs, Typography } from 'antd'
 import DrawerFormModules from './components/DrawerFormModules'
+import ListModules from './components/ListModules'
 
 const ModulesView = () => {
     return (
         <>
             <Typography.Title level={4}>Configuracion de modulos</Typography.Title>
-            <Tabs items={[
-                {
-                    label: 'Modulos',
-                    key: '1',
-                    children: <DrawerFormModules />,
-                },
-                {
-                    label: 'Ordenar',
-                    key: '2',
-                    children: 'Tab 2',
-                },
-            ]} />
+            <br />
+            <Row >
+                <Col span={24}>
+                    <ListModules />
+                </Col>
+            </Row>
+
+
 
         </>
     )

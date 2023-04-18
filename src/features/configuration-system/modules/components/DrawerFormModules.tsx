@@ -2,7 +2,7 @@ import { PlusCircleFilled } from '@ant-design/icons';
 import { Button, Drawer, DrawerProps, Radio, RadioChangeEvent, Row, Space, theme } from 'antd';
 import React, { useState } from 'react'
 import FormModules from './FormModules';
-import ListModules from './ListModules';
+import ListModules from './ListModules(deprecate)';
 
 
 
@@ -45,9 +45,6 @@ const DrawerFormModules = () => {
                 </Button>
             </Space>
 
-            <Row>
-                <ListModules />
-            </Row>
         </>
     )
 }

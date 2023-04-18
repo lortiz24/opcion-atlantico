@@ -14,7 +14,7 @@ const FormModules = () => {
     const [sumando, setSumando] = useState<boolean | string>('initial')
     const [form] = useForm();
     const dispatch = useAppDispatch()
-    const { isLoading, modules, isCreating } = useAppSelector(selector => selector.menu)
+    const { isLoading, modules, isMutation } = useAppSelector(selector => selector.menu)
 
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
@@ -109,7 +109,7 @@ const FormModules = () => {
                             )
                             }
                             <Row>
-                                <Button loading={isCreating} icon={<SaveOutlined />} type='primary' htmlType='submit'>Guardar</Button>
+                                <Button loading={isMutation} icon={<SaveOutlined />} type='primary' htmlType='submit'>Guardar</Button>
                             </Row>
                         </Form>
                     </Col>

@@ -1,6 +1,6 @@
 import { modulesCollectionRef } from "../providers";
 import { IModules, StatusMenuItem } from "../../interfaces/modules-interface";
-import { query, where, orderBy, limit, addDoc, getDocs, } from "firebase/firestore";
+import { query, where, orderBy, limit, addDoc, getDocs, deleteDoc, doc, updateDoc, } from "firebase/firestore";
 interface IConditionsMenu {
     status?: {
         isAvalible?: StatusMenuItem
@@ -34,6 +34,35 @@ export const createMenus = async (newMenu: Omit<IModules, 'id'>) => {
         return newModuleId
     } catch (error) {
         console.error("Error al crear el menú: ", error);
+        throw error;
+    }
+}
+export const deleteMenu = async (idMenu: string) => {
+    try {
+        const moduleRef = doc(modulesCollectionRef, idMenu);
+        await deleteDoc(moduleRef);
+    } catch (error) {
+        console.error("Error al eliminar el menú: ", error);
+        throw error;
+    }
+}
+export const inactiveMenu = async (idMenu: string) => {
+    try {
+        const moduleRef = doc(modulesCollectionRef, idMenu);
+        moduleRef
+        await updateDoc(moduleRef, { status: "not-avalible" });
+    } catch (error) {
+        console.error("Error al inactivar el menú: ", error);
+        throw error;
+    }
+}
+export const activeMenu = async (idMenu: string) => {
+    try {
+        const moduleRef = doc(modulesCollectionRef, idMenu);
+        moduleRef
+        await updateDoc(moduleRef, { status: "avalible" });
+    } catch (error) {
+        console.error("Error activar el menú: ", error);
         throw error;
     }
 }
