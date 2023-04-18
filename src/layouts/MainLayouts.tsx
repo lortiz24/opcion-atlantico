@@ -34,9 +34,9 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Layout style={LayoutCss}>
       <InternetConnectionAlert />
-      <Header className="header" style={{background:'#E50053'}}>
+      <Header  className="header" style={{background:'#E50053',  color: '#FFFFFF' }}>
         <Row justify={'end'} style={{ width: '100%', margin: 10 }} >
-          <Button type="text" >Iniciar sesión</Button>
+          <Button type="primary" >Iniciar sesión</Button>
         </Row>
         {/* <Menu mode="horizontal">
           <Menu.Item key="login" style={{ float: 'right' }}>

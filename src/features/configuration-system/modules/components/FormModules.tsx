@@ -7,7 +7,7 @@ import { useForm } from 'antd/es/form/Form'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { createModule } from '../../../../store/slices/menus/thunks'
 
-const CreateModules = () => {
+const FormModules = () => {
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [cantSubMenus, setCantSubMenus] = useState(1)
     const [subMenus, setSubMenus] = useState<number[]>([1])
@@ -28,15 +28,19 @@ const CreateModules = () => {
                     const pathSubMenu = values[`pathSubMenu${index}`]
                     const children: IChildrensModules = {
                         label: nameSubMenu,
-                        path: pathSubMenu
+                        path: pathSubMenu,
+                        order: index,
+                        status: 'avalible'
                     }
                     childrens.push(children)
                 }
             }
         }
-        const newModules: IModules = {
+        const newModules: Omit<IModules, 'id'> = {
             label: values.nameMenu,
-            path: values.pathMenu
+            path: values.pathMenu,
+            order: modules.length,
+            status: 'avalible'
         }
         if (haveChildrens) newModules.children = childrens
         dispatch(createModule(newModules))
@@ -115,4 +119,4 @@ const CreateModules = () => {
     )
 }
 
-export default CreateModules
+export default FormModules

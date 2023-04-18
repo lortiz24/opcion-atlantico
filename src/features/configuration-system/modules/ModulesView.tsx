@@ -1,7 +1,5 @@
 import { Tabs, Typography } from 'antd'
-import TabPane from 'antd/es/tabs/TabPane'
-import React from 'react'
-import CreateModules from './components/CreateModules'
+import DrawerFormModules from './components/DrawerFormModules'
 
 const ModulesView = () => {
     return (
@@ -9,19 +7,14 @@ const ModulesView = () => {
             <Typography.Title level={4}>Configuracion de modulos</Typography.Title>
             <Tabs items={[
                 {
-                    label: 'Crear modules',
+                    label: 'Modulos',
                     key: '1',
-                    children: <CreateModules/>,
+                    children: <DrawerFormModules />,
                 },
                 {
-                    label: 'Tab 2',
+                    label: 'Ordenar',
                     key: '2',
                     children: 'Tab 2',
-                },
-                {
-                    label: 'Tab 3',
-                    key: '3',
-                    children: <CreateModules/>,
                 },
             ]} />
 

@@ -11,5 +11,6 @@ export const AntDesingTheme: ThemeConfig = {
             colorBgHeader: '#ffffff',
         },
     },
+    
     token: AntDesingToken
 }
