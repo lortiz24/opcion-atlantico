@@ -5,7 +5,7 @@ import axios from 'axios'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const menuApi = createApi({
-    reducerPath: 'todos',
+    reducerPath: 'menuapi',
 
     baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
 

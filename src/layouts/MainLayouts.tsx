@@ -6,7 +6,6 @@ import './MainLayout.style.css'
 import { LayoutCss } from './MainLayout.style';
 import { getModules } from '../store/slices/menus/thunks';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { SlicesRedux } from '../store/slices/ProviderSlices';
 import InternetConnectionAlert from '../components/internet-conection-alert/InternetConectionAlert';
 import { useNavigate } from 'react-router-dom';
 const { Header, Content, Sider } = Layout;
@@ -16,29 +15,9 @@ const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
   label: `nav ${key}`,
 }));
 
-const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-  (icon, index) => {
-    const key = String(index + 1);
-
-    return {
-      key: `sub${key}`,
-      icon: React.createElement(icon),
-      label: `subnav ${key}`,
-
-      children: new Array(4).fill(null).map((_, j) => {
-        const subKey = index * 4 + j + 1;
-        return {
-          key: subKey,
-          label: `option${subKey}`,
-        };
-      }),
-    };
-  },
-);
-
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const dispatch = useAppDispatch();
-  const { isLoading, modules } = useAppSelector(SlicesRedux.selectMenus)
+  const { isLoading, modules } = useAppSelector(selector =>selector.menu)
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -55,9 +34,9 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Layout style={LayoutCss}>
       <InternetConnectionAlert />
-      <Header className="header" >
+      <Header className="header" style={{background:'#E50053'}}>
         <Row justify={'end'} style={{ width: '100%', margin: 10 }} >
-          <Button type="primary">Iniciar sesión</Button>
+          <Button type="text" >Iniciar sesión</Button>
         </Row>
         {/* <Menu mode="horizontal">
           <Menu.Item key="login" style={{ float: 'right' }}>
@@ -95,12 +74,8 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             )}
           />
         </Sider>
-        <Layout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item> */}
-          </Breadcrumb>
+        <Layout style={{ padding: '24px 24px 24px' }}>
+          
           <Content
             style={{
               paddingLeft: 24,

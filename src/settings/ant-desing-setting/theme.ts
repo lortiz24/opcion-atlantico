@@ -10,9 +10,6 @@ export const AntDesingTheme: ThemeConfig = {
         Layout: {
             colorBgHeader: '#ffffff',
         },
-        Menu: {
-            colorText: '#E50053'
-        }
     },
     token: AntDesingToken
 }
