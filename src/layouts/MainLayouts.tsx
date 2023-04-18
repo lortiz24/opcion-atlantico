@@ -77,19 +77,20 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             items={modules.map(
               (module, index) => {
                 const key = String(index + 1);
-                return {
+                let newModule:any = {
                   key: `module${key}`,
                   label: module.label,
-                  children: module.children.map((children, indexChildren) => {
+                  children: module.children?.map((children, indexChildren) => {
                     const subKey = index * 4 + indexChildren + 1;
-                    console.log(subKey)
                     return {
                       key: subKey,
                       label: children.label,
                       onClick: () => navigate(children.path)
                     }
                   })
-                };
+                }
+                if(!module.children)newModule.onClick=() => navigate(module.path)
+                return newModule;
               },
             )}
           />
@@ -102,7 +103,10 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </Breadcrumb>
           <Content
             style={{
-              padding: 24,
+              paddingLeft: 24,
+              paddingRight:24,
+              paddingTop:15,
+              paddingBottom:50,
               margin: 0,
               minHeight: 280,
               background: colorBgContainer,

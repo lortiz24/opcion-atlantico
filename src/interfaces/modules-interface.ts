@@ -1,6 +1,6 @@
 export interface IModules {
     label: string;
-    children: IChildrensModules[];
+    children?: IChildrensModules[];
     path: string
 }
 
