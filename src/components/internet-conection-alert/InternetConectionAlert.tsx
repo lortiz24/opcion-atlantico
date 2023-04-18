@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Space, Typography } from 'antd';
+import { Alert, Col, Row, Space, Typography } from 'antd';
 import controllerInternetConnection from '../../utils/internet-conection-alert/controllerInternetConnection';
 
 interface propsOptions {
@@ -24,7 +24,7 @@ const positionBotton: React.CSSProperties = {
   textAlign: 'center',
 };
 
-const InternetConnectionAlert = ({ description, placement = 'top', action }: propsOptions) => {
+const InternetConnectionAlert = ({ description, placement = 'bottom', action }: propsOptions) => {
   const [connectionStatus, setConnectionStatus] = useState<boolean | string>('initial');
 
   controllerInternetConnection({ setConnectionStatus });
@@ -71,6 +71,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
               action={action}
             />
           )}
+
         </>
       )}
     </>

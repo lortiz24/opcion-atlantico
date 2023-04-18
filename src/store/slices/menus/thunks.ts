@@ -25,7 +25,7 @@ export const createModule = (newMenu: IModules): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startCreating());
         try {
-            const newModuleId = await createMenus(newMenu);
+            await createMenus(newMenu);
             dispatch(stopCreating());
             DispatchMessageService({ action: 'show', type: "success", msj: 'Se creo el modulo correctamente' })
             dispatch(getModules());
