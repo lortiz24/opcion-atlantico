@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { getModules } from './thunks';
-import { IModules } from './interface/modules-interface';
+import { IModules } from '../../../interfaces/modules-interface';
 
 
 interface MenuState {

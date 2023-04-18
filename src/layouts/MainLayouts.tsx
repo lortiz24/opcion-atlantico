@@ -7,7 +7,8 @@ import { LayoutCss } from './MainLayout.style';
 import { getModules } from '../store/slices/menus/thunks';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { SlicesRedux } from '../store/slices/ProviderSlices';
-import { getModelingModules } from './utils/getModelingModules';
+import InternetConnectionAlert from '../components/internet-conection-alert/InternetConectionAlert';
+import { useNavigate } from 'react-router-dom';
 const { Header, Content, Sider } = Layout;
 
 const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
@@ -41,6 +42,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getModules())
@@ -52,14 +54,18 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   if (modules.length === 0) return <>No hay modules</>
   return (
     <Layout style={LayoutCss}>
+      <InternetConnectionAlert />
       <Header className="header" >
-        <Menu mode="horizontal">
+        <Row justify={'end'} style={{ width: '100%', margin: 10 }} >
+          <Button type="primary">Iniciar sesión</Button>
+        </Row>
+        {/* <Menu mode="horizontal">
           <Menu.Item key="login" style={{ float: 'right' }}>
-            <Row justify={'end'} style={{width:'100%',margin:10}} >
+            <Row justify={'end'} style={{ width: '100%', margin: 10 }} >
               <Button type="primary">Iniciar sesión</Button>
             </Row>
           </Menu.Item>
-        </Menu>
+        </Menu> */}
       </Header>
       <Layout>
         <Sider width={200} >
@@ -68,14 +74,31 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             defaultSelectedKeys={['1']}
             defaultOpenKeys={['sub1']}
             style={{ height: '100%', borderRight: 0 }}
-            items={getModelingModules(modules)}
+            items={modules.map(
+              (module, index) => {
+                const key = String(index + 1);
+                return {
+                  key: `module${key}`,
+                  label: module.label,
+                  children: module.children.map((children, indexChildren) => {
+                    const subKey = index * 4 + indexChildren + 1;
+                    console.log(subKey)
+                    return {
+                      key: subKey,
+                      label: children.label,
+                      onClick: () => navigate(children.path)
+                    }
+                  })
+                };
+              },
+            )}
           />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
+            {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
+            <Breadcrumb.Item>App</Breadcrumb.Item> */}
           </Breadcrumb>
           <Content
             style={{
