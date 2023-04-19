@@ -1,6 +1,6 @@
 import { modulesCollectionRef } from "../providers";
 import { IModules, StatusMenuItem } from "../../interfaces/modules-interface";
-import { query, where, orderBy, limit, addDoc, getDocs, deleteDoc, doc, updateDoc, } from "firebase/firestore";
+import { query, where, orderBy, limit, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, } from "firebase/firestore";
 interface IConditionsMenu {
     status?: {
         isAvalible?: StatusMenuItem
@@ -65,4 +65,17 @@ export const activeMenu = async (idMenu: string) => {
         console.error("Error activar el menú: ", error);
         throw error;
     }
+}
+export const listeningModules = (onSet: (modules: IModules[]) => void) => {
+    const queryData = query<Omit<IModules, 'id'>>(modulesCollectionRef, orderBy("order", "asc"));
+    return onSnapshot(queryData, (querySnapshot) => {
+        if (!querySnapshot.empty) {
+            const modules: IModules[] = []
+            querySnapshot.forEach((doc) => modules.push({ id: doc.id, ...doc.data() }));
+            onSet(modules)
+        } else {
+            onSet([])
+        }
+    });
+
 }

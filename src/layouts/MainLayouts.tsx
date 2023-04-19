@@ -87,10 +87,10 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             style={{
               paddingLeft: 24,
               paddingRight: 24,
-              paddingTop: 15,
+              paddingTop: 0,
               paddingBottom: 50,
               margin: 0,
-              minHeight: 280,
+              minHeight: 0,
               background: colorBgContainer,
             }}
           >

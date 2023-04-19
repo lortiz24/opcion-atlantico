@@ -1,16 +1,18 @@
+import React from 'react'
 import { Button, Popconfirm, Space, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table';
-import React from 'react'
-import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { useAppDispatch } from '../../../../store/store';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { activeModule, deleteModule, inactiveModule } from '../../../../store/slices/menus/thunks';
-import { StatusMenuItem } from '../../../../interfaces/modules-interface';
+import { activeModule, inactiveModule } from '../../../../store/slices/menus/thunks';
+import useGetModules from '../../../../hooks/useListeningModules';
+import { StatusToRender } from '../utils/status-render';
+import { StatusToRenderValues } from '../interfaces/form-modules';
 
 interface DataType {
     key: string;
     name: string;
     path: string;
-    status: StatusMenuItem;
+    status: StatusToRenderValues;
 }
 
 const columns: ColumnsType<DataType> = [
@@ -31,7 +33,7 @@ const columns: ColumnsType<DataType> = [
         dataIndex: 'status',
         render: (_, { status }) => (
             <>
-                <Tag color={status === 'avalible' ? 'green' : "red"}>
+                <Tag color={status === 'Habilitada' ? 'green' : "red"}>
                     {status.toUpperCase()}
                 </Tag>
 
@@ -42,21 +44,18 @@ const columns: ColumnsType<DataType> = [
 
 
 const ListModules = () => {
-
+    const { loading, modules } = useGetModules()
     const dispatch = useAppDispatch()
 
     const onInactiveModule = ({ key: menuId }: DataType) => {
-        console.log(menuId)
         dispatch(inactiveModule(menuId))
     }
     const onactiveModule = ({ key: menuId }: DataType) => {
-        console.log(menuId)
         dispatch(activeModule(menuId))
     }
 
-    const { modules } = useAppSelector(selector => selector.menu)
     return (
-        <Table columns={[...columns, {
+        <Table loading={loading} columns={[...columns, {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
@@ -64,7 +63,7 @@ const ListModules = () => {
                     <Button icon={<EyeOutlined />} ></Button>
                     <Button icon={<EditOutlined />}></Button>
                     {
-                        record.status === 'avalible' ? (
+                        record.status === StatusToRender.avalible ? (
                             <Popconfirm
                                 placement="topRight"
                                 title={'Inactivar modulo'}
@@ -93,7 +92,7 @@ const ListModules = () => {
 
                 </Space>
             ),
-        }]} dataSource={modules.map(module => ({ key: module.id, name: module.label, path: `/${module.path}`, status: module.status })) as DataType[]} />
+        }]} dataSource={modules.map(module => ({ key: module.id, name: module.label, path: `/${module.path}`, status: StatusToRender[module.status] })) as DataType[]} />
     )
 }
 
