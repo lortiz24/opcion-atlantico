@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom"
 import { PrivateRoute } from "./PrivateRoute"
 import { PublicRoute } from "./PublicRoute"
-import AttendanceApp from "../features/attendance/AttendanceApp"
 import ModulesView from "../features/configuration-system/modules/ModulesView"
+import EventRouter from "../features/eventModule/router/EventRouter"
 
 
 
@@ -10,7 +10,7 @@ export const AppRouter = () => {
   return (
     <>
       <Routes>
-        <Route path="/attendance" element={<AttendanceApp />} />
+        <Route path="/events" element={<EventRouter />} />
         <Route path="/modules" element={<ModulesView />} />
 
         {/* <Route

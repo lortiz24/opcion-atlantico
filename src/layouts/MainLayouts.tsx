@@ -4,7 +4,7 @@ import { Button, MenuProps, Row, Space } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import './MainLayout.style.css'
 import { LayoutCss } from './MainLayout.style';
-import { deleteModule, getModules } from '../store/slices/menus/thunks';
+import { getModules } from '../store/slices/menus/thunks';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import InternetConnectionAlert from '../components/internet-conection-alert/InternetConectionAlert';
 import { useNavigate } from 'react-router-dom';
@@ -71,7 +71,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     return {
                       key: subKey,
                       label: children.label,
-                      onClick: () => navigate(children.path)
+                      onClick: () => navigate(`${module.path}/${children.path}`)
                     }
                   })
                 }
