@@ -4,6 +4,8 @@ import { IEvents, IEventsRender } from './interfaces/events-interfaces'
 import useGetEvents from '../../hooks/useGetEvents';
 import { DeleteOutlined, EditOutlined, LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import { LevelTitlesModules } from '../../settings/properties-globals/levels-titles';
+import GenerateQr from './components/GenerateQr';
+import ReadQr from './components/ReadQr';
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
@@ -16,9 +18,30 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 const EventView = () => {
     const { events, loading } = useGetEvents()
     const [eventsRender, setEventsRender] = useState<IEventsRender[]>([])
+    const [openGenerateQR, setOpenGenerateQR] = useState(false)
+    const [eventAttendanceId, setEventAttendanceId] = useState('')
+    const [isOpenReadQR, setisOpenReadQR] = useState(false)
 
+    const onGenerateQR = (eventId: string) => {
+        setOpenGenerateQR(true)
+        setEventAttendanceId(eventId)
+    }
+
+    const onCancelGenerateQR = () => {
+        setOpenGenerateQR(false)
+    }
+
+    const onReadQr = () => {
+        setisOpenReadQR(true)
+    }
+
+    const onCloseReadQr = () => {
+        setisOpenReadQR(false)
+    }
     return (
         <>
+            {isOpenReadQR && <ReadQr isReadQrOpen={isOpenReadQR} onClose={onCloseReadQr} />}
+            {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} />}
             <Typography.Title level={LevelTitlesModules}>Eventos</Typography.Title>
             <br />
             <List
@@ -32,25 +55,27 @@ const EventView = () => {
                     pageSize: 3,
                 }}
                 dataSource={events}
-                renderItem={(item) => (
+                renderItem={(eventItem) => (
                     <List.Item
-                        key={item.title}
+                        key={eventItem.title}
                         actions={[
                             <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
                             <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
                             <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                            <Button type='ghost' onClick={() => onGenerateQR(eventItem.id)}>Generar QR</Button>,
+                            <Button type='primary' onClick={() => onReadQr()}>Marcar Asistencia</Button>
                         ]}
                         extra={
                             <img
                                 width={272}
                                 alt="logo"
-                                src={item.img}
+                                src={eventItem.img}
                             />
                         }
                     >
                         <List.Item.Meta
                             avatar={<Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
-                                {item.assistants.map((assistant, key) => (
+                                {eventItem.assistants.map((assistant, key) => (
                                     <Tooltip key={key} title={assistant.name} placement='top'>
                                         <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
                                             {assistant.name.charAt(0).toUpperCase()}
@@ -58,10 +83,10 @@ const EventView = () => {
                                     </Tooltip>
                                 ))}
                             </Avatar.Group>}
-                            title={item.title}
-                            description={item.date.toDate().toString()}
+                            title={eventItem.title}
+                            description={eventItem.date.toDate().toString()}
                         />
-                        {item.desciption}
+                        {eventItem.desciption}
                     </List.Item>
                 )}
             />

@@ -3,7 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 
 export interface IEvents {
     id: string;
-    img:string;
+    img: string;
     title: string;
     desciption: string;
     date: Timestamp
@@ -22,3 +22,10 @@ export interface IEventsRender {
     description: string;
     content: string;
 }
+
+export interface IQrCode {
+    id: string
+    codeQr: string;
+}
+
+export type FacingMode = 'user' | 'environment'
