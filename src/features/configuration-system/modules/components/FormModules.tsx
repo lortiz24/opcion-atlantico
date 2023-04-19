@@ -40,7 +40,8 @@ const FormModules = () => {
             label: values.nameMenu,
             path: values.pathMenu,
             order: modules.length,
-            status: 'avalible'
+            status: 'avalible',
+            icon:"ponselo careverga"
         }
         if (haveChildrens) newModules.children = childrens
         dispatch(createModule(newModules))

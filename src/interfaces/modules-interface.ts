@@ -6,6 +6,7 @@ export interface IModules {
     path: string
     order: number
     status: StatusMenuItem
+    icon:string;
 }
 
 export interface IChildrensModules {

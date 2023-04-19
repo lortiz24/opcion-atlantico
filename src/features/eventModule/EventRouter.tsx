@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import EventView from '../my-events/EventView'
+import EventView from './EventView'
 
 const EventRouter = () => {
     return (
