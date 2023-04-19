@@ -1,0 +1,1 @@
+export type TStatusConection = 'initial' | 'not-conection' | 'conection';

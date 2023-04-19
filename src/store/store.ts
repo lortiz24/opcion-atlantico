@@ -2,15 +2,17 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { menuApi } from './apis/menuApis';
 import { menusSlice } from './slices/menus/menuSlice'
+import { statusConectionSlice } from './slices/status-conection/statusConectionSlice';
 
 
 export const store = configureStore({
     reducer: {
         menu: menusSlice.reducer,
-        [menuApi.reducerPath]: menuApi.reducer
+        statusConection:statusConectionSlice.reducer,
+       // [menuApi.reducerPath]: menuApi.reducer
     },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(menuApi.middleware),
+    /* middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(menuApi.middleware), */
 })
 
 export type RootState = ReturnType<typeof store.getState>
