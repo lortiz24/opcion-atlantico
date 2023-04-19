@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../store/store';
 import InternetConnectionAlert from '../components/internet-conection-alert/InternetConectionAlert';
 import { useNavigate } from 'react-router-dom';
 import { IModules } from '../interfaces/modules-interface';
+import LoadingComponent from '../components/loading/LoadingComponent';
 const { Header, Content, Sider } = Layout;
 
 const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
@@ -34,14 +35,17 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [modules])
 
 
-  if (isLoading) {
-    return (<>Esta cargando......</>)
-  }
-  if (modules.length === 0) return <>No hay modules</>
+  // if (isLoading) {
+  //   return (<>Esta cargando......</>)
+  // }
+  // if (modules.length === 0) return <>No hay modules</>
   return (
+    <>
+    {isLoading ? <LoadingComponent isLoading={isLoading}/>
+:
     <Layout style={LayoutCss}>
       <InternetConnectionAlert />
-      <Header className="header" style={{ background: '#E50053', color: '#FFFFFF' }}>
+      <Header className="header" style={{ background: '#a40c4c', color: '#FFFFFF' }}>
         <Row justify={'end'} style={{ width: '100%', margin: 10 }} >
           <Button type="primary" >Iniciar sesión</Button>
         </Row>
@@ -98,7 +102,8 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </Content>
         </Layout>
       </Layout>
-    </Layout>
+    </Layout>}
+    </>
   );
 };
 
