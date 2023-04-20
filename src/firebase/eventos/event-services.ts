@@ -1,7 +1,7 @@
 import { qrAttendanceCollectionRef } from "../providers";
 import { IModules, StatusMenuItem } from "../../interfaces/modules-interface";
 import { query, where, orderBy, limit, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, DocumentSnapshot, } from "firebase/firestore";
-import { IQrCode } from "../../features/eventModule/interfaces/events-interfaces";
+import { IQrCode } from "../../interfaces/events-interfaces";
 
 
 export const listeningQrAttendance = (codeQrID: string, onSet: (modules: IQrCode) => void) => {

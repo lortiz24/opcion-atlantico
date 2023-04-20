@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
 export interface IEvents {

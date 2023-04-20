@@ -1,6 +1,6 @@
 import { Avatar, Button, Card, Col, List, Row, Space, Tabs, Tooltip, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { IEvents, IEventsRender } from './interfaces/events-interfaces'
+import { IEvents, IEventsRender } from '../../interfaces/events-interfaces'
 import useGetEvents from '../../hooks/useGetEvents';
 import { DeleteOutlined, EditOutlined, LikeOutlined, MessageOutlined, QrcodeOutlined, StarOutlined } from '@ant-design/icons';
 import { LevelTitlesModules } from '../../settings/properties-globals/levels-titles';
@@ -78,7 +78,7 @@ const EventView = () => {
                                     <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
                                     <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
                                     <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-                                    <Button  type='ghost' onClick={() => onGenerateQR(eventItem.id)}>Generar QR <QrcodeOutlined /></Button>,
+                                    <Button type='ghost' onClick={() => onGenerateQR(eventItem.id)}>Generar QR <QrcodeOutlined /></Button>,
                                     <Button type='primary' onClick={() => onReadQr()}>Marcar Asistencia</Button>
                                 ]}
                                 extra={

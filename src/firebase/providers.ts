@@ -1,9 +1,9 @@
 import { collection, CollectionReference } from "firebase/firestore";
 import { FirebaseAuth, FirebaseDB } from "./ConfigFirebase";
 import { IModules } from "../interfaces/modules-interface";
-import { IQrCode } from "../features/eventModule/interfaces/events-interfaces";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { IRegisterUserWithEmailPasswordParams } from "../interfaces/auth-interface";
+import { IQrCode } from "../interfaces/events-interfaces";
 
 export const modulesCollectionRef = collection(FirebaseDB, "modules") as CollectionReference<Omit<IModules, 'id'>>;
 export const eventsCollectionRef = collection(FirebaseDB, "events");

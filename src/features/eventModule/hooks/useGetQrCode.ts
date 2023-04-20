@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { IQrCode } from '../interfaces/events-interfaces';
 import { listeningQrAttendance } from '../../../firebase/eventos/event-services';
+import { IQrCode } from '../../../interfaces/events-interfaces';
 
 const useGetQrCode = (codeQrID: string) => {
     const [codeQr, setCodeQr] = useState<IQrCode>({} as IQrCode);

@@ -1,8 +1,8 @@
 import { Button, Col, Form, Modal, ModalProps, Row, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { QrReader } from 'react-qr-reader';
-import { FacingMode } from '../interfaces/events-interfaces';
 import { CameraOutlined } from '@ant-design/icons';
+import { FacingMode } from '../../../interfaces/events-interfaces';
 interface IReadQrProps extends ModalProps {
     isReadQrOpen: boolean,
     onClose: () => void
