@@ -29,7 +29,7 @@ const MenuComponent = () => {
 			mode='inline'
 			defaultSelectedKeys={['1']}
 			defaultOpenKeys={['sub1']}
-			style={{ height: '100%', borderRight: 0,background:colorBgContainer }}
+			style={{ height: '100%', borderRight: 0, background: colorBgContainer }}
 			items={menuList.map((module, index) => {
 				const key = String(index + 1);
 				let newModule: any = {
@@ -37,15 +37,17 @@ const MenuComponent = () => {
 					label: module.label,
 					// @ts-ignore
 					icon: React.createElement(IconsAntDesing[module.icon]),
-					children: module.children?.map((children, indexChildren) => {
+				};
+				if (module.children.length > 0) {
+					newModule.children = module.children.map((children, indexChildren) => {
 						const subKey = index * 4 + indexChildren + 1;
 						return {
 							key: subKey,
 							label: children.label,
 							onClick: () => navigate(`${module.path}/${children.path}`),
 						};
-					}),
-				};
+					})
+				}
 				if (!module.children) newModule.onClick = () => navigate(module.path);
 				return newModule;
 			})}

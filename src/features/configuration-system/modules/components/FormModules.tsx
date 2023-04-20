@@ -41,9 +41,9 @@ const FormModules = () => {
             path: values.pathMenu,
             order: modules.length,
             status: 'avalible',
-            icon:"ponselo careverga"
+            icon: "ponselo careverga",
+            children: childrens
         }
-        if (haveChildrens) newModules.children = childrens
         dispatch(createModule(newModules))
     }
 
@@ -55,9 +55,7 @@ const FormModules = () => {
     const onLessSubMenuSelected = (subMenuSelected: number) => {
         if (subMenus.length > 1) {
             form.resetFields([`nameSubMenu${subMenuSelected}`, `pathSubMenu${subMenuSelected}`]);
-            const nuevaCantidad = cantSubMenus - 1
             const cloneArray = [...subMenus]
-
             const subMenusFiltrados = cloneArray.filter(submenu => submenu !== subMenuSelected)
             setSubMenus(subMenusFiltrados)
         }

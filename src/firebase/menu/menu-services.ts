@@ -26,7 +26,6 @@ export const getMenus = async (conditions?: IConditionsMenu) => {
         return []
     }
 }
-
 export const createMenus = async (newMenu: Omit<IModules, 'id'>) => {
     try {
         const querySnapshot = await addDoc(modulesCollectionRef, newMenu);
@@ -46,10 +45,20 @@ export const deleteMenu = async (idMenu: string) => {
         throw error;
     }
 }
+export const updateMenu = async (idMenu: string, { id, ...newMenu }: IModules) => {
+    try {
+        const moduleRef = doc(modulesCollectionRef, idMenu);
+        console.log('newMenu', idMenu)
+        await updateDoc(moduleRef, newMenu);
+    } catch (error) {
+        console.error("Error al actualizar el menú: ", error);
+        throw error;
+    }
+}
 export const inactiveMenu = async (idMenu: string) => {
     try {
         const moduleRef = doc(modulesCollectionRef, idMenu);
-        moduleRef
+
         await updateDoc(moduleRef, { status: "not-avalible" });
     } catch (error) {
         console.error("Error al inactivar el menú: ", error);
@@ -59,7 +68,6 @@ export const inactiveMenu = async (idMenu: string) => {
 export const activeMenu = async (idMenu: string) => {
     try {
         const moduleRef = doc(modulesCollectionRef, idMenu);
-        moduleRef
         await updateDoc(moduleRef, { status: "avalible" });
     } catch (error) {
         console.error("Error activar el menú: ", error);

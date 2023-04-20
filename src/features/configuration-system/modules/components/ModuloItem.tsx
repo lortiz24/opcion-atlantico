@@ -6,6 +6,7 @@ import { StatusToRenderValues } from '../interfaces/form-modules';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { StatusToRender } from '../utils/status-render';
 import useListeningModule from '../hooks/useListeningModule';
+import { updateMenu } from '../../../../firebase/menu/menu-services';
 
 
 interface DataType {
@@ -15,7 +16,7 @@ interface DataType {
     status: StatusToRenderValues;
 }
 interface IModuloItemProps extends ModalProps {
-    subModuleId: string
+    moduleId: string
 }
 
 const columns: ColumnsType<DataType> = [
@@ -33,9 +34,14 @@ const columns: ColumnsType<DataType> = [
 ];
 
 
-const ModuloItem = ({ onCancel, onOk, subModuleId, open }: IModuloItemProps) => {
-    const { loading, module } = useListeningModule(subModuleId)
-    if (!open) return <></>
+const ModuloItem = ({ onCancel, onOk, moduleId, open }: IModuloItemProps) => {
+    const { loading, module } = useListeningModule(moduleId)
+
+    const onDeleteSubMenu = (record: DataType) => {
+        const newModule = { ...module }
+        newModule.children = newModule.children?.filter(submenu => submenu.label !== record.name)
+        updateMenu(moduleId, newModule)
+    }
     return (
         <Modal open={open} onCancel={onCancel} onOk={onOk} destroyOnClose>
             <Table loading={loading} columns={[...columns, {
@@ -50,11 +56,10 @@ const ModuloItem = ({ onCancel, onOk, subModuleId, open }: IModuloItemProps) => 
                                     placement="topRight"
                                     title={'Inactivar modulo'}
                                     description={'Esta seguro que desea inactivar el modulo'}
-                                    // onConfirm={() => onInactiveModule(record)}
+                                    onConfirm={() => onDeleteSubMenu(record)}
                                     okText="Si"
                                     cancelText="No"
                                 >
-
                                     <Button icon={<DeleteOutlined />}></Button>
                                 </Popconfirm>
                             ) : (

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as IconsAntDesing from '@ant-design/icons';
-import { Button, Col, MenuProps, Row, Space } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Button, Col, Row } from 'antd';
+import { Layout, theme } from 'antd';
 import './MainLayout.style.css';
 import { LayoutCss } from './MainLayout.style';
 import { getModules } from '../store/menus/thunks';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import InternetConnectionAlert from '../components/internet-conection-alert/InternetConectionAlert';
 import { useNavigate } from 'react-router-dom';
-import { IModules } from '../interfaces/modules-interface';
 import LoadingComponent from '../components/loading/LoadingComponent';
 import useGetStatusConection from '../hooks/useGetStatusConection';
 import { setStatusConection } from '../store/status-conection/statusConectionSlice';
@@ -17,13 +16,12 @@ const { Header, Content, Sider } = Layout;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { statusConection } = useGetStatusConection();
-	const { isLoading, modules } = useAppSelector(selector => selector.menu);
+	const { isLoading } = useAppSelector(selector => selector.menu);
 	const [collapsed, setCollapsed] = useState(false);
 	const dispatch = useAppDispatch();
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(setStatusConection({ statusConection }));
@@ -33,7 +31,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		dispatch(getModules());
 	}, []);
 
-	
+
 	return (
 		<>
 			{isLoading ? (
@@ -43,14 +41,14 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 					<InternetConnectionAlert />
 					<Layout>
 						<Sider
-              style={{background: colorBgContainer}}
+							style={{ background: colorBgContainer }}
 							width={200}
 							trigger={null}
 							collapsible
 							onCollapse={() => setCollapsed(!collapsed)}
 							collapsed={collapsed}
 						>
-              <MenuComponent/>
+							<MenuComponent />
 						</Sider>
 						<Layout>
 							<Header
