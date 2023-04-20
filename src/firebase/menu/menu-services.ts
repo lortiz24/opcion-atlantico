@@ -77,5 +77,13 @@ export const listeningModules = (onSet: (modules: IModules[]) => void) => {
             onSet([])
         }
     });
+}
 
+export const listeningModule = (moduleId: string, onSet: (modules: IModules) => void) => {
+    console.log("🚀 ~ file: menu-services.ts:83 ~ listeningModule ~ moduleId:", moduleId)
+    const moduleRef = doc(modulesCollectionRef, moduleId);
+    return onSnapshot(moduleRef, (doc) => {
+        const data = doc.data()
+        onSet({ id: doc.id, ...data } as IModules)
+    });
 }

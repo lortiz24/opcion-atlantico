@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { IModules } from '../interfaces/modules-interface'
 import { listeningModules } from '../firebase/menu/menu-services';
 
-const useGetModules = () => {
+const useListeningModules = () => {
 
   const [modules, setModules] = useState<IModules[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,4 +23,4 @@ const useGetModules = () => {
   }
 }
 
-export default useGetModules
+export default useListeningModules

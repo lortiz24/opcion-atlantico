@@ -1,7 +1,6 @@
-import { Card, Col, Row, Space, Tabs, Typography } from 'antd'
-import DrawerFormModules from './components/DrawerFormModules'
-import ListModules from './components/ListModules'
+import { Col, Row, Typography } from 'antd'
 import { LevelTitlesModules } from '../../../settings/properties-globals/levels-titles'
+import ModulesList from './components/ModulesList'
 
 const ModulesView = () => {
     return (
@@ -10,7 +9,7 @@ const ModulesView = () => {
             <br />
             <Row >
                 <Col span={24}>
-                    <ListModules />
+                    <ModulesList />
                 </Col>
             </Row>
 

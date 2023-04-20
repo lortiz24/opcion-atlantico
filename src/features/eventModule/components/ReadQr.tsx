@@ -1,18 +1,12 @@
 import { Button, Col, Form, Modal, ModalProps, Row, Tabs } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { QrReader } from 'react-qr-reader';
 import { CameraOutlined } from '@ant-design/icons';
 import { FacingMode } from '../../../interfaces/events-interfaces';
 interface IReadQrProps extends ModalProps {
-    isReadQrOpen: boolean,
-    onClose: () => void
 }
-const ReadQr = ({ isReadQrOpen, onClose, onOk }: IReadQrProps) => {
+const ReadQr = ({ onCancel, onOk, open }: IReadQrProps) => {
     const [facingMode, setFacingMode] = useState<FacingMode>('user');
-
-    const handleError = (err: any) => {
-        console.error(err);
-    };
 
     const handleScan = (data: any) => {
         console.log(data)
@@ -20,10 +14,11 @@ const ReadQr = ({ isReadQrOpen, onClose, onOk }: IReadQrProps) => {
 
     return (
         <Modal
-            open={isReadQrOpen}
+            open={open}
+            destroyOnClose
             title={'Lector QR'}
             footer={false}
-            onCancel={onClose}
+            onCancel={onCancel}
             onOk={onOk}
             okText={'Guardar'}>
             <Tabs defaultValue='1' destroyInactiveTabPane={true}>
@@ -51,7 +46,7 @@ const ReadQr = ({ isReadQrOpen, onClose, onOk }: IReadQrProps) => {
                         videoStyle={{ width: '100%' }}
                         scanDelay={1500}
                         onResult={handleScan}
-                        constraints={{ facingMode: facingMode, sampleSize: 10, frameRate:10 }}
+                        constraints={{ facingMode: facingMode, sampleSize: 10, frameRate: 10 }}
                     />
                 </Tabs.TabPane>
             </Tabs>

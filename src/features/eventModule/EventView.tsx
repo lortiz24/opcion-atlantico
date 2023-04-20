@@ -1,8 +1,7 @@
-import { Avatar, Button, Card, Col, List, Row, Space, Tabs, Tooltip, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { IEvents, IEventsRender } from '../../interfaces/events-interfaces'
+import { Avatar, Button, Card, List, Space, Tooltip, Typography } from 'antd'
+import React, { useState } from 'react'
 import useGetEvents from '../../hooks/useGetEvents';
-import { DeleteOutlined, EditOutlined, LikeOutlined, MessageOutlined, QrcodeOutlined, StarOutlined } from '@ant-design/icons';
+import { LikeOutlined, MessageOutlined, QrcodeOutlined, StarOutlined } from '@ant-design/icons';
 import { LevelTitlesModules } from '../../settings/properties-globals/levels-titles';
 import GenerateQr from './components/GenerateQr';
 import ReadQr from './components/ReadQr';
@@ -18,7 +17,6 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 
 const EventView = () => {
     const { events, loading } = useGetEvents()
-    const [eventsRender, setEventsRender] = useState<IEventsRender[]>([])
     const [openGenerateQR, setOpenGenerateQR] = useState(false)
     const [eventAttendanceId, setEventAttendanceId] = useState('')
     const [isOpenReadQR, setisOpenReadQR] = useState(false)
@@ -29,6 +27,7 @@ const EventView = () => {
     }
 
     const onCancelGenerateQR = () => {
+        console.log('Aqui')
         setOpenGenerateQR(false)
     }
 
@@ -41,8 +40,8 @@ const EventView = () => {
     }
     return (
         <>
-            {isOpenReadQR && <ReadQr isReadQrOpen={isOpenReadQR} onClose={onCloseReadQr} />}
-            {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} />}
+            <ReadQr open={isOpenReadQR} onCancel={onCloseReadQr} onOk={onCloseReadQr} />
+            <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />
             <Typography.Title level={LevelTitlesModules}>Eventos</Typography.Title>
             <br />
             <List
@@ -92,7 +91,7 @@ const EventView = () => {
                                 <List.Item.Meta
                                     avatar={<Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
                                         {eventItem.assistants.map((assistant, key) => (
-                                            <Tooltip key={key} title={assistant.name} placement='top'>
+                                            <Tooltip key={assistant.id} title={assistant.name} placement='top'>
                                                 <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
                                                     {assistant.name.charAt(0).toUpperCase()}
                                                 </Avatar>
