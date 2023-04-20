@@ -47,8 +47,9 @@ const MenuComponent = () => {
 							onClick: () => navigate(`${module.path}/${children.path}`),
 						};
 					})
+				} else {
+					newModule.onClick = () => navigate(module.path);
 				}
-				if (!module.children) newModule.onClick = () => navigate(module.path);
 				return newModule;
 			})}
 		/>
