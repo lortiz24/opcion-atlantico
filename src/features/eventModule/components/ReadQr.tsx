@@ -7,7 +7,6 @@ interface IReadQrProps extends ModalProps {
 }
 const ReadQr = ({ onCancel, onOk, open }: IReadQrProps) => {
     const [facingMode, setFacingMode] = useState<FacingMode>('user');
-
     const handleScan = (data: any) => {
         console.log(data)
     };
@@ -21,35 +20,24 @@ const ReadQr = ({ onCancel, onOk, open }: IReadQrProps) => {
             onCancel={onCancel}
             onOk={onOk}
             okText={'Guardar'}>
-            <Tabs defaultValue='1' destroyInactiveTabPane={true}>
-                <Tabs.TabPane
-                    tab={
-                        <>
-                            <CameraOutlined />
-                            {'Camara'}
-                        </>
-                    }
-                    key='1'>
-                    <Form.Item>
-                        <Row justify='center' wrap gutter={8}>
-                            <Col>
-                                <Button
-                                    type='primary'
-                                    icon={<CameraOutlined />}
-                                    onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}>
-                                    {facingMode === 'user' ? ' Front' : 'Rear'} Camera
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form.Item>
-                    <QrReader
-                        videoStyle={{ width: '100%' }}
-                        scanDelay={1500}
-                        onResult={handleScan}
-                        constraints={{ facingMode: facingMode, sampleSize: 10, frameRate: 10 }}
-                    />
-                </Tabs.TabPane>
-            </Tabs>
+            <Form.Item>
+                <Row justify='center' wrap gutter={8}>
+                    <Col>
+                        <Button
+                            type='primary'
+                            icon={<CameraOutlined />}
+                            onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}>
+                            {facingMode === 'user' ? ' Front' : 'Rear'} Camera
+                        </Button>
+                    </Col>
+                </Row>
+            </Form.Item>
+            <QrReader
+                videoStyle={{ width: '100%' }}
+                scanDelay={1500}
+                onResult={handleScan}
+                constraints={{ facingMode: facingMode, sampleSize: 10, frameRate: 10, autoGainControl: true }}
+            />
         </Modal>
     )
 }

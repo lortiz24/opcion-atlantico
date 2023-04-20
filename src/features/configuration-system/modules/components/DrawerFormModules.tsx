@@ -1,24 +1,23 @@
 import { PlusCircleFilled } from '@ant-design/icons';
-import { Button, Drawer, DrawerProps, Radio, RadioChangeEvent, Row, Space, theme } from 'antd';
+import { Button, Drawer, Space } from 'antd';
 import React, { useState } from 'react'
 import FormModules from './FormModules';
-import ListModules from './ListModules(deprecate)';
+import { IModules } from '../../../../interfaces/modules-interface';
+import useListeningModule from '../hooks/useListeningModule';
+import useGetModule from '../hooks/useGetModule';
 
 
+interface IDrawerFormModulesProps {
+    onClose: () => void;
+    open: boolean;
+    showDrawer: () => void;
+    isEdit: boolean
+    moduleId: string
+}
 
 
-
-const DrawerFormModules = () => {
-    const [open, setOpen] = useState(false);
-
-    const showDrawer = () => {
-        setOpen(true);
-    };
-
-
-    const onClose = () => {
-        setOpen(false);
-    };
+const DrawerFormModules = ({ onClose, open, showDrawer, isEdit, moduleId }: IDrawerFormModulesProps) => {
+    const { loading, module } = useGetModule(moduleId)
 
     return (
         <>
@@ -37,13 +36,8 @@ const DrawerFormModules = () => {
                     </Space>
                 }
             >
-                <FormModules />
+                <FormModules isEdit={isEdit} moduleId={moduleId} />
             </Drawer>
-            <Space style={{ marginBottom: 20 }}>
-                <Button icon={<PlusCircleFilled />} type="primary" onClick={showDrawer}>
-                    Agregar modulo
-                </Button>
-            </Space>
 
         </>
     )

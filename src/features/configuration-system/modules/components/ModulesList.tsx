@@ -8,6 +8,8 @@ import { StatusToRender } from '../utils/status-render';
 import { StatusToRenderValues } from '../interfaces/form-modules';
 import ModuloItem from './ModuloItem';
 import useListeningModules from '../../../../hooks/useListeningModules';
+import FormModules from './FormModules';
+import { IModules } from '../../../../interfaces/modules-interface';
 
 interface DataType {
     key: string;
@@ -44,8 +46,11 @@ const columns: ColumnsType<DataType> = [
     },
 ];
 
-
-const ModulesList = () => {
+interface IModulesListProps {
+    onSetIsEdit: (moduleId: string) => void
+    setModuleId: React.Dispatch<React.SetStateAction<string>>
+}
+const ModulesList = ({ onSetIsEdit, setModuleId }: IModulesListProps) => {
     const { loading, modules } = useListeningModules()
     const dispatch = useAppDispatch()
     const [showSubmodules, setShowSubmodules] = useState(false)
@@ -65,6 +70,9 @@ const ModulesList = () => {
     const onCloseShowSubmodule = () => {
         setShowSubmodules(false)
     }
+
+
+
     return (
         <>
             {showSubmodules && <ModuloItem open={showSubmodules} onCancel={onCloseShowSubmodule} onOk={onCloseShowSubmodule} moduleId={selectedModuleId} />}
@@ -76,7 +84,7 @@ const ModulesList = () => {
                     render: (_, record) => (
                         <Space size="middle">
                             {record.subMenus && <Button icon={<EyeOutlined />} onClick={() => onShowSubmodules(record.key)}></Button>}
-                            <Button icon={<EditOutlined />}></Button>
+                            <Button icon={<EditOutlined />} onClick={() => onSetIsEdit(record.key)}></Button>
                             {
                                 record.status === StatusToRender.avalible ? (
                                     <Popconfirm

@@ -6,15 +6,23 @@ import { IChildrensModules, IModules } from '../../../../interfaces/modules-inte
 import { useForm } from 'antd/es/form/Form'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { createModule } from '../../../../store/menus/thunks'
+import { FormProps } from 'react-router-dom'
+import useGetModule from '../hooks/useGetModule'
 
-const FormModules = () => {
+interface IFormModulesProps extends FormProps {
+    isEdit: boolean
+    moduleId: string
+}
+//todo: termianr el formulario de edicion
+const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [cantSubMenus, setCantSubMenus] = useState(1)
     const [subMenus, setSubMenus] = useState<number[]>([1])
-    const [sumando, setSumando] = useState<boolean | string>('initial')
     const [form] = useForm();
     const dispatch = useAppDispatch()
-    const { isLoading, modules, isMutation } = useAppSelector(selector => selector.menu)
+    const { modules, isMutation } = useAppSelector(selector => selector.menu)
+    const { loading, module } = useGetModule(moduleId)
+
 
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
@@ -60,16 +68,22 @@ const FormModules = () => {
             setSubMenus(subMenusFiltrados)
         }
     }
+
+    useEffect(() => {
+        console.log(module)
+        if (module?.children && module.children.length > 0) setHaveChildrens(true)
+    }, [])
+
     return (
         <>
             <Fragment>
                 <Row justify='center' wrap gutter={[8, 8]}>
                     <Col span={16}>
                         <Form form={form} onFinish={onSubmit} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-                            <Form.Item label='Nombre' name={'nameMenu'} rules={[{ required: true, message: 'El nombre del menu es requerido' }]}>
+                            <Form.Item initialValue={isEdit ? module.label : ''} label='Nombre' name={'nameMenu'} rules={[{ required: true, message: 'El nombre del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item label='Path' name={'pathMenu'} rules={[{ required: true, message: 'El path del menu es requerido' }]}>
+                            <Form.Item initialValue={isEdit ? module.path : ''} label='Path' name={'pathMenu'} rules={[{ required: true, message: 'El path del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
                             <Form.Item label='Tiene sub menu'>
