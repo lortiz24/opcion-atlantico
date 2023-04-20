@@ -3,7 +3,7 @@ import { Button, Popconfirm, Space, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 import { useAppDispatch } from '../../../../store/store';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { activeModule, inactiveModule } from '../../../../store/slices/menus/thunks';
+import { activeModule, inactiveModule } from '../../../../store/menus/thunks';
 import useGetModules from '../../../../hooks/useListeningModules';
 import { StatusToRender } from '../utils/status-render';
 import { StatusToRenderValues } from '../interfaces/form-modules';

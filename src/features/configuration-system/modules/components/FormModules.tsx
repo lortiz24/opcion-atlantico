@@ -5,7 +5,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { IChildrensModules, IModules } from '../../../../interfaces/modules-interface'
 import { useForm } from 'antd/es/form/Form'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
-import { createModule } from '../../../../store/slices/menus/thunks'
+import { createModule } from '../../../../store/menus/thunks'
 
 const FormModules = () => {
     const [haveChildrens, setHaveChildrens] = useState(false)

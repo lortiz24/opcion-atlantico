@@ -4,7 +4,7 @@ import { Button, Col, MenuProps, Row, Space } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import './MainLayout.style.css';
 import { LayoutCss } from './MainLayout.style';
-import { getModules } from '../store/slices/menus/thunks';
+import { getModules } from '../store/menus/thunks';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import InternetConnectionAlert from '../components/internet-conection-alert/InternetConectionAlert';
 import { useNavigate } from 'react-router-dom';

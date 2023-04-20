@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { menuApi } from './apis/menuApis';
-import { menusSlice } from './slices/menus/menuSlice'
+import { menusSlice } from './menus/menuSlice'
 import { statusConectionSlice } from './slices/status-conection/statusConectionSlice';
 import { sessionSlice } from './slices/session/sessionSlice';
 
