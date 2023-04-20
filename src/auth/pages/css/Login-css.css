@@ -1,0 +1,41 @@
+.login-page-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+  }
+  .container-left{
+    background-size: cover;
+    background-position: center;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+ 
+  }
+  .login-card {
+    width: 400px; /* Ancho de la card */
+    margin: auto; /* Centrar horizontalmente */
+    margin-top: 50px; /* Separación con la imagen de fondo */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+ 
+  }
+  
+
+  .login-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 64px;
+
+    
+  }
+  
+  .background-image-container {
+    background-image: url('../../../assets/IMG_1366.JPG');
+    background-size: cover;
+    background-position: center;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+  }
+  

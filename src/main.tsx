@@ -14,9 +14,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Provider store={store}>
       <ConfigProvider theme={AntDesingTheme}>
         <HashRouter>
-          <MainLayout>
+
             <AppRouter />
-          </MainLayout>
+
         </HashRouter>
       </ConfigProvider>
     </Provider>
