@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../store';
-import { TStatusConection } from '../../../interfaces/status-conection.interface';
+import { RootState } from '../store';
+import { TStatusConection } from '../../interfaces/status-conection.interface';
 
 interface MenuState {
 	statusConection: TStatusConection;

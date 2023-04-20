@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Col, Row, Space, Typography } from 'antd';
 import controllerInternetConnection from '../../utils/internet-conection-alert/controllerInternetConnection';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import { setStatusConection } from '../../store/slices/status-conection/statusConectionSlice';
+import { setStatusConection } from '../../store/status-conection/statusConectionSlice';
 
 interface propsOptions {
 	description?: string | React.ReactNode;

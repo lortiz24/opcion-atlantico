@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { IModules } from '../interfaces/modules-interface';
 import LoadingComponent from '../components/loading/LoadingComponent';
 import useGetStatusConection from '../hooks/useGetStatusConection';
-import { setStatusConection } from '../store/slices/status-conection/statusConectionSlice';
+import { setStatusConection } from '../store/status-conection/statusConectionSlice';
 import MenuComponent from '../components/menu/MenuComponent';
 const { Header, Content, Sider } = Layout;
 

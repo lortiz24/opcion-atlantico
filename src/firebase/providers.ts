@@ -2,7 +2,8 @@ import { collection, CollectionReference } from "firebase/firestore";
 import { FirebaseAuth, FirebaseDB } from "./ConfigFirebase";
 import { IModules } from "../interfaces/modules-interface";
 import { IQrCode } from "../features/eventModule/interfaces/events-interfaces";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { IRegisterUserWithEmailPasswordParams } from "../interfaces/auth-interface";
 
 export const modulesCollectionRef = collection(FirebaseDB, "modules") as CollectionReference<Omit<IModules, 'id'>>;
 export const eventsCollectionRef = collection(FirebaseDB, "events");
@@ -12,6 +13,28 @@ interface ILogin {
     email: string;
     password: string;
 }
+
+export const registerUserWithEmailPassword = async ({ email, password, displayName }: IRegisterUserWithEmailPasswordParams) => {
+
+    try {
+        const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
+        const { uid, photoURL } = resp.user;
+
+        await updateProfile(resp.user, { displayName });
+
+        return {
+            ok: true,
+            uid, photoURL, email, displayName
+        }
+
+    } catch (error: any) {
+        console.log(error);
+        return { ok: false, errorMessage: error.message }
+    }
+
+}
+
+
 export const loginWithEmailPassword = async ({ email, password }: ILogin) => {
 
     try {
