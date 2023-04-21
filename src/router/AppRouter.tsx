@@ -16,7 +16,7 @@ export const AppRouter = () => {
 					path='/*'
 					element={
 						<MainLayout>
-							<PrivateRoute>
+							<Routes>
 								<Route
 									path='/events/*'
 									element={
@@ -34,7 +34,7 @@ export const AppRouter = () => {
 										</PrivateRoute>
 									}
 								/>
-							</PrivateRoute>
+							</Routes>
 						</MainLayout>
 					}
 				/>
