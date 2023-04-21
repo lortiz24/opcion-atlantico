@@ -5,9 +5,10 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { IChildrensModules, IModules } from '../../../../interfaces/modules-interface'
 import { useForm } from 'antd/es/form/Form'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
-import { createModule } from '../../../../store/menus/thunks'
+import { createModule, updateModule } from '../../../../store/menus/thunks'
 import { FormProps } from 'react-router-dom'
 import useGetModule from '../hooks/useGetModule'
+import LoadingComponent from '../../../../components/loading/LoadingComponent';
 
 interface IFormModulesProps extends FormProps {
     isEdit: boolean
@@ -15,16 +16,20 @@ interface IFormModulesProps extends FormProps {
 }
 //todo: termianr el formulario de edicion
 const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
+    //estados
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [cantSubMenus, setCantSubMenus] = useState(1)
     const [subMenus, setSubMenus] = useState<number[]>([1])
+    //herramientas
     const [form] = useForm();
+    const { isLoading, modules, isMutation } = useAppSelector(selector => selector.menu)
+    const { module, loading: loadingEditModule } = useGetModule(moduleId)
     const dispatch = useAppDispatch()
-    const { modules, isMutation } = useAppSelector(selector => selector.menu)
-    const { loading, module } = useGetModule(moduleId)
+    //metodos
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
     }
+
     const onSubmit = (values: any) => {
         const childrens: any[] = []
         if (haveChildrens) {
@@ -50,6 +55,7 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
             icon: "ponselo careverga",
             children: childrens
         }
+        if (isEdit) return dispatch(updateModule(moduleId, newModules))
         dispatch(createModule(newModules))
     }
 
@@ -67,41 +73,45 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
         }
     }
 
+    //efectos
     useEffect(() => {
-        console.log(module)
-        if (module?.children && module.children.length > 0) setHaveChildrens(true)
-    }, [])
+        if (module) {
+            form.setFieldValue('nameMenu', module.label)
+            form.setFieldValue('pathMenu', module.path)
+            form.setFieldValue('haveSubmenus', true)
 
-    useEffect(() => {
-        if (!!module) {
-            form.setFieldValue('nameMenu',module.label)
-            form.setFieldValue('pathMenu',module.path)
-            
+            if (module?.children && module.children.length > 0) {
+                form.setFieldValue('haveSubmenus', true)
+                setHaveChildrens(true)
+                setCantSubMenus(module.children.length + 1)
+                module.children.forEach((item, index) => {
+                    if (index > 1) setSubMenus(current => [...current, index + 1])
+                    form.setFieldValue(`nameSubMenu${index + 1}`, item.label)
+                    form.setFieldValue(`pathSubMenu${index + 1}`, item.path)
+                })
+            }
         };
     }, [module])
-    
-console.log('isEdit',isEdit)
+
+    if (isEdit && loadingEditModule) return <LoadingComponent isLoading={loadingEditModule} />
+
     return (
         <>
-            <Fragment>
+            <Fragment >
                 <Row justify='center' wrap gutter={[8, 8]}>
                     <Col span={16}>
-                        <Form form={form} onFinish={onSubmit} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-                            <Form.Item  label='Nombre' name={'nameMenu'} rules={[{ required: true, message: 'El nombre del menu es requerido' }]}>
+                        <Form initialValues={{ haveSubmenus: true }} form={form} onFinish={onSubmit} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+                            <Form.Item label='Nombre' name={'nameMenu'} rules={[{ required: true, message: 'El nombre del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item initialValue={isEdit ? module.path : ''} label='Path' name={'pathMenu'} rules={[{ required: true, message: 'El path del menu es requerido' }]}>
+                            <Form.Item label='Path' name={'pathMenu'} rules={[{ required: true, message: 'El path del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
+                            {((isEdit && !loadingEditModule) || !isEdit) && <Form.Item label='Tiene sub menu' name='haveSubmenus'>
+                                <Checkbox defaultChecked={haveChildrens} onChange={onChange} />
+                            </Form.Item>}
                             {
-                                !isEdit && (
-                                    <Form.Item label='Tiene sub menu' name='haveSubmenus'>
-                                        <Checkbox onChange={onChange} />
-                                    </Form.Item>
-                                )
-                            }
-                            {
-                                (haveChildrens && !isEdit) && subMenus.map((item, index) => {
+                                haveChildrens && subMenus.map((item, index) => {
                                     return (
                                         <div key={index}>
                                             <Row justify='center' wrap gutter={[8, 8]} key={item}>
@@ -123,7 +133,7 @@ console.log('isEdit',isEdit)
                                     )
                                 })
                             }
-                            {(haveChildrens && !isEdit) && (
+                            {haveChildrens && (
                                 <Row justify={'end'} gutter={[8, 8]}>
                                     <Col>
                                         <Button icon={<PlusCircleOutlined />} type='dashed' onClick={onAddSubMenu}>Agregar submenu</Button>
@@ -133,7 +143,7 @@ console.log('isEdit',isEdit)
                             )
                             }
                             <Row>
-                                <Button loading={isMutation} icon={<SaveOutlined />} type='primary' htmlType='submit'>Guardar</Button>
+                                <Button loading={isLoading || isMutation} icon={<SaveOutlined />} type='primary' htmlType='submit'>Guardar</Button>
                             </Row>
                         </Form>
                     </Col>

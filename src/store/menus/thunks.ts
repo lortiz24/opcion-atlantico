@@ -1,7 +1,7 @@
 import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
-import { startLoading, setModules, startMutation, stopMutation } from "./menuSlice";
-import { activeMenu, createMenus, deleteMenu, getMenus, inactiveMenu } from "../../firebase/menu/menu-services";
+import { startLoading, setModules, startMutation, stopMutation, stopLoading } from "./menuSlice";
+import { activeMenu, createMenus, deleteMenu, getMenus, inactiveMenu, updateMenu } from "../../firebase/menu/menu-services";
 import { IModules } from "../../interfaces/modules-interface";
 import { DispatchMessageService } from "../../components/message-response/DispatchMessageService";
 
@@ -29,6 +29,20 @@ export const createModule = (newMenu: Omit<IModules, 'id'>): ThunkResult<void> =
         } catch (error) {
             dispatch(stopMutation());
             DispatchMessageService({ action: 'show', type: "error", msj: 'No se pudo crear el modulo' })
+            console.error("Error getting documents: ", error);
+        }
+    };
+};
+export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>): ThunkResult<void> => {
+    return async (dispatch: AppDispatch, getState: () => RootState) => {
+        dispatch(startMutation());
+        try {
+            await updateMenu(menuId, { id: menuId, ...newMenu });
+            dispatch(stopMutation());
+            DispatchMessageService({ action: 'show', type: "success", msj: 'Se actualizo el modulo correctamente' })
+        } catch (error) {
+            dispatch(stopMutation());
+            DispatchMessageService({ action: 'show', type: "error", msj: 'No se actualizar crear el modulo' })
             console.error("Error getting documents: ", error);
         }
     };

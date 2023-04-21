@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../store';
 import { getModules } from './thunks';
-import { IModules } from '../../../interfaces/modules-interface';
+import { IModules } from '../../interfaces/modules-interface';
+import { RootState } from '../store';
 
 
 interface MenuState {
@@ -24,11 +24,15 @@ export const menusSlice = createSlice({
         startLoading: (state, /* action */) => {
             state.isLoading = true;
         },
+        stopLoading: (state, /* action */) => {
+            state.isLoading = false;
+        },
         setModules: (state, action) => {
             state.modules = action.payload.modules
             state.isLoading = false;
         },
         startMutation: (state, /* action */) => {
+            console.log('Iniciano mutacion')
             state.isMutation = true;
         },
         stopMutation: (state, /* action */) => {
@@ -41,6 +45,6 @@ export const menusSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { setModules, startLoading, startMutation, stopMutation } = menusSlice.actions;
+export const { setModules, startLoading, startMutation, stopMutation, stopLoading } = menusSlice.actions;
 
 export const selectMenus = (state: RootState) => state.menu

@@ -1,6 +1,6 @@
 import { modulesCollectionRef } from "../providers";
 import { IModules, StatusMenuItem } from "../../interfaces/modules-interface";
-import { query, where, orderBy, limit, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, getDoc, } from "firebase/firestore";
+import { query, orderBy, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, getDoc, } from "firebase/firestore";
 interface IConditionsMenu {
     status?: {
         isAvalible?: StatusMenuItem
@@ -31,7 +31,7 @@ export const getModule = async (menuId: string, conditions?: IConditionsMenu) =>
         const moduleRef = doc(modulesCollectionRef, menuId);
 
         const querySnapshot = await getDoc<Omit<IModules, 'id'>>(moduleRef);
-        
+
         return { id: querySnapshot.id, ...querySnapshot.data() } as IModules
     } catch (error) {
         console.log(error)

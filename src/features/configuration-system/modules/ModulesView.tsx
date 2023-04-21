@@ -4,7 +4,6 @@ import ModulesList from './components/ModulesList';
 import { PlusCircleFilled } from '@ant-design/icons';
 import { useState } from 'react';
 import DrawerFormModules from './components/DrawerFormModules';
-import { IModules } from '../../../interfaces/modules-interface';
 
 const ModulesView = () => {
 	const [open, setOpen] = useState(false);
@@ -16,6 +15,8 @@ const ModulesView = () => {
 
 	const onClose = () => {
 		setOpen(false);
+		setIsEdit(false)
+		setModuleId('')
 	};
 
 	const onSetIsEdit = (mooduleId: string) => {
