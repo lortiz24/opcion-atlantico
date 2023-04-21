@@ -2,6 +2,8 @@ import React from "react";
 import { Form, Input, Button, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./css/Login-css.css";
+import opcion_logo from '../../assets/Logo Opcion Atlantico 2022.svg';
+import Title from "antd/es/typography/Title";
 
 const LoginPages = () => {
   return (
@@ -9,7 +11,10 @@ const LoginPages = () => {
       <div className="container-left">
         <div className="login-card-container">
           <Card className="login-card">
-            <h2 className="login-title">Iniciar Sesión</h2>
+          <div className="card-logo-container">
+              <img src={opcion_logo} height={300} alt="Logo"  className="card-logo" />
+            </div>
+            <Title level={2} style={{ color: '#1f3f50', fontWeight: 'bold', marginBottom: '20px' }}>Iniciar Sesión</Title>
             <Form
               name="login-form"
               initialValues={{ remember: true }}
@@ -33,9 +38,11 @@ const LoginPages = () => {
                 />
               </Form.Item>
               <Form.Item>
+              <div className="button-container">
                 <Button type="primary" htmlType="submit" className="login-form-button">
                   Iniciar sesión
                 </Button>
+                </div>
               </Form.Item>
             </Form>
           </Card>

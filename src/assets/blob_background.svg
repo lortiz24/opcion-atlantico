@@ -1,1 +1,12 @@
-<svg class="border shadow-md" viewBox="0 0 594 475.2" style="width: 594px; height: 475.2px;" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><rect class="bg" id="bg" x="0" y="0" width="594" height="475.2" fill="#ffffff"/><g transform="translate(-297 178.2) scale(1)"><path d="M486,402.5Q419,508,297,508.5Q175,509,128,403Q81,297,126,188Q171,79,305.5,64Q440,49,496.5,173Q553,297,486,402.5Z" fill="#BC044C" stroke="none" stroke-width="10"/></g><g transform="translate(297 -297) scale(1)"><path d="M492,416Q434,535,316.5,501Q199,467,115.5,382Q32,297,113.5,208.5Q195,120,311,96Q427,72,488.5,184.5Q550,297,492,416Z" fill="#BC044C" stroke="none" stroke-width="10"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="1440" height="560" preserveAspectRatio="none" viewBox="0 0 1440 560">
+    <g mask="url(&quot;#SvgjsMask1058&quot;)" fill="none">
+        <path d="M 0,39 C 57.6,64.8 172.8,164.6 288,168 C 403.2,171.4 460.8,65.8 576,56 C 691.2,46.2 748.8,123.8 864,119 C 979.2,114.2 1036.8,19.8 1152,32 C 1267.2,44.2 1382.4,150.4 1440,180L1440 560L0 560z" fill="rgba(138, 0, 53, 1)"></path>
+        <path d="M 0,256 C 48,270.6 144,328 240,329 C 336,330 384,261.8 480,261 C 576,260.2 624,334.8 720,325 C 816,315.2 864,203.2 960,212 C 1056,220.8 1104,365 1200,369 C 1296,373 1392,259.4 1440,232L1440 560L0 560z" fill="rgba(198, 0, 76, 1)"></path>
+        <path d="M 0,473 C 32,462.8 96,404.6 160,422 C 224,439.4 256,568 320,560 C 384,552 416,383 480,382 C 544,381 576,541.2 640,555 C 704,568.8 736,454 800,451 C 864,448 896,547.8 960,540 C 1024,532.2 1056,422.4 1120,412 C 1184,401.6 1216,484.2 1280,488 C 1344,491.8 1408,442.4 1440,431L1440 560L0 560z" fill="rgba(215, 76, 129, 1)"></path>
+    </g>
+    <defs>
+        <mask id="SvgjsMask1058">
+            <rect width="1440" height="560" fill="#ffffff"></rect>
+        </mask>
+    </defs>
+</svg>
