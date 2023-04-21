@@ -13,6 +13,6 @@ export const PrivateRoute = ({
 	// const { logged } = useContext(AuthContext);
 	const { status } = useAppSelector(selector => selector.auth);
 	return (
-		<>{status === 'authenticated' ? children : <Navigate to='/login' />}</>
+		<> {children} </>
 	);
 };

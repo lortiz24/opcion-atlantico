@@ -1,13 +1,14 @@
-import { Button, Col, Form, Modal, ModalProps, Row, Tabs } from 'antd';
+import { Button, Col, Form, Modal, ModalProps, Row } from 'antd';
 import React, { useState } from 'react'
-import { QrReader } from 'react-qr-reader';
+// @ts-ignore: Unreachable code error 
+import * as QrReader from 'react-qr-reader';
 import { CameraOutlined } from '@ant-design/icons';
 import { FacingMode } from '../../../interfaces/events-interfaces';
 interface IReadQrProps extends ModalProps {
 }
 const ReadQr = ({ onCancel, onOk, open }: IReadQrProps) => {
     const [facingMode, setFacingMode] = useState<FacingMode>('user');
-    const handleScan = (data: any) => {
+    const handleScan = (data: string | null) => {
         console.log(data)
     };
 
@@ -33,10 +34,15 @@ const ReadQr = ({ onCancel, onOk, open }: IReadQrProps) => {
                 </Row>
             </Form.Item>
             <QrReader
-                videoStyle={{ width: '100%' }}
-                scanDelay={1500}
-                onResult={handleScan}
-                constraints={{ facingMode: facingMode, sampleSize: 10, frameRate: 10, autoGainControl: true }}
+                delay={1500}
+                facingMode={facingMode}
+                onScan={handleScan}
+                style={{
+                    width: '80%',
+                    marginBottom: '20px',
+                }}
+                onError={console.log}
+
             />
         </Modal>
     )
