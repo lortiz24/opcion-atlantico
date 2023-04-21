@@ -27,12 +27,10 @@ export const getMenus = async (conditions?: IConditionsMenu) => {
     }
 }
 export const getModule = async (menuId: string, conditions?: IConditionsMenu) => {
-    console.log("🚀 ~ file: menu-services.ts:30 ~ getModule ~ menuId:", menuId)
     try {
         const moduleRef = doc(modulesCollectionRef, menuId);
 
         const querySnapshot = await getDoc<Omit<IModules, 'id'>>(moduleRef);
-        console.log("🚀 ~ file: menu-services.ts:34 ~ getModule ~ querySnapshot:", querySnapshot)
         
         return { id: querySnapshot.id, ...querySnapshot.data() } as IModules
     } catch (error) {

@@ -22,8 +22,6 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
     const dispatch = useAppDispatch()
     const { modules, isMutation } = useAppSelector(selector => selector.menu)
     const { loading, module } = useGetModule(moduleId)
-
-
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
     }
@@ -74,23 +72,36 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
         if (module?.children && module.children.length > 0) setHaveChildrens(true)
     }, [])
 
+    useEffect(() => {
+        if (!!module) {
+            form.setFieldValue('nameMenu',module.label)
+            form.setFieldValue('pathMenu',module.path)
+            
+        };
+    }, [module])
+    
+console.log('isEdit',isEdit)
     return (
         <>
             <Fragment>
                 <Row justify='center' wrap gutter={[8, 8]}>
                     <Col span={16}>
                         <Form form={form} onFinish={onSubmit} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-                            <Form.Item initialValue={isEdit ? module.label : ''} label='Nombre' name={'nameMenu'} rules={[{ required: true, message: 'El nombre del menu es requerido' }]}>
+                            <Form.Item  label='Nombre' name={'nameMenu'} rules={[{ required: true, message: 'El nombre del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
                             <Form.Item initialValue={isEdit ? module.path : ''} label='Path' name={'pathMenu'} rules={[{ required: true, message: 'El path del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item label='Tiene sub menu'>
-                                <Checkbox onChange={onChange} />
-                            </Form.Item>
                             {
-                                haveChildrens && subMenus.map((item, index) => {
+                                !isEdit && (
+                                    <Form.Item label='Tiene sub menu' name='haveSubmenus'>
+                                        <Checkbox onChange={onChange} />
+                                    </Form.Item>
+                                )
+                            }
+                            {
+                                (haveChildrens && !isEdit) && subMenus.map((item, index) => {
                                     return (
                                         <div key={index}>
                                             <Row justify='center' wrap gutter={[8, 8]} key={item}>
@@ -112,7 +123,7 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
                                     )
                                 })
                             }
-                            {haveChildrens && (
+                            {(haveChildrens && !isEdit) && (
                                 <Row justify={'end'} gutter={[8, 8]}>
                                     <Col>
                                         <Button icon={<PlusCircleOutlined />} type='dashed' onClick={onAddSubMenu}>Agregar submenu</Button>
