@@ -10,7 +10,7 @@ const MenuComponent = () => {
 	const { isLoading, modules } = useAppSelector(selector => selector.menu);
 	const navigate = useNavigate();
 
-
+console.log('menuList',menuList)
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
@@ -32,11 +32,12 @@ const MenuComponent = () => {
 			style={{ height: '100%', borderRight: 0, background: colorBgContainer }}
 			items={menuList.map((module, index) => {
 				const key = String(index + 1);
+				let iconeModule:any
 				let newModule: any = {
 					key: `module${key}`,
 					label: module.label,
 					// @ts-ignore
-					icon: React.createElement(IconsAntDesing[module.icon]),
+					icon: React.createElement(IconsAntDesing[module.icon] ??IconsAntDesing.UnorderedListOutlined),
 				};
 				if (module.children.length > 0) {
 					newModule.children = module.children.map((children, indexChildren) => {

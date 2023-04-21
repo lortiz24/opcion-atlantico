@@ -1,35 +1,44 @@
-import { Route, Routes } from "react-router-dom"
-import { PrivateRoute } from "./PrivateRoute"
-import { PublicRoute } from "./PublicRoute"
-import EventRouter from "../features/eventModule/EventRouter"
-import ModoulesRouter from "../features/configuration-system/modules/ModulesRouter"
-import EventView from "../features/eventModule/EventView"
-import LoginPages from "../auth/pages/LoginPages"
-
-
+import { Route, Routes } from 'react-router-dom';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
+import EventRouter from '../features/eventModule/EventRouter';
+import ModoulesRouter from '../features/configuration-system/modules/ModulesRouter';
+import EventView from '../features/eventModule/EventView';
+import LoginPages from '../auth/pages/LoginPages';
+import MainLayout from '../layouts/MainLayouts';
 
 export const AppRouter = () => {
-  return (
-    <>
-      <Routes>
-        <Route path="/login" element={<LoginPages />} />
-        <Route path="/events/*" element={<EventView />} />
-        <Route path="/configuration/*" element={<ModoulesRouter />} />
+	return (
+		<>
+			<Routes>
+				<Route path='/login' element={<LoginPages />} />
+				<Route
+					path='/*'
+					element={
+						<MainLayout>
+							<PrivateRoute>
+								<Route
+									path='/events/*'
+									element={
+										<PrivateRoute>
+											<EventView />
+										</PrivateRoute>
+									}
+								/>
 
-        {/* <Route
-          path="login"
-          element={<PublicRoute>
-            <LoginPages />
-          </PublicRoute>} />
-
-        <Route
-          path="/*"
-          element={
-            <PrivateRoute>
-              <HeroesRoutes />
-            </PrivateRoute>} /> */}
-
-      </Routes>
-    </>
-  )
-}
+								<Route
+									path='/configuration/*'
+									element={
+										<PrivateRoute>
+											<ModoulesRouter />
+										</PrivateRoute>
+									}
+								/>
+							</PrivateRoute>
+						</MainLayout>
+					}
+				/>
+			</Routes>
+		</>
+	);
+};
