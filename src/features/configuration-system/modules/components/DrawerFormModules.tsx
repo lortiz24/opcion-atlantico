@@ -1,11 +1,6 @@
-import { PlusCircleFilled } from '@ant-design/icons';
+import React from 'react'
 import { Button, Drawer, Space } from 'antd';
-import React, { useState } from 'react'
 import FormModules from './FormModules';
-import { IModules } from '../../../../interfaces/modules-interface';
-import useListeningModule from '../hooks/useListeningModule';
-import useGetModule from '../hooks/useGetModule';
-
 
 interface IDrawerFormModulesProps {
     onClose: () => void;
@@ -17,7 +12,6 @@ interface IDrawerFormModulesProps {
 
 
 const DrawerFormModules = ({ onClose, open, showDrawer, isEdit, moduleId }: IDrawerFormModulesProps) => {
-    const { loading, module } = useGetModule(moduleId)
 
     return (
         <>
@@ -36,7 +30,7 @@ const DrawerFormModules = ({ onClose, open, showDrawer, isEdit, moduleId }: IDra
                     </Space>
                 }
             >
-                <FormModules isEdit={isEdit} moduleId={moduleId} />
+                <FormModules isEdit={isEdit} moduleId={moduleId} onClose={onClose}/>
             </Drawer>
 
         </>

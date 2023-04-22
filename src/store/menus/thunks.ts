@@ -19,7 +19,7 @@ export const getModules = (): ThunkResult<void> => {
     };
 };
 
-export const createModule = (newMenu: Omit<IModules, 'id'>): ThunkResult<void> => {
+export const createModule = (newMenu: Omit<IModules, 'id'>, call?: () => void): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
@@ -30,10 +30,12 @@ export const createModule = (newMenu: Omit<IModules, 'id'>): ThunkResult<void> =
             dispatch(stopMutation());
             DispatchMessageService({ action: 'show', type: "error", msj: 'No se pudo crear el modulo' })
             console.error("Error getting documents: ", error);
+        } finally {
+            if (call) call()
         }
     };
 };
-export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>): ThunkResult<void> => {
+export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>, call?: () => void): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
@@ -44,6 +46,8 @@ export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>): Thu
             dispatch(stopMutation());
             DispatchMessageService({ action: 'show', type: "error", msj: 'No se actualizar crear el modulo' })
             console.error("Error getting documents: ", error);
+        } finally {
+            if (call) call()
         }
     };
 };

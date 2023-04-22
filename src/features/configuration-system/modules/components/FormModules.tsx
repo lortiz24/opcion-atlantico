@@ -14,9 +14,10 @@ import * as IconsAntDesign from '@ant-design/icons';
 interface IFormModulesProps extends FormProps {
     isEdit: boolean
     moduleId: string
+    onClose: () => void
 }
 //todo: termianr el formulario de edicion
-const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
+const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
     //estados
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [cantSubMenus, setCantSubMenus] = useState(1)
@@ -61,8 +62,10 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
             icon: values.icon ?? '',
             children: childrens
         }
-        if (isEdit) return dispatch(updateModule(moduleId, newModules))
-        dispatch(createModule(newModules))
+        if (isEdit) {
+            return dispatch(updateModule(moduleId, newModules, onClose))
+        }
+        dispatch(createModule(newModules, onClose))
     }
 
     const onAddSubMenu = () => {
