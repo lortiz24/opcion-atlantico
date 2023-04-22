@@ -9,10 +9,9 @@ export const FeatureRoutes = () => {
 		<>
 			<MainLayout>
 				<Routes>
-					<Route path='/' element={<EventView />} />
 					<Route path='/events/*' element={<EventView />} />
 					<Route path='/configuration/*' element={<ConfigurationRouter />} />
-					<Route path='/*' element={<Navigate to='/' />} />
+					<Route path='/*' element={<Navigate to='/events' />} />
 				</Routes>
 			</MainLayout>
 		</>
