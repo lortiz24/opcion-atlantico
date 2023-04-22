@@ -10,7 +10,6 @@ const MenuComponent = () => {
 	const { isLoading, modules } = useAppSelector(selector => selector.menu);
 	const navigate = useNavigate();
 
-console.log('menuList',menuList)
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
