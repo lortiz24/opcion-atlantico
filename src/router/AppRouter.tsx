@@ -8,6 +8,7 @@ import LoadingComponent from '../components/loading/LoadingComponent';
 export const AppRouter = () => {
 	const status = useCheckAuth();
 	if (status === 'checking') {
+		console.log('Recarga')
 		return <LoadingComponent isLoading={status === 'checking'} />
 	}
 	return (
