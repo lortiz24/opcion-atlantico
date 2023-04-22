@@ -12,6 +12,7 @@ import LoadingComponent from '../components/loading/LoadingComponent';
 import useGetStatusConection from '../hooks/useGetStatusConection';
 import { setStatusConection } from '../store/status-conection/statusConectionSlice';
 import MenuComponent from '../components/menu/MenuComponent';
+import { startLogout } from '../store/auth';
 const { Header, Content, Sider } = Layout;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -31,7 +32,9 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		dispatch(getModules());
 	}, []);
 
-
+	const onLogout = () => {
+		dispatch(startLogout());
+	}
 	return (
 		<>
 			{isLoading ? (
@@ -70,7 +73,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 										)}
 									</Col>
 									<Col>
-										<Button type='primary'>Iniciar sesión</Button>
+										<Button type='primary' onClick={onLogout}>Cerrar sesion</Button>
 									</Col>
 								</Row>
 							</Header>

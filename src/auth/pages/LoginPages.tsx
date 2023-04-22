@@ -14,7 +14,6 @@ const LoginPages = () => {
   const { status } = useAppSelector(selector => selector.auth)
   const navigate = useNavigate()
 
-
   if (status === 'checking') return <LoadingComponent isLoading={status === 'checking'} />
   return (
     <div className="login-page-container">
@@ -29,7 +28,6 @@ const LoginPages = () => {
               name="login-form"
               initialValues={{ remember: true }}
               onFinish={(values) => dispatch(startLoginWithEmailPassword({ email: values.email, password: values.password }))}
-              onFinishFailed={() => { }}
             >
               <Form.Item
                 name="email"

@@ -1,47 +1,20 @@
-import { Route, Routes } from 'react-router-dom';
-import { PrivateRoute } from './PrivateRoute';
-import { PublicRoute } from './PublicRoute';
-import EventRouter from '../features/eventModule/EventRouter';
-import ModoulesRouter from '../features/configuration-system/modules/ModulesRouter';
-import EventView from '../features/eventModule/EventView';
-import LoginPages from '../auth/pages/LoginPages';
-import MainLayout from '../layouts/MainLayouts';
-import RegisterPage from '../auth/pages/RegisterPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { useAppSelector } from '../store/store';
+import { AuthRoutes } from '../auth/routes/AuthRoutes';
+import { FeatureRoutes } from '../features/FeatureRoutes';
 
 export const AppRouter = () => {
+	const { status } = useAppSelector(selector => selector.auth)
+	console.log('status',status)
 	return (
 		<>
 			<Routes>
-				<Route path='/login' element={<LoginPages />} />
-				<Route path='/register' element={<RegisterPage />} />
-				<Route
-					path='/*'
-					element={
-						<MainLayout>
-							<PrivateRoute>
-								<Routes>
-									<Route
-										path='/events/*'
-										element={
-											<PrivateRoute>
-												<EventView />
-											</PrivateRoute>
-										}
-									/>
-
-									<Route
-										path='/configuration/*'
-										element={
-											<PrivateRoute>
-												<ModoulesRouter />
-											</PrivateRoute>
-										}
-									/>
-								</Routes>
-							</PrivateRoute>
-						</MainLayout>
-					}
-				/>
+				{
+					(status === 'authenticated')
+						? <Route path="/*" element={<FeatureRoutes />} />
+						: <Route path="/auth/*" element={<AuthRoutes />} />
+				}
+				<Route path='/*' element={<Navigate to='/auth/login' />} />
 			</Routes>
 		</>
 	);
