@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Form, Input, Button, Card, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./css/Login-css.css";
@@ -14,7 +14,10 @@ const LoginPages = () => {
   const { status } = useAppSelector(selector => selector.auth)
   const navigate = useNavigate()
 
-  if (status === 'checking') return <LoadingComponent isLoading={status === 'checking'} />
+  // if (status === 'checking') return <LoadingComponent isLoading={status === 'checking'} />
+
+  const isAuthenticating = useMemo(() => status === 'checking', [status]);
+
   return (
     <div className="login-page-container">
       <div className="container-left">
@@ -48,7 +51,7 @@ const LoginPages = () => {
               <Form.Item>
                 <Row justify={'center'} gutter={[8, 8]}>
                   <Col>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Button type="primary" disabled={isAuthenticating} htmlType="submit" className="login-form-button">
                       Iniciar sesión
                     </Button>
                   </Col>

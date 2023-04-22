@@ -2,10 +2,14 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAppSelector } from '../store/store';
 import { AuthRoutes } from '../auth/routes/AuthRoutes';
 import { FeatureRoutes } from '../features/FeatureRoutes';
+import { useCheckAuth } from '../hooks/useCheckAuth';
+import LoadingComponent from '../components/loading/LoadingComponent';
 
 export const AppRouter = () => {
-	const { status } = useAppSelector(selector => selector.auth)
-	console.log('status',status)
+	const status = useCheckAuth();
+	if (status === 'checking') {
+		return <LoadingComponent isLoading={status === 'checking'} />
+	}
 	return (
 		<>
 			<Routes>

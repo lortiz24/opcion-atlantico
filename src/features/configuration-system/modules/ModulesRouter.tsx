@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import ModulesView from './ModulesView'
 
-const ModoulesRouter = () => {
+const ConfigurationRouter = () => {
     return (
         <Routes>
             <Route path="/modules" element={<ModulesView />} />
@@ -10,4 +10,4 @@ const ModoulesRouter = () => {
     )
 }
 
-export default ModoulesRouter
+export default ConfigurationRouter

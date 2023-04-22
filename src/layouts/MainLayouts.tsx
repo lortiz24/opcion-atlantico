@@ -7,7 +7,6 @@ import { LayoutCss } from './MainLayout.style';
 import { getModules } from '../store/menus/thunks';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import InternetConnectionAlert from '../components/internet-conection-alert/InternetConectionAlert';
-import { useNavigate } from 'react-router-dom';
 import LoadingComponent from '../components/loading/LoadingComponent';
 import useGetStatusConection from '../hooks/useGetStatusConection';
 import { setStatusConection } from '../store/status-conection/statusConectionSlice';
