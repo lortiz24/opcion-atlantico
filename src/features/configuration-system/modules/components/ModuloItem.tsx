@@ -37,49 +37,55 @@ const columns: ColumnsType<DataType> = [
 const ModuloItem = ({ onCancel, onOk, moduleId, open }: IModuloItemProps) => {
     const { loading, module } = useListeningModule(moduleId)
 
-    const onDeleteSubMenu = (record: DataType) => {
+    const onUpdateSubMenu = (record: DataType, action: 'active' | 'inactive') => {
         const newModule = { ...module }
-        newModule.children = newModule.children?.filter(submenu => submenu.label !== record.name)
+        newModule.children = newModule.children?.map(submenu => {
+            if (submenu.label === record.name) {
+                return { ...submenu, status: action === 'inactive' ? 'not-avalible' : 'avalible' } as IChildrensModules
+            }
+            return submenu
+        })
         updateMenu(moduleId, newModule)
     }
     return (
         <Modal open={open} onCancel={onCancel} onOk={onOk} destroyOnClose>
-            <Table loading={loading} columns={[...columns, {
-                title: 'Acciones',
-                key: 'action',
-                render: (_, record) => (
-                    <Space size="middle">
-                        <Button icon={<EditOutlined />}></Button>
-                        {
-                            record.status === StatusToRender.avalible ? (
-                                <Popconfirm
-                                    placement="topRight"
-                                    title={'Inactivar modulo'}
-                                    description={'Esta seguro que desea inactivar el modulo'}
-                                    onConfirm={() => onDeleteSubMenu(record)}
-                                    okText="Si"
-                                    cancelText="No"
-                                >
-                                    <Button icon={<DeleteOutlined />}></Button>
-                                </Popconfirm>
-                            ) : (
-                                <Popconfirm
-                                    placement="topRight"
-                                    title={'Activar modulo'}
-                                    description={'Esta seguro que desea activar el modulo'}
-                                    // onConfirm={() => onactiveModule(record)}
-                                    okText="Si"
-                                    cancelText="No"
-                                >
+            <Table loading={loading}
+                dataSource={module.children?.map(module => ({ key: module.label + module.path, name: module.label, path: `/${module.path}`, status: StatusToRender[module.status] })) as DataType[]}
+                columns={[...columns, {
+                    title: 'Acciones',
+                    key: 'action',
+                    render: (_, record) => (
+                        <Space size="middle">
+                            {
+                                record.status === StatusToRender.avalible ? (
+                                    <Popconfirm
+                                        placement="topRight"
+                                        title={'Inactivar modulo'}
+                                        description={'Esta seguro que desea inactivar el submodulo'}
+                                        onConfirm={() => onUpdateSubMenu(record, 'inactive')}
+                                        okText="Si"
+                                        cancelText="No"
+                                    >
+                                        <Button icon={<DeleteOutlined />}></Button>
+                                    </Popconfirm>
+                                ) : (
+                                    <Popconfirm
+                                        placement="topRight"
+                                        title={'Activar modulo'}
+                                        description={'Esta seguro que desea activar el submodulo'}
+                                        onConfirm={() => onUpdateSubMenu(record, 'active')}
+                                        okText="Si"
+                                        cancelText="No"
+                                    >
+                                        <Button icon={<CheckOutlined />}></Button>
+                                    </Popconfirm>
+                                )
+                            }
 
-                                    <Button icon={<CheckOutlined />}></Button>
-                                </Popconfirm>
-                            )
-                        }
-
-                    </Space>
-                ),
-            }]} dataSource={module.children?.map(module => ({ key: module.label + module.path, name: module.label, path: `/${module.path}`, status: StatusToRender[module.status] })) as DataType[]} />
+                        </Space>
+                    ),
+                }]}
+            />
         </Modal>
     )
 }

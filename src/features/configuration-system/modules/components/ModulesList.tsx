@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Popconfirm, Space, Table, Tag } from 'antd'
+import { Button, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 import { useAppDispatch } from '../../../../store/store';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import ModuloItem from './ModuloItem';
 import useListeningModules from '../../../../hooks/useListeningModules';
 import FormModules from './FormModules';
 import { IModules } from '../../../../interfaces/modules-interface';
+import { openEditionMode } from '../../../../store/form-modules/formModulesSlices';
 
 interface DataType {
     key: string;
@@ -46,11 +47,7 @@ const columns: ColumnsType<DataType> = [
     },
 ];
 
-interface IModulesListProps {
-    onSetIsEdit: (moduleId: string) => void
-    setModuleId: React.Dispatch<React.SetStateAction<string>>
-}
-const ModulesList = ({ onSetIsEdit, setModuleId }: IModulesListProps) => {
+const ModulesList = () => {
     const { loading, modules } = useListeningModules()
     const dispatch = useAppDispatch()
     const [showSubmodules, setShowSubmodules] = useState(false)
@@ -83,32 +80,50 @@ const ModulesList = ({ onSetIsEdit, setModuleId }: IModulesListProps) => {
                     key: 'action',
                     render: (_, record) => (
                         <Space size="middle">
-                            {record.subMenus ? <Button icon={<EyeOutlined />} onClick={() => onShowSubmodules(record.key)}></Button> : <Button icon={<EyeInvisibleOutlined />} disabled></Button>}
-                            <Button icon={<EditOutlined />} onClick={() => onSetIsEdit(record.key)}></Button>
+                            {record.subMenus ?
+                                <>
+                                    <Tooltip placement="topLeft" title={'Mostrar submenus'} >
+                                        <Button icon={<EyeOutlined />} onClick={() => onShowSubmodules(record.key)}></Button>
+                                    </Tooltip>
+                                </>
+                                :
+                                <>
+                                    <Tooltip placement="topLeft" title={'No tiene submenus'} >
+                                        <Button icon={<EyeInvisibleOutlined />} disabled></Button>
+                                    </Tooltip>
+                                </>}
+                            <Tooltip placement="topLeft" title={'Editar el menu'} >
+                                <Button icon={<EditOutlined />} onClick={() => dispatch(openEditionMode({ moduleID: record.key }))}></Button>
+                            </Tooltip>
                             {
                                 record.status === StatusToRender.avalible ? (
-                                    <Popconfirm
-                                        placement="topRight"
-                                        title={'Inactivar modulo'}
-                                        description={'Esta seguro que desea inactivar el modulo'}
-                                        onConfirm={() => onInactiveModule(record)}
-                                        okText="Si"
-                                        cancelText="No"
-                                    >
+                                    <Tooltip placement="topLeft" title={'Desactivar el modulo'} >
+                                        <Popconfirm
+                                            placement="topRight"
+                                            title={'Inactivar modulo'}
+                                            description={'Esta seguro que desea inactivar el modulo'}
+                                            onConfirm={() => onInactiveModule(record)}
+                                            okText="Si"
+                                            cancelText="No"
+                                        >
 
-                                        <Button icon={<DeleteOutlined />}></Button>
-                                    </Popconfirm>
+                                            <Button icon={<DeleteOutlined />}></Button>
+                                        </Popconfirm>
+                                    </Tooltip>
                                 ) : (
-                                    <Popconfirm
-                                        placement="topRight"
-                                        title={'Activar modulo'}
-                                        description={'Esta seguro que desea activar el modulo'}
-                                        onConfirm={() => onactiveModule(record)}
-                                        okText="Si"
-                                        cancelText="No"
-                                    >
-                                        <Button icon={<CheckOutlined />}></Button>
-                                    </Popconfirm>
+                                    <Tooltip placement="topLeft" title={'Activar el modulo'} >
+                                        <Popconfirm
+                                            placement="topRight"
+                                            title={'Activar modulo'}
+                                            description={'Esta seguro que desea activar el modulo'}
+                                            onConfirm={() => onactiveModule(record)}
+                                            okText="Si"
+                                            cancelText="No"
+                                        >
+                                            <Button icon={<CheckOutlined />}></Button>
+                                        </Popconfirm>
+                                    </Tooltip>
+
                                 )
                             }
 

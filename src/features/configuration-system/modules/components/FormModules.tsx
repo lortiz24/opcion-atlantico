@@ -6,30 +6,27 @@ import { IChildrensModules, IModules } from '../../../../interfaces/modules-inte
 import { useForm } from 'antd/es/form/Form'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { createModule, updateModule } from '../../../../store/menus/thunks'
-import { FormProps } from 'react-router-dom'
 import useGetModule from '../hooks/useGetModule'
 import LoadingComponent from '../../../../components/loading/LoadingComponent';
 import * as IconsAntDesign from '@ant-design/icons';
 import useGetIconStringList from '../hooks/useGetIconStringList'
 
-interface IFormModulesProps extends FormProps {
-    isEdit: boolean
-    moduleId: string
-    onClose: () => void
-}
-//todo: termianr el formulario de edicion
-const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
+//todo: cambiar al formmulario dinamico de ant desing
+const FormModules = () => {
     //estados
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [cantSubMenus, setCantSubMenus] = useState(1)
     const [subMenus, setSubMenus] = useState<number[]>([1])
     //custom Hooks
     const { iconListString } = useGetIconStringList()
+    //store
+    const { isEdit, moduleID } = useAppSelector(selector => selector.formModule)
     //herramientas
     const [form] = useForm();
     const { isLoading, modules, isMutation } = useAppSelector(selector => selector.menu)
-    const { module, loading: loadingEditModule } = useGetModule(moduleId)
+    const { module, loading: loadingEditModule } = useGetModule(moduleID)
     const dispatch = useAppDispatch()
+
     //metodos
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
@@ -38,7 +35,6 @@ const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
     const filterOption = (inputValue: string, option?: any) => {
         return option.value.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0;
     }
-
     const onSubmit = (values: any) => {
         const childrens: any[] = []
         if (haveChildrens) {
@@ -65,9 +61,9 @@ const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
             children: childrens
         }
         if (isEdit) {
-            return dispatch(updateModule(moduleId, newModules, onClose))
+            return dispatch(updateModule(moduleID, newModules))
         }
-        dispatch(createModule(newModules, onClose))
+        dispatch(createModule(newModules))
     }
 
     const onAddSubMenu = () => {
@@ -96,7 +92,9 @@ const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
                 setHaveChildrens(true)
                 setCantSubMenus(module.children.length + 1)
                 module.children.forEach((item, index) => {
-                    if (index > 1) setSubMenus(current => [...current, index + 1])
+                    if (index > 0) {
+                        setSubMenus(current => [...current, index + 1])
+                    }
                     form.setFieldValue(`nameSubMenu${index + 1}`, item.label)
                     form.setFieldValue(`pathSubMenu${index + 1}`, item.path)
                 })
@@ -136,8 +134,6 @@ const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
                             <Form.Item label='Tiene sub menu' name='haveSubmenus'>
                                 <Checkbox onChange={onChange} checked={haveChildrens} />
                             </Form.Item>
-
-
                             {
                                 haveChildrens && subMenus.map((item, index) => {
                                     return (

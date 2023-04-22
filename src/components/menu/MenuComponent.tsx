@@ -7,7 +7,7 @@ import * as IconsAntDesing from '@ant-design/icons';
 
 const MenuComponent = () => {
 	const [menuList, setMenuList] = useState<IModules[]>([]);
-	const { isLoading, modules } = useAppSelector(selector => selector.menu);
+	const { modules } = useAppSelector(selector => selector.menu);
 	const navigate = useNavigate();
 
 	const {
@@ -31,12 +31,12 @@ const MenuComponent = () => {
 			style={{ height: '100%', borderRight: 0, background: colorBgContainer }}
 			items={menuList.map((module, index) => {
 				const key = String(index + 1);
-				let iconeModule:any
+				let iconeModule: any
 				let newModule: any = {
 					key: `module${key}`,
 					label: module.label,
 					// @ts-ignore
-					icon: React.createElement(IconsAntDesing[module.icon] ??IconsAntDesing.UnorderedListOutlined),
+					icon: React.createElement(IconsAntDesing[module.icon] ?? IconsAntDesing.UnorderedListOutlined),
 				};
 				if (module.children.length > 0) {
 					newModule.children = module.children.map((children, indexChildren) => {

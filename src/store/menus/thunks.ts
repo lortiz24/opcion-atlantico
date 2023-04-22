@@ -1,9 +1,10 @@
 import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
-import { startLoading, setModules, startMutation, stopMutation, stopLoading } from "./menuSlice";
-import { activeMenu, createMenus, deleteMenu, getMenus, inactiveMenu, updateMenu } from "../../firebase/menu/menu-services";
+import { startLoading, setModules, startMutation, stopMutation } from "./menuSlice";
+import { activeMenu, createMenus, deleteMenu, getMenusToSlice, inactiveMenu, updateMenu } from "../../firebase/menu/menu-services";
 import { IModules } from "../../interfaces/modules-interface";
 import { DispatchMessageService } from "../../components/message-response/DispatchMessageService";
+import { closeDrawer, closeEditionMode } from "../form-modules/formModulesSlices";
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 
@@ -11,7 +12,7 @@ export const getModules = (): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startLoading());
         try {
-            const modules = await getMenus();
+            const modules = await getMenusToSlice();
             dispatch(setModules({ modules }));
         } catch (error) {
             console.error("Error getting documents: ", error);
@@ -31,11 +32,11 @@ export const createModule = (newMenu: Omit<IModules, 'id'>, call?: () => void): 
             DispatchMessageService({ action: 'show', type: "error", msj: 'No se pudo crear el modulo' })
             console.error("Error getting documents: ", error);
         } finally {
-            if (call) call()
+            dispatch(closeDrawer())
         }
     };
 };
-export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>, call?: () => void): ThunkResult<void> => {
+export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
@@ -47,7 +48,7 @@ export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>, call
             DispatchMessageService({ action: 'show', type: "error", msj: 'No se actualizar crear el modulo' })
             console.error("Error getting documents: ", error);
         } finally {
-            if (call) call()
+            dispatch(closeEditionMode())
         }
     };
 };

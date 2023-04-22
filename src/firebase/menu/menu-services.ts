@@ -6,6 +6,26 @@ interface IConditionsMenu {
         isAvalible?: StatusMenuItem
     }
 }
+export const getMenusToSlice = async (conditions?: IConditionsMenu) => {
+    try {
+        let queryData
+        queryData = query<Omit<IModules, 'id'>>(modulesCollectionRef, orderBy("order", "asc"));
+        const querySnapshot = await getDocs<Omit<IModules, 'id'>>(queryData);
+        let modules: IModules[] = []
+        querySnapshot.forEach((doc) => {
+            const data: Omit<IModules, 'id'> = doc.data();
+            const childrens = data.children.filter((child) => child.status === "avalible")
+            modules.push({ id: doc.id, ...data,children:childrens })
+        });
+        if (conditions?.status?.isAvalible) {
+            modules = modules.filter((module) => module.status === conditions?.status?.isAvalible);
+        }
+        return modules
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+}
 export const getMenus = async (conditions?: IConditionsMenu) => {
     try {
         let queryData

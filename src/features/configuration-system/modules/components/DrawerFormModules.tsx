@@ -1,36 +1,27 @@
 import React from 'react'
 import { Button, Drawer, Space } from 'antd';
 import FormModules from './FormModules';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { closeDrawer, closeEditionMode } from '../../../../store/form-modules/formModulesSlices';
 
-interface IDrawerFormModulesProps {
-    onClose: () => void;
-    open: boolean;
-    showDrawer: () => void;
-    isEdit: boolean
-    moduleId: string
-}
-
-
-const DrawerFormModules = ({ onClose, open, showDrawer, isEdit, moduleId }: IDrawerFormModulesProps) => {
-
+const DrawerFormModules = () => {
+    const { isDrawerOpen, isEdit } = useAppSelector(select => select.formModule)
+    const dispatch = useAppDispatch()
     return (
         <>
             <Drawer
-                title="Drawer with extra actions"
+                title={isEdit ? 'Edicion de modulo' : 'Creacion de modulo'}
                 placement={'right'}
                 width={500}
-                onClose={onClose}
-                open={open}
+                onClose={() => dispatch(closeEditionMode())}
+                open={isDrawerOpen}
                 extra={
                     <Space>
-                        <Button onClick={onClose}>Cancelar</Button>
-                        <Button type="primary" onClick={onClose}>
-                            Ok
-                        </Button>
+                        <Button onClick={() => dispatch(closeDrawer())}>Cancelar</Button>
                     </Space>
                 }
             >
-                <FormModules isEdit={isEdit} moduleId={moduleId} onClose={onClose}/>
+                <FormModules />
             </Drawer>
 
         </>
