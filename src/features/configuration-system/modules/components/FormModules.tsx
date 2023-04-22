@@ -1,5 +1,5 @@
-import { CloseOutlined, MinusOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd'
+import { CloseOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Col, Form, Input, Row, Select } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import React, { Fragment, useEffect, useState } from 'react'
 import { IChildrensModules, IModules } from '../../../../interfaces/modules-interface'
@@ -9,6 +9,7 @@ import { createModule, updateModule } from '../../../../store/menus/thunks'
 import { FormProps } from 'react-router-dom'
 import useGetModule from '../hooks/useGetModule'
 import LoadingComponent from '../../../../components/loading/LoadingComponent';
+import * as IconsAntDesign from '@ant-design/icons';
 
 interface IFormModulesProps extends FormProps {
     isEdit: boolean
@@ -20,6 +21,7 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [cantSubMenus, setCantSubMenus] = useState(1)
     const [subMenus, setSubMenus] = useState<number[]>([1])
+    const [iconsList, setIconsList] = useState([] as string[])
     //herramientas
     const [form] = useForm();
     const { isLoading, modules, isMutation } = useAppSelector(selector => selector.menu)
@@ -28,6 +30,10 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
     //metodos
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
+    }
+
+    const filterOption = (inputValue: string, option?: any) => {
+        return option.value.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0;
     }
 
     const onSubmit = (values: any) => {
@@ -50,9 +56,9 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
         const newModules: Omit<IModules, 'id'> = {
             label: values.nameMenu,
             path: values.pathMenu,
-            order: modules.length,
+            order: isEdit ? module.order : modules.length,
             status: 'avalible',
-            icon: "ponselo careverga",
+            icon: values.icon ?? '',
             children: childrens
         }
         if (isEdit) return dispatch(updateModule(moduleId, newModules))
@@ -75,11 +81,12 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
 
     //efectos
     useEffect(() => {
+        setIconsList(Object.keys(IconsAntDesign))
         if (module) {
             form.setFieldValue('nameMenu', module.label)
             form.setFieldValue('pathMenu', module.path)
             form.setFieldValue('haveSubmenus', true)
-
+            form.setFieldValue('icon', module.icon)
             if (module?.children && module.children.length > 0) {
                 form.setFieldValue('haveSubmenus', true)
                 setHaveChildrens(true)
@@ -100,16 +107,31 @@ const FormModules = ({ isEdit, moduleId }: IFormModulesProps) => {
             <Fragment >
                 <Row justify='center' wrap gutter={[8, 8]}>
                     <Col span={16}>
-                        <Form initialValues={{ haveSubmenus: true }} form={form} onFinish={onSubmit} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+                        <Form form={form} onFinish={onSubmit} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
                             <Form.Item label='Nombre' name={'nameMenu'} rules={[{ required: true, message: 'El nombre del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
                             <Form.Item label='Path' name={'pathMenu'} rules={[{ required: true, message: 'El path del menu es requerido' }]}>
                                 <Input />
                             </Form.Item>
-                            {((isEdit && !loadingEditModule) || !isEdit) && <Form.Item label='Tiene sub menu' name='haveSubmenus'>
-                                <Checkbox defaultChecked={haveChildrens} onChange={onChange} />
-                            </Form.Item>}
+                            <Form.Item label='Escoga un icono' name='icon'>
+                                <Select allowClear showSearch filterOption={filterOption} >
+                                    {iconsList.map(item => (
+                                        <Select.Option key={item} value={item}>
+                                            <Row justify='space-between'>
+                                                <Col>{item}</Col>
+                                                {/* @ts-ignore */}
+                                                <Col>{React.createElement(IconsAntDesign[item] ?? IconsAntDesign.UnorderedListOutlined)}</Col>
+                                            </Row>
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item label='Tiene sub menu' name='haveSubmenus'>
+                                <Checkbox onChange={onChange} checked={haveChildrens} />
+                            </Form.Item>
+
+
                             {
                                 haveChildrens && subMenus.map((item, index) => {
                                     return (

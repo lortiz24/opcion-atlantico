@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Popconfirm, Space, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 import { useAppDispatch } from '../../../../store/store';
-import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, EditOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { activeModule, inactiveModule } from '../../../../store/menus/thunks';
 import { StatusToRender } from '../utils/status-render';
 import { StatusToRenderValues } from '../interfaces/form-modules';
@@ -83,7 +83,7 @@ const ModulesList = ({ onSetIsEdit, setModuleId }: IModulesListProps) => {
                     key: 'action',
                     render: (_, record) => (
                         <Space size="middle">
-                            {record.subMenus && <Button icon={<EyeOutlined />} onClick={() => onShowSubmodules(record.key)}></Button>}
+                            {record.subMenus ? <Button icon={<EyeOutlined />} onClick={() => onShowSubmodules(record.key)}></Button> : <Button icon={<EyeInvisibleOutlined />} disabled></Button>}
                             <Button icon={<EditOutlined />} onClick={() => onSetIsEdit(record.key)}></Button>
                             {
                                 record.status === StatusToRender.avalible ? (
