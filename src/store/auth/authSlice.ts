@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
 interface AuthState {
-	status: StatusAuth | undefined;
+	status: StatusAuth;
 	uid: string | null;
 	email: string | null;
 	displayName: string | null;
@@ -12,7 +12,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-	status: 'checking', // 'checking', 'not-authenticated', 'authenticated'
+	status: 'not-authenticated', // 'checking', 'not-authenticated', 'authenticated'
 	uid: null,
 	email: null,
 	displayName: null,

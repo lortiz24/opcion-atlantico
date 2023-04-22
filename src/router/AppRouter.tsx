@@ -6,35 +6,39 @@ import ModoulesRouter from '../features/configuration-system/modules/ModulesRout
 import EventView from '../features/eventModule/EventView';
 import LoginPages from '../auth/pages/LoginPages';
 import MainLayout from '../layouts/MainLayouts';
+import RegisterPage from '../auth/pages/RegisterPage';
 
 export const AppRouter = () => {
 	return (
 		<>
 			<Routes>
 				<Route path='/login' element={<LoginPages />} />
+				<Route path='/register' element={<RegisterPage />} />
 				<Route
 					path='/*'
 					element={
 						<MainLayout>
-							<Routes>
-								<Route
-									path='/events/*'
-									element={
-										<PrivateRoute>
-											<EventView />
-										</PrivateRoute>
-									}
-								/>
+							<PrivateRoute>
+								<Routes>
+									<Route
+										path='/events/*'
+										element={
+											<PrivateRoute>
+												<EventView />
+											</PrivateRoute>
+										}
+									/>
 
-								<Route
-									path='/configuration/*'
-									element={
-										<PrivateRoute>
-											<ModoulesRouter />
-										</PrivateRoute>
-									}
-								/>
-							</Routes>
+									<Route
+										path='/configuration/*'
+										element={
+											<PrivateRoute>
+												<ModoulesRouter />
+											</PrivateRoute>
+										}
+									/>
+								</Routes>
+							</PrivateRoute>
 						</MainLayout>
 					}
 				/>
