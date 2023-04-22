@@ -10,6 +10,7 @@ import { FormProps } from 'react-router-dom'
 import useGetModule from '../hooks/useGetModule'
 import LoadingComponent from '../../../../components/loading/LoadingComponent';
 import * as IconsAntDesign from '@ant-design/icons';
+import useGetIconStringList from '../hooks/useGetIconStringList'
 
 interface IFormModulesProps extends FormProps {
     isEdit: boolean
@@ -22,7 +23,8 @@ const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [cantSubMenus, setCantSubMenus] = useState(1)
     const [subMenus, setSubMenus] = useState<number[]>([1])
-    const [iconsList, setIconsList] = useState([] as string[])
+    //custom Hooks
+    const { iconListString } = useGetIconStringList()
     //herramientas
     const [form] = useForm();
     const { isLoading, modules, isMutation } = useAppSelector(selector => selector.menu)
@@ -84,8 +86,7 @@ const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
 
     //efectos
     useEffect(() => {
-        setIconsList(Object.keys(IconsAntDesign))
-        if (module) {
+        if (isEdit && module) {
             form.setFieldValue('nameMenu', module.label)
             form.setFieldValue('pathMenu', module.path)
             form.setFieldValue('haveSubmenus', true)
@@ -119,15 +120,17 @@ const FormModules = ({ isEdit, moduleId, onClose }: IFormModulesProps) => {
                             </Form.Item>
                             <Form.Item label='Escoga un icono' name='icon'>
                                 <Select allowClear showSearch filterOption={filterOption} >
-                                    {iconsList.map(item => (
-                                        <Select.Option key={item} value={item}>
-                                            <Row justify='space-between'>
-                                                <Col>{item}</Col>
-                                                {/* @ts-ignore */}
-                                                <Col>{React.createElement(IconsAntDesign[item] ?? IconsAntDesign.UnorderedListOutlined)}</Col>
-                                            </Row>
-                                        </Select.Option>
-                                    ))}
+                                    {iconListString.map(item => {
+                                        return (
+                                            <Select.Option key={item} value={item}>
+                                                <Row justify='space-between'>
+                                                    <Col>{item}</Col>
+                                                    {/* @ts-ignore */}
+                                                    <Col>{React.createElement(IconsAntDesign[item] ?? IconsAntDesign.UnorderedListOutlined)}</Col>
+                                                </Row>
+                                            </Select.Option>
+                                        )
+                                    })}
                                 </Select>
                             </Form.Item>
                             <Form.Item label='Tiene sub menu' name='haveSubmenus'>
