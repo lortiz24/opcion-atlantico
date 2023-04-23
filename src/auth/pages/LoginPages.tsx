@@ -99,7 +99,7 @@ const LoginPages = () => {
 												<Button
 													type='dashed'
 													className='login-form-button'
-													onClick={() => navigate('/register')}
+													onClick={() => navigate('/auth/register')}
 												>
 													Registrarse
 												</Button>

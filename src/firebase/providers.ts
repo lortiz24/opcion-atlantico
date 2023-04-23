@@ -4,15 +4,15 @@ import { IModules } from "../interfaces/modules-interface";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { IRegisterUserWithEmailPasswordParams } from "../interfaces/auth-interface";
 import { IQrCode } from "../interfaces/events-interfaces";
+import { ILogin } from "../interfaces/firebase-interfaces";
+import { IUserInfo } from "../interfaces/user-interfaces";
+import { createUserInfo } from "./user/user-services";
 
 export const modulesCollectionRef = collection(FirebaseDB, "modules") as CollectionReference<Omit<IModules, 'id'>>;
 export const eventsCollectionRef = collection(FirebaseDB, "events");
 export const qrAttendanceCollectionRef = collection(FirebaseDB, "qr-attendance") as CollectionReference<Omit<IQrCode, 'id'>>;
+export const userInfoCollectionRef = collection(FirebaseDB, "user-info") as CollectionReference<Omit<IUserInfo, 'id'>>;
 
-interface ILogin {
-    email: string;
-    password: string;
-}
 
 export const registerUserWithEmailPassword = async ({ email, password, displayName }: IRegisterUserWithEmailPasswordParams) => {
 
@@ -21,10 +21,10 @@ export const registerUserWithEmailPassword = async ({ email, password, displayNa
         const { uid, photoURL } = resp.user;
 
         await updateProfile(resp.user, { displayName });
-
+        await createUserInfo(uid, { rols: ['user'] })
         return {
             ok: true,
-            uid, photoURL, email, displayName
+            uid, photoURL, email, displayName, userInfo: { rols: ['user'] }
         }
 
     } catch (error: any) {
@@ -54,6 +54,7 @@ export const loginWithEmailPassword = async ({ email, password }: ILogin) => {
 
 export const logoutFirebase = async () => {
     return await FirebaseAuth.signOut();
+
 }
 
 

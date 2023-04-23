@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { login, logout } from '../store/auth';
 import { FirebaseAuth } from '../firebase/ConfigFirebase';
 import { useAppDispatch, useAppSelector } from '../store/store';
+import { getUserInfoById } from '../firebase/user/user-services';
 
 
 
@@ -14,10 +15,11 @@ export const useCheckAuth = () => {
 
     useEffect(() => {
         onAuthStateChanged(FirebaseAuth, async (user) => {
-            if (!user) return dispatch(logout({}));
+            const userInfo = await getUserInfoById(user?.uid ?? '')
+            if (!user || !userInfo.rols) return dispatch(logout({}));
 
             const { uid, email, displayName, photoURL } = user;
-            dispatch(login({ uid, email, displayName, photoURL }));
+            dispatch(login({ uid, email, displayName, photoURL, userInfo }));
         })
     }, []);
 

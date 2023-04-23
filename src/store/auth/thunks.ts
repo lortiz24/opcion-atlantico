@@ -2,6 +2,7 @@ import { loginWithEmailPassword, registerUserWithEmailPassword, logoutFirebase }
 import { checkingCredentials, logout, login } from '.';
 import { AppDispatch } from '../store';
 import { IStartCreatingUserWithEmailPasswordParams, IStartLoginWithEmailPasswordParams } from '../../interfaces/auth-interface';
+import { createUserInfo, getUserInfoById } from '../../firebase/user/user-services';
 
 export const checkingAuthentication = () => {
     return async (dispatch: AppDispatch) => {
@@ -18,7 +19,6 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
 
         const result = await registerUserWithEmailPassword({ email, password, displayName });
         if (!result.ok) return dispatch(logout(result.errorMessage));
-
         dispatch(login(result))
 
     }
@@ -31,9 +31,12 @@ export const startLoginWithEmailPassword = ({ email, password }: IStartLoginWith
         dispatch(checkingCredentials());
 
         const result = await loginWithEmailPassword({ email, password });
-
+        const userInfo = await getUserInfoById(result.uid ?? '')
         if (!result.ok) return dispatch(logout(result));
-        dispatch(login(result));
+
+        if (!userInfo.rols) await createUserInfo(result.uid ?? '', { rols: ['user'] })
+
+        dispatch(login({ ...result, userInfo }));
 
     }
 }

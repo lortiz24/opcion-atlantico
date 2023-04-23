@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IUserInfo, TRoles } from '../../interfaces/user-interfaces';
 
 type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
@@ -9,6 +10,7 @@ interface AuthState {
 	displayName: string | null;
 	photoURL: string | null;
 	errorMessage: any;
+	userInfo: IUserInfo | null
 }
 
 const initialState: AuthState = {
@@ -18,6 +20,8 @@ const initialState: AuthState = {
 	displayName: null,
 	photoURL: null,
 	errorMessage: null,
+	userInfo: null
+
 };
 export const authSlice = createSlice({
 	name: 'auth',
@@ -30,6 +34,7 @@ export const authSlice = createSlice({
 			state.displayName = payload.displayName;
 			state.photoURL = payload.photoURL;
 			state.errorMessage = null;
+			state.userInfo = payload.userInfo;
 		},
 		logout: (state, { payload }) => {
 			state.status = 'not-authenticated';
