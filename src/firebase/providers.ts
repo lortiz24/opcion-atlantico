@@ -1,7 +1,7 @@
 import { collection, CollectionReference, getFirestore } from "firebase/firestore";
 import { FirebaseAuth, FirebaseDB } from "./ConfigFirebase";
 import { IModules } from "../interfaces/modules-interface";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, updateEmail, updatePassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, updateEmail, updatePassword, deleteUser } from "firebase/auth";
 import { IRegisterUserWithEmailPasswordParams } from "../interfaces/auth-interface";
 import { IEvent, IQrCode } from "../interfaces/events-interfaces";
 import { ILogin } from "../interfaces/firebase-interfaces";
@@ -19,9 +19,8 @@ export const registerUserWithEmailPassword = async ({ email, password, displayNa
     try {
         const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
         const { uid, photoURL } = resp.user;
-        console.log('displayName', displayName)
         await updateProfile(resp.user, { displayName });
-        await createUserInfo(uid, { rols: ['user'] })
+        await createUserInfo(uid, { rols: ['user'], displayName, email, photoURL })
         return {
             ok: true,
             uid, photoURL, email, displayName, userInfo: { rols: ['user'] }
@@ -35,15 +34,15 @@ export const registerUserWithEmailPassword = async ({ email, password, displayNa
 }
 
 
-export const loginWithEmailPassword = async ({ email, password }: ILogin) => {
+export const loginWithEmailPassword = async ({ email: emailLogin, password }: ILogin) => {
 
     try {
-        const resp = await signInWithEmailAndPassword(FirebaseAuth, email, password);
-        const { uid, photoURL, displayName } = resp.user;
+        const resp = await signInWithEmailAndPassword(FirebaseAuth, emailLogin, password);
+        const { uid, photoURL, displayName, email } = resp.user;
 
         return {
             ok: true,
-            uid, photoURL, displayName
+            uid, photoURL, displayName, email
         }
 
     } catch (error: any) {
@@ -56,20 +55,23 @@ export const logoutFirebase = async () => {
 
 }
 
-export const updateProfileUser = async (user: Pick<IUser, 'displayName' | 'photoUrl'>) => {
+export const updateProfileUser = async (user: Pick<IUser, 'displayName' | 'photoURL'>) => {
     const userToUpdate = FirebaseAuth.currentUser
     if (!userToUpdate) return null
     await updateProfile(userToUpdate, user);
 }
+
 export const updateEmailUser = async (newEmail: string) => {
     const userToUpdate = FirebaseAuth.currentUser
     if (!userToUpdate) return null
     await updateEmail(userToUpdate, newEmail);
 }
+
 export const updatePasswordUser = async (newPassword: string) => {
     const userToUpdate = FirebaseAuth.currentUser
     if (!userToUpdate) return null
     await updatePassword(userToUpdate, newPassword);
 }
+
 
 

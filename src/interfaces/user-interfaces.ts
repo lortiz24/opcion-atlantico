@@ -2,7 +2,7 @@ import { Timestamp } from "firebase/firestore";
 
 export type TRoles = 'user' | 'admin' | 'developer' | 'guest'
 
-export interface IUserInfo {
+export interface IUserInfo extends Omit<IUser,'password'> {
     id: string;
     rols: TRoles[];
     dateBirth?: Timestamp;
@@ -13,6 +13,6 @@ export interface IUserInfo {
 export interface IUser {
     email: string;
     displayName: string;
-    photoUrl: string;
+    photoURL: string | null;
     password: string;
 }

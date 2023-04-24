@@ -16,7 +16,6 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
     return async (dispatch: AppDispatch) => {
 
         dispatch(checkingCredentials());
-        console.log('displayName',displayName)
         const result = await registerUserWithEmailPassword({ email, password, displayName });
         if (!result.ok) return dispatch(logout(result.errorMessage));
         dispatch(login(result))
@@ -31,13 +30,10 @@ export const startLoginWithEmailPassword = ({ email, password }: IStartLoginWith
         dispatch(checkingCredentials());
 
         const result = await loginWithEmailPassword({ email, password });
+        if (!result.ok && !result.displayName) return dispatch(logout(result));
         const userInfo = await getUserInfoById(result.uid ?? '')
-        if (!result.ok) return dispatch(logout(result));
-
-        if (!userInfo.rols) await createUserInfo(result.uid ?? '', { rols: ['user'] })
 
         dispatch(login({ ...result, userInfo }));
-
     }
 }
 
@@ -49,4 +45,5 @@ export const startLogout = () => {
 
     }
 }
+
 

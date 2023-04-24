@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { useAppSelector } from '../store/store';
 import { AuthRoutes } from '../auth/routes/AuthRoutes';
 import { FeatureRoutes } from '../features/FeatureRoutes';
 import { useCheckAuth } from '../hooks/useCheckAuth';
