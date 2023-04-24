@@ -7,9 +7,7 @@ export const AntDesingToken: Partial<AliasToken> = {
 
 export const AntDesingTheme: ThemeConfig = {
     components: {
-        Layout: {
-            colorBgHeader: '#ffffff',
-        },
+        
     },
     
     token: AntDesingToken

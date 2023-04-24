@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as IconsAntDesing from '@ant-design/icons';
-import { Button, Col, Row } from 'antd';
+import { Avatar, Button, Col, Dropdown, Row, Space, Typography } from 'antd';
 import { Layout, theme } from 'antd';
 import './MainLayout.style.css';
 import { LayoutCss } from './MainLayout.style';
@@ -17,6 +17,7 @@ const { Header, Content, Sider } = Layout;
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { statusConection } = useGetStatusConection();
 	const { isLoading } = useAppSelector(selector => selector.menu);
+	const { displayName, photoURL } = useAppSelector(selector => selector.auth);
 	const [collapsed, setCollapsed] = useState(false);
 	const dispatch = useAppDispatch();
 	const {
@@ -72,7 +73,35 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 										)}
 									</Col>
 									<Col>
-										<Button type='primary' onClick={onLogout}>Cerrar sesion</Button>
+										<Dropdown
+
+											children={
+												<Space >
+													<Avatar src={photoURL ? photoURL : 'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/avatar-defecto.webp?alt=media&token=dc44ebc7-da97-4d93-8a03-c8f62103054e'} /><Typography.Text style={{ color: '#FFFFFF' }}>{displayName}</Typography.Text>
+												</Space>}
+											menu={{
+												items: [{
+													key: '1',
+													label: 'Mi perfil',
+													icon: <IconsAntDesing.UserOutlined />
+												},
+												{
+													key: '2',
+													label: 'Mis eventos',
+													icon: <IconsAntDesing.CalendarOutlined />
+												},
+												{
+													key: '3',
+													label: 'Cerrar sesion',
+													onClick: onLogout,
+													icon: <IconsAntDesing.LogoutOutlined />
+												},
+												]
+											}}
+											placement="bottomCenter"
+											arrow={{ pointAtCenter: true }}
+										/>
+
 									</Col>
 								</Row>
 							</Header>

@@ -16,7 +16,7 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
     return async (dispatch: AppDispatch) => {
 
         dispatch(checkingCredentials());
-
+        console.log('displayName',displayName)
         const result = await registerUserWithEmailPassword({ email, password, displayName });
         if (!result.ok) return dispatch(logout(result.errorMessage));
         dispatch(login(result))

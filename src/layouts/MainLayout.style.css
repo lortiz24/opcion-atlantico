@@ -29,3 +29,10 @@ components-layout-demo-top-side-2 .logo {
   margin: 16px;
   background: rgba(255, 255, 255, 0.3);
 }
+
+
+.custom-header {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+

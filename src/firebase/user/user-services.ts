@@ -6,7 +6,6 @@ export const getUserInfoById = async (userId: string): Promise<IUserInfo> => {
     try {
         const userInfoRef = doc(userInfoCollectionRef, userId);
         const querySnapshot = await getDoc<Omit<IUserInfo, 'id'>>(userInfoRef);
-        console.log(querySnapshot.data())
         return { id: querySnapshot.id, ...querySnapshot.data() } as IUserInfo
     } catch (error) {
         console.log(error)
@@ -17,7 +16,6 @@ export const getUserInfoById = async (userId: string): Promise<IUserInfo> => {
 
 export const createUserInfo = async (userId: string, newUserInfo: Omit<IUserInfo, 'id'>) => {
     try {
-        console.log('Creando',userId)
         const userInfoRef = doc(userInfoCollectionRef, userId);
         await setDoc(userInfoRef, newUserInfo);
     } catch (error) {

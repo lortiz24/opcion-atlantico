@@ -28,7 +28,7 @@ const MenuComponent = () => {
 			mode='inline'
 			defaultSelectedKeys={['1']}
 			defaultOpenKeys={['sub1']}
-			style={{ height: '100%', borderRight: 0, background: colorBgContainer }}
+			style={{ height: '100%', borderRight: 0, }}
 			items={menuList.map((module, index) => {
 				const key = String(index + 1);
 				let iconeModule: any
