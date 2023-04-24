@@ -7,7 +7,6 @@ import LoadingComponent from '../components/loading/LoadingComponent';
 
 export const AppRouter = () => {
 	const status = useCheckAuth();
-	const { uid, userInfo } = useAppSelector(selector => selector.auth)
 	if (status === 'checking') {
 		return <LoadingComponent isLoading={status === 'checking'} />
 	}

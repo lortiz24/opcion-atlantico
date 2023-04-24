@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IModules } from '../interfaces/modules-interface'
-import { listeningModules } from '../firebase/menu/menu-services';
+import { listeningModules } from '../firebase/menu/menu-firebase-services';
 
 const useListeningModules = () => {
 

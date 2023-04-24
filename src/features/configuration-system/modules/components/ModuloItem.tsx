@@ -6,7 +6,7 @@ import { StatusToRenderValues } from '../interfaces/form-modules';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { StatusToRender } from '../utils/status-render';
 import useListeningModule from '../hooks/useListeningModule';
-import { updateMenu } from '../../../../firebase/menu/menu-services';
+import { updateMenu } from '../../../../firebase/menu/menu-firebase-services';
 
 
 interface DataType {

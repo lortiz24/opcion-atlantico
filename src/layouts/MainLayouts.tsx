@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import * as IconsAntDesing from '@ant-design/icons';
-import { Avatar, Button, Col, Dropdown, Row, Space, Typography } from 'antd';
 import { Layout, theme } from 'antd';
 import './MainLayout.style.css';
 import { LayoutCss } from './MainLayout.style';
@@ -11,9 +9,9 @@ import LoadingComponent from '../components/loading/LoadingComponent';
 import useGetStatusConection from '../hooks/useGetStatusConection';
 import { setStatusConection } from '../store/status-conection/statusConectionSlice';
 import MenuComponent from '../components/menu/MenuComponent';
-import { startLogout } from '../store/auth';
 import MenuHeaderComponent from '../components/menu/MenuHeaderComponent';
 import useGetMonitorSize from '../hooks/useGetMonitorSize';
+import './MainLayout.style.css'
 const { Header, Content, Sider } = Layout;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -22,6 +20,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [collapsed, setCollapsed] = useState(false);
 	const dispatch = useAppDispatch();
 	const { isMobile } = useGetMonitorSize()
+	const [scrollPosition, setScrollPosition] = useState(0);
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
@@ -31,7 +30,15 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	}, [statusConection]);
 
 	useEffect(() => {
+		//todo: hacer transparente el header al hacer scroll
+		const handleScroll = () => {
+			setScrollPosition(window.scrollY);
+		};
 		dispatch(getModules());
+		window.addEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -59,17 +66,17 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 						</Sider>
 						<Layout>
 							<Header
-								className='header'
-								style={{ background: '#a40c4c', color: '#FFFFFF' }}
+								className={`header`}
+								style={{ background: '#a40c4c', color: '#FFFFFF', height: '60px' }}
 							>
 								<MenuHeaderComponent collapsed={collapsed} setCollapsed={setCollapsed} />
 							</Header>
 							<Content
 								style={{
-									overflow: 'auto',
+									height: `calc(100vh - ${60}px )`,
+									overflowY: 'auto',
 									padding: 25,
 									margin: 0,
-									minHeight: 0,
 									background: colorBgContainer,
 								}}
 							>

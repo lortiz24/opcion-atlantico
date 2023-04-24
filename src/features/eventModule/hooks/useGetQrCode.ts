@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { listeningQrAttendance } from '../../../firebase/eventos/event-services';
+import { listeningQrAttendance } from '../../../firebase/eventos/event-firebase-services';
 import { IQrCode } from '../../../interfaces/events-interfaces';
 
 const useGetQrCode = (codeQrID: string) => {

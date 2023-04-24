@@ -1,12 +1,12 @@
 import { collection, CollectionReference } from "firebase/firestore";
 import { FirebaseAuth, FirebaseDB } from "./ConfigFirebase";
 import { IModules } from "../interfaces/modules-interface";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, updateEmail, updatePassword } from "firebase/auth";
 import { IRegisterUserWithEmailPasswordParams } from "../interfaces/auth-interface";
 import { IEvent, IQrCode } from "../interfaces/events-interfaces";
 import { ILogin } from "../interfaces/firebase-interfaces";
-import { IUserInfo } from "../interfaces/user-interfaces";
-import { createUserInfo } from "./user/user-services";
+import { IUser, IUserInfo } from "../interfaces/user-interfaces";
+import { createUserInfo } from "./user/user-firebase-services";
 
 export const modulesCollectionRef = collection(FirebaseDB, "modules") as CollectionReference<Omit<IModules, 'id'>>;
 export const eventsCollectionRef = collection(FirebaseDB, "events") as CollectionReference<Omit<IEvent, 'id'>>;
@@ -56,6 +56,21 @@ export const logoutFirebase = async () => {
 
 }
 
+export const updateProfileUser = async (user: Pick<IUser, 'displayName' | 'photoUrl'>) => {
+    const userToUpdate = FirebaseAuth.currentUser
+    if (!userToUpdate) return null
+    await updateProfile(userToUpdate, user);
+}
+export const updateEmailUser = async (newEmail: string) => {
+    const userToUpdate = FirebaseAuth.currentUser
+    if (!userToUpdate) return null
+    await updateEmail(userToUpdate, newEmail);
+}
+export const updatePasswordUser = async (newPassword: string) => {
+    const userToUpdate = FirebaseAuth.currentUser
+    if (!userToUpdate) return null
+    await updatePassword(userToUpdate, newPassword);
+}
 
 
 

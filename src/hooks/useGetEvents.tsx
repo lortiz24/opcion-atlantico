@@ -12,8 +12,8 @@ const listEvents: IEvent[] = [
         title: 'Reunion beca opcion',
         desciption: 'Reunion que se realiza los dias miercoles con el fin de que todos los becados esten al tanto de las nuevas iniciativas del programa, conocer su desempeño en el semestre y compartir un espacio en el que pueda dialogar y tener encuentros que fortalezcan los lasos que unen a cada uno de los miembros',
         place:'Sala de eventos 2',
-        dateStart: Timestamp.fromDate(addTimeToDate(dayjs(Timestamp.now().toDate()),20,'minute').toDate()),
-        dateEnd: Timestamp.fromDate(addTimeToDate(dayjs(Timestamp.now().toDate()),20,'minute').toDate()),
+        dateStart: Timestamp.fromDate(addTimeToDate(dayjs(Timestamp.now().toDate()),1,'minute').toDate()),
+        dateEnd: Timestamp.fromDate(addTimeToDate(dayjs(Timestamp.now().toDate()),2,'minute').toDate()),
         assistants: [
             {
                 id: 'fe6f6efefeefedd',

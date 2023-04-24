@@ -4,7 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { login, logout } from '../store/auth';
 import { FirebaseAuth } from '../firebase/ConfigFirebase';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { getUserInfoById } from '../firebase/user/user-services';
+import { getUserInfoById } from '../firebase/user/user-firebase-services';
 
 
 

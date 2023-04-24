@@ -26,7 +26,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr }: IEventItemProps) => {
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')
     const [messageByState, setMessageByState] = useState('')
     useEffect(() => {
-        console.log(timestampBeforeNow(eventItem.dateStart) && timestampBeforeNow(eventItem.dateEnd))
         if (timestampAfterNow(eventItem.dateStart) && timestampAfterNow(eventItem.dateEnd)) {
             setMessageByState('El evento esta por empezar')
             setstatusResult('info')
@@ -100,8 +99,8 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr }: IEventItemProps) => {
                     </Col>
                     <Col span={24}>
                         <Space wrap>
-                            <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" key="list-vertical-message" />
-                            <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" key="list-vertical-message" />
+                            <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />
+                            <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />
                         </Space>
                     </Col>
                 </Row>

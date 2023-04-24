@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IModules } from '../../../../interfaces/modules-interface';
-import { getModule } from '../../../../firebase/menu/menu-services';
+import { getModule } from '../../../../firebase/menu/menu-firebase-services';
 
 const useGetModule = (moduleId: string) => {
 	const [module, setModule] = useState<IModules>({} as IModules);

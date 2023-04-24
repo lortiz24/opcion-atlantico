@@ -1,11 +1,9 @@
-import { qrAttendanceCollectionRef } from "../providers";
-import { IModules, StatusMenuItem } from "../../interfaces/modules-interface";
-import { query, where, orderBy, limit, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, DocumentSnapshot, } from "firebase/firestore";
+import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
+import { query, where,  addDoc,  deleteDoc, doc,  onSnapshot, } from "firebase/firestore";
 import { IEvent, IQrCode } from "../../interfaces/events-interfaces";
-import { eventsCollectionRef } from "../providers";
 
 
-export const listeningQrAttendance = (codeQrID: string, onSet: (modules: IQrCode) => void) => {
+export const listeningQrAttendanceFirebase = (codeQrID: string, onSet: (modules: IQrCode) => void) => {
     const qrAttendanceDocRef = doc(qrAttendanceCollectionRef, codeQrID);
     const queryData = query<Omit<IQrCode, 'id'>>(qrAttendanceCollectionRef, where('codeQr', '==', codeQrID));
     return onSnapshot(qrAttendanceDocRef, (doc) => {
@@ -21,7 +19,7 @@ export const listeningQrAttendance = (codeQrID: string, onSet: (modules: IQrCode
     }); */
 }
 
-export const createQrAttendance = async (newQrAttendance: Omit<IQrCode, 'id'>) => {
+export const createQrAttendanceFirebase = async (newQrAttendance: Omit<IQrCode, 'id'>) => {
     try {
         const querySnapshot = await addDoc(qrAttendanceCollectionRef, newQrAttendance);
         const newQrAttendanceId = querySnapshot.id;
@@ -31,7 +29,7 @@ export const createQrAttendance = async (newQrAttendance: Omit<IQrCode, 'id'>) =
         throw error;
     }
 }
-export const deleteQrAttendance = async (idQrAttendanceId: string) => {
+export const deleteQrAttendanceFirebase = async (idQrAttendanceId: string) => {
     try {
         const moduleRef = doc(qrAttendanceCollectionRef, idQrAttendanceId);
         await deleteDoc(moduleRef);
@@ -40,7 +38,7 @@ export const deleteQrAttendance = async (idQrAttendanceId: string) => {
         throw error;
     }
 }
-export const createEvent = async (newEvent: Omit<IEvent, 'id'>) => {
+export const createEventFirebase = async (newEvent: Omit<IEvent, 'id'>) => {
     try {
         const querySnapshot = await addDoc(eventsCollectionRef, newEvent);
         const newEventId = querySnapshot.id;

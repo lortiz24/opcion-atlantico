@@ -2,7 +2,7 @@ import { loginWithEmailPassword, registerUserWithEmailPassword, logoutFirebase }
 import { checkingCredentials, logout, login } from '.';
 import { AppDispatch } from '../store';
 import { IStartCreatingUserWithEmailPasswordParams, IStartLoginWithEmailPasswordParams } from '../../interfaces/auth-interface';
-import { createUserInfo, getUserInfoById } from '../../firebase/user/user-services';
+import { createUserInfo, getUserInfoById } from '../../firebase/user/user-firebase-services';
 
 export const checkingAuthentication = () => {
     return async (dispatch: AppDispatch) => {

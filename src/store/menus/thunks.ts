@@ -1,7 +1,7 @@
 import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
 import { startLoading, setModules, startMutation, stopMutation } from "./menuSlice";
-import { activeMenu, createMenus, deleteMenu, getMenusToSlice, inactiveMenu, updateMenu } from "../../firebase/menu/menu-services";
+import { activeMenu, createMenus, deleteMenu, getMenusToSlice, inactiveMenu, updateMenu } from "../../firebase/menu/menu-firebase-services";
 import { IModules } from "../../interfaces/modules-interface";
 import { DispatchMessageService } from "../../components/message-response/DispatchMessageService";
 import { closeDrawer, closeEditionMode } from "../form-modules/formModulesSlices";

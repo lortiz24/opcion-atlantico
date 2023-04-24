@@ -56,7 +56,8 @@ const MenuComponent = () => {
 				}
 				return newModule;
 			})}
-		/>
+		>
+		</Menu>
 	);
 };
 

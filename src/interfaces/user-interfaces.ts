@@ -9,3 +9,10 @@ export interface IUserInfo {
     dateUpdated?: Timestamp;
     dateCreated?: Timestamp;
 }
+
+export interface IUser {
+    email: string;
+    displayName: string;
+    photoUrl: string;
+    password: string;
+}
