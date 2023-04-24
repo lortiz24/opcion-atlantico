@@ -1,17 +1,18 @@
-import { Button, Col, Row, Space, Typography } from 'antd'
+import { Button, Col, Row, Space } from 'antd'
 import React, { useState } from 'react'
-import { LevelTitlesModules } from '../../settings/properties-globals/levels-titles';
 import GenerateQr from './components/GenerateQr';
 import ReadQr from './components/ReadQr';
-import EventList from './events-all/EventList';
+import EventList from './EventList';
 import { PlusCircleFilled } from '@ant-design/icons';
-import { useAppDispatch } from '../../store/store';
-import { openDrawerFormEvent } from '../../store/form-events/formEventFormSlice';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { openDrawerFormEvent } from '../../../store/form-events/formEventSlice';
+import DrawerEventForm from './DrawerEventForm';
 
 const EventView = () => {
     const [openGenerateQR, setOpenGenerateQR] = useState(false)
     const [eventAttendanceId, setEventAttendanceId] = useState('')
     const [isOpenReadQR, setisOpenReadQR] = useState(false)
+    const { isDrawerEventOpen } = useAppSelector(selector => selector.formEvent)
     const dispatch = useAppDispatch()
     const onGenerateQR = (eventId: string) => {
         setOpenGenerateQR(true)
@@ -33,8 +34,9 @@ const EventView = () => {
         <>
             {isOpenReadQR && <ReadQr open={isOpenReadQR} onCancel={onCloseReadQr} onOk={onCloseReadQr} />}
             {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
-            <Typography.Title level={LevelTitlesModules}>Eventos</Typography.Title>
-            <br />
+            {isDrawerEventOpen && (
+                <DrawerEventForm />
+            )}
             <Row>
                 <Col>
                     <Space style={{ marginBottom: 20 }}>

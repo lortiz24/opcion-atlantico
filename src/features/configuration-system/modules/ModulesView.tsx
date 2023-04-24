@@ -1,5 +1,4 @@
 import { Button, Col, Row, Space, Typography } from 'antd';
-import { LevelTitlesModules } from '../../../settings/properties-globals/levels-titles';
 import ModulesList from './components/ModulesList';
 import { PlusCircleFilled } from '@ant-design/icons';
 import DrawerFormModules from './components/DrawerFormModules';
@@ -23,10 +22,6 @@ const ModulesView = () => {
 			{isDrawerOpen && (
 				<DrawerFormModules />
 			)}
-			<Typography.Title level={LevelTitlesModules}>
-				Configuracion de modulos
-			</Typography.Title>
-			<br />
 			<Row>
 				<Col>
 					<Space style={{ marginBottom: 20 }}>

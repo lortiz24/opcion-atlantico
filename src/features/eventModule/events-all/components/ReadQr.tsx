@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 // @ts-ignore: Unreachable code error 
 import * as QrReader from 'react-qr-reader';
 import { CameraOutlined } from '@ant-design/icons';
-import { FacingMode } from '../../../interfaces/events-interfaces';
+import { FacingMode } from '../../../../interfaces/events-interfaces';
 interface IReadQrProps extends ModalProps {
 }
 const ReadQr = ({ onCancel, onOk, open }: IReadQrProps) => {

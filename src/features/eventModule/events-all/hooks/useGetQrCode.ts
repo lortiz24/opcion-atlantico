@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { listeningQrAttendance } from '../../../firebase/eventos/event-firebase-services';
-import { IQrCode } from '../../../interfaces/events-interfaces';
+import { IQrCode } from '../../../../interfaces/events-interfaces';
+import { listeningQrAttendanceFirebase } from '../../../../firebase/eventos/event-firebase-services';
 
 const useGetQrCode = (codeQrID: string) => {
     const [codeQr, setCodeQr] = useState<IQrCode>({} as IQrCode);
@@ -11,7 +11,7 @@ const useGetQrCode = (codeQrID: string) => {
         setLoading(false)
     }
     useEffect(() => {
-        const ubsuscribe = listeningQrAttendance(codeQrID, onSet)
+        const ubsuscribe = listeningQrAttendanceFirebase(codeQrID, onSet)
         return () => {
             ubsuscribe()
         }

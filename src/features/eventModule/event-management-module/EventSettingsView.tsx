@@ -1,9 +1,9 @@
 import React from 'react'
 
-const EventView = () => {
+const EventManagementView = () => {
   return (
     <div>EventView</div>
   )
 }
 
-export default EventView
+export default EventManagementView

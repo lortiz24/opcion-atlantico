@@ -4,7 +4,7 @@ type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
 interface FormEvents {
 	isLoadingFormEvent: boolean;
-	isDrawerOpen: boolean;
+	isDrawerEventOpen: boolean;
 	eventId: string;
 	isEditFormEvent: boolean;
 }
@@ -15,12 +15,12 @@ interface IAction {
 }
 
 const initialState: FormEvents = {
-	isDrawerOpen: false,
+	isDrawerEventOpen: false,
 	isEditFormEvent: false,
 	eventId: '',
 	isLoadingFormEvent: false
 };
-export const formModuleSlice = createSlice({
+export const formEventSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
@@ -37,10 +37,10 @@ export const formModuleSlice = createSlice({
 			state.isEditFormEvent = false
 		},
 		openDrawerFormEvent: (state) => {
-			state.isDrawerOpen = true
+			state.isDrawerEventOpen = true
 		},
-		closeDrawer: (state) => {
-			state.isDrawerOpen = false
+		closeDrawerEvent: (state) => {
+			state.isDrawerEventOpen = false
 			state.isEditFormEvent = false
 			state.eventId = ''
 		},
@@ -48,11 +48,11 @@ export const formModuleSlice = createSlice({
 		openEditionMode: (state, action: IAction) => {
 			if (action?.payload.eventId) state.eventId = action.payload.eventId
 			state.isEditFormEvent = true
-			state.isDrawerOpen = true
+			state.isDrawerEventOpen = true
 
 		},
 		restoreState: (state) => {
-			state.isDrawerOpen = false
+			state.isDrawerEventOpen = false
 			state.isEditFormEvent = false
 			state.isLoadingFormEvent = false
 			state.eventId = ''
@@ -61,4 +61,4 @@ export const formModuleSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { closeDrawer, openDrawerFormEvent, startAction, startEdition, stopAction, stopEdition, openEditionMode, restoreState } = formModuleSlice.actions;
+export const { closeDrawerEvent, openDrawerFormEvent, startAction, startEdition, stopAction, stopEdition, openEditionMode, restoreState } = formEventSlice.actions;

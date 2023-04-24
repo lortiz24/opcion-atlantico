@@ -7,7 +7,6 @@ interface IGenerateQrProps extends ModalProps {
 }
 const GenerateQr = ({ open, eventAttendanceId, onCancel, onOk }: IGenerateQrProps) => {
     const [uuid, setUuid] = useState('');
-    // const { codeQr, loading } = useGetQrCode()
     useEffect(() => {
         if (!uuid) setUuid(uuidv4());
         const intervalId = setInterval(() => {
