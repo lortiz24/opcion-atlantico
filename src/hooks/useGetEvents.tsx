@@ -21,7 +21,7 @@ const listEvents: IEvents[] = [
             }
         ]
     },
-    /* {
+    {
         id: 'e51f5e1f1egf1eg5e1f65ef',
         img: 'https://www.cuc.edu.co/wp-content/uploads/2022/11/IMG_1377-scaled-600x450.jpg',
         title: 'Reunion beca opcion',
@@ -71,7 +71,7 @@ const listEvents: IEvents[] = [
                 'name': 'Andres Barros'
             }
         ]
-    } */
+    }
 ]
 const useGetEvents = () => {
     const [events, setEvents] = useState<IEvents[]>([]);

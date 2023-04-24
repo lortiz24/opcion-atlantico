@@ -12,14 +12,16 @@ import useGetStatusConection from '../hooks/useGetStatusConection';
 import { setStatusConection } from '../store/status-conection/statusConectionSlice';
 import MenuComponent from '../components/menu/MenuComponent';
 import { startLogout } from '../store/auth';
+import MenuHeaderComponent from '../components/menu/MenuHeaderComponent';
+import useGetMonitorSize from '../hooks/useGetMonitorSize';
 const { Header, Content, Sider } = Layout;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { statusConection } = useGetStatusConection();
 	const { isLoading } = useAppSelector(selector => selector.menu);
-	const { displayName, photoURL } = useAppSelector(selector => selector.auth);
 	const [collapsed, setCollapsed] = useState(false);
 	const dispatch = useAppDispatch();
+	const { isMobile } = useGetMonitorSize()
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
@@ -32,9 +34,11 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		dispatch(getModules());
 	}, []);
 
-	const onLogout = () => {
-		dispatch(startLogout());
-	}
+	useEffect(() => {
+		if (isMobile) setCollapsed(true)
+	}, [isMobile])
+
+
 	return (
 		<>
 			{isLoading ? (
@@ -45,7 +49,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 					<Layout>
 						<Sider
 							style={{ background: colorBgContainer }}
-							width={200}
+							width={300}
 							trigger={null}
 							collapsible
 							onCollapse={() => setCollapsed(!collapsed)}
@@ -58,52 +62,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 								className='header'
 								style={{ background: '#a40c4c', color: '#FFFFFF' }}
 							>
-								<Row justify={'space-between'} style={{ width: '100%' }}>
-									<Col>
-										{collapsed ? (
-											<IconsAntDesing.MenuUnfoldOutlined
-												style={{ fontSize: '24px' }}
-												onClick={() => setCollapsed(!collapsed)}
-											/>
-										) : (
-											<IconsAntDesing.MenuFoldOutlined
-												style={{ fontSize: '24px' }}
-												onClick={() => setCollapsed(!collapsed)}
-											/>
-										)}
-									</Col>
-									<Col>
-										<Dropdown
-
-											children={
-												<Space >
-													<Avatar src={photoURL ? photoURL : 'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/avatar-defecto.webp?alt=media&token=dc44ebc7-da97-4d93-8a03-c8f62103054e'} /><Typography.Text style={{ color: '#FFFFFF' }}>{displayName}</Typography.Text>
-												</Space>}
-											menu={{
-												items: [{
-													key: '1',
-													label: 'Mi perfil',
-													icon: <IconsAntDesing.UserOutlined />
-												},
-												{
-													key: '2',
-													label: 'Mis eventos',
-													icon: <IconsAntDesing.CalendarOutlined />
-												},
-												{
-													key: '3',
-													label: 'Cerrar sesion',
-													onClick: onLogout,
-													icon: <IconsAntDesing.LogoutOutlined />
-												},
-												]
-											}}
-											placement="bottomCenter"
-											arrow={{ pointAtCenter: true }}
-										/>
-
-									</Col>
-								</Row>
+								<MenuHeaderComponent collapsed={collapsed} setCollapsed={setCollapsed} />
 							</Header>
 							<Content
 								style={{

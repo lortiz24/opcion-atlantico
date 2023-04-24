@@ -10,7 +10,7 @@ export const FeatureRoutes = () => {
 				<Routes>
 					<Route path='/events/*' element={<EventsRouter />} />
 					<Route path='/configuration/*' element={<ConfigurationRouter />} />
-					<Route path='/*' element={<Navigate to='/events' />} />
+					<Route path='/*' element={<Navigate to='/events/all-events' />} />
 				</Routes>
 			</MainLayout>
 		</>

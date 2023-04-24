@@ -30,15 +30,17 @@ const MenuComponent = () => {
 			mode='inline'
 			defaultSelectedKeys={['1']}
 			defaultOpenKeys={['sub1']}
-			style={{ height: '100%', borderRight: 0, }}
+			style={{ height: '100%', borderRight: 0 }}
 			items={menuList.map((module, index) => {
 				const key = String(index + 1);
 				let iconeModule: any
 				let newModule: any = {
 					key: `module${key}`,
 					label: module.label,
+					title: module.label,
 					// @ts-ignore
 					icon: React.createElement(IconsAntDesing[module.icon] ?? IconsAntDesing.UnorderedListOutlined),
+
 				};
 				if (module.children.length > 0) {
 					newModule.children = module.children.map((children, indexChildren) => {
