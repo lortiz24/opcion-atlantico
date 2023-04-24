@@ -3,6 +3,7 @@ import { Avatar, Badge, Col, Dropdown, Row, Space, Typography } from 'antd'
 import * as IconsAntDesing from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { startLogout } from '../../store/auth';
+import { useNavigate } from 'react-router-dom';
 
 interface IMenuHeaderComponentProps {
     collapsed: boolean;
@@ -11,6 +12,7 @@ interface IMenuHeaderComponentProps {
 
 const MenuHeaderComponent = ({ collapsed, setCollapsed }: IMenuHeaderComponentProps) => {
     const { photoURL, displayName } = useAppSelector(selector => selector.auth)
+    const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const onLogout = () => {
         dispatch(startLogout());
@@ -48,6 +50,7 @@ const MenuHeaderComponent = ({ collapsed, setCollapsed }: IMenuHeaderComponentPr
                             key: '2',
                             label: 'Mis eventos',
                             icon: <IconsAntDesing.CalendarOutlined />,
+                            onClick: () =>navigate('/events/my-events')
                         },
                         {
                             key: '3',

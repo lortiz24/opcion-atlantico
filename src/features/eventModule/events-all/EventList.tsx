@@ -2,15 +2,17 @@ import React from 'react'
 import { List } from 'antd';
 import useGetEvents from '../../../hooks/useGetEvents';
 import EventItem from './EventItem';
+import { IEvent } from '../../../interfaces/events-interfaces';
 
 
 export interface IEventListProps {
-    onReadQr: () => void;
-    onGenerateQR: (eventId: string) => void;
+    onReadQr?: () => void;
+    onGenerateQR?: (eventId: string) => void;
+    onSelected?: (item: IEvent) => void
 }
 
 
-const EventList = ({ onReadQr, onGenerateQR }: IEventListProps) => {
+const EventList = ({ onReadQr, onGenerateQR, onSelected }: IEventListProps) => {
     const { events, loading } = useGetEvents()
 
     return (
@@ -27,7 +29,7 @@ const EventList = ({ onReadQr, onGenerateQR }: IEventListProps) => {
             dataSource={events}
             renderItem={(eventItem) => (
                 <>
-                    <EventItem key={eventItem.title} eventItem={eventItem} onGenerateQR={onGenerateQR} onReadQr={onReadQr} />
+                    <EventItem key={eventItem.title} eventItem={eventItem} onGenerateQR={onGenerateQR} onReadQr={onReadQr} onSelected={onSelected}/>
                 </>
 
             )}

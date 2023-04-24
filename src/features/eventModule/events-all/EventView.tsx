@@ -34,21 +34,8 @@ const EventView = () => {
         <>
             {isOpenReadQR && <ReadQr open={isOpenReadQR} onCancel={onCloseReadQr} onOk={onCloseReadQr} />}
             {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
-            {isDrawerEventOpen && (
-                <DrawerEventForm />
-            )}
+
             <Row>
-                <Col>
-                    <Space style={{ marginBottom: 20 }}>
-                        <Button
-                            icon={<PlusCircleFilled />}
-                            type='primary'
-                            onClick={() => dispatch(openDrawerFormEvent())}
-                        >
-                            Crear evento
-                        </Button>
-                    </Space>
-                </Col>
                 <Col span={24}>
                     <EventList onReadQr={onReadQr} onGenerateQR={onGenerateQR} />
                 </Col>

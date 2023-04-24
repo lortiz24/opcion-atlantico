@@ -1,4 +1,4 @@
-import { collection, CollectionReference } from "firebase/firestore";
+import { collection, CollectionReference, getFirestore } from "firebase/firestore";
 import { FirebaseAuth, FirebaseDB } from "./ConfigFirebase";
 import { IModules } from "../interfaces/modules-interface";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, updateEmail, updatePassword } from "firebase/auth";
@@ -71,6 +71,5 @@ export const updatePasswordUser = async (newPassword: string) => {
     if (!userToUpdate) return null
     await updatePassword(userToUpdate, newPassword);
 }
-
 
 

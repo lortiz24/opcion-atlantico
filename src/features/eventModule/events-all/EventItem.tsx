@@ -21,7 +21,7 @@ const IconText = ({ icon, text, onClick }: { icon: React.FC; text: string, onCli
     </Space>
 );
 
-const EventItem = ({ eventItem, onGenerateQR, onReadQr }: IEventItemProps) => {
+const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItemProps) => {
     const { width } = useGetMonitorSize()
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')
     const [messageByState, setMessageByState] = useState('')
@@ -44,6 +44,9 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr }: IEventItemProps) => {
 
     return (
         <List.Item
+            onClick={() => {
+                if (onSelected) onSelected(eventItem)
+            }}
             /*  actions={[
                  <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" key="list-vertical-message" />,
                  <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" key="list-vertical-message" />,
@@ -61,7 +64,7 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr }: IEventItemProps) => {
             }
 
         >
-            <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
+            <Card hoverable={!!onSelected} bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }} >
                 <Result
                     style={{ paddingTop: '2px', paddingBottom: '20px' }}
                     status={statusResult}
@@ -99,8 +102,8 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr }: IEventItemProps) => {
                     </Col>
                     <Col span={24}>
                         <Space wrap>
-                            <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />
-                            <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />
+                            {onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
+                            {onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
                         </Space>
                     </Col>
                 </Row>
