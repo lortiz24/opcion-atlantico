@@ -3,13 +3,13 @@ import { FirebaseAuth, FirebaseDB } from "./ConfigFirebase";
 import { IModules } from "../interfaces/modules-interface";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { IRegisterUserWithEmailPasswordParams } from "../interfaces/auth-interface";
-import { IQrCode } from "../interfaces/events-interfaces";
+import { IEvent, IQrCode } from "../interfaces/events-interfaces";
 import { ILogin } from "../interfaces/firebase-interfaces";
 import { IUserInfo } from "../interfaces/user-interfaces";
 import { createUserInfo } from "./user/user-services";
 
 export const modulesCollectionRef = collection(FirebaseDB, "modules") as CollectionReference<Omit<IModules, 'id'>>;
-export const eventsCollectionRef = collection(FirebaseDB, "events");
+export const eventsCollectionRef = collection(FirebaseDB, "events") as CollectionReference<Omit<IEvent, 'id'>>;
 export const qrAttendanceCollectionRef = collection(FirebaseDB, "qr-attendance") as CollectionReference<Omit<IQrCode, 'id'>>;
 export const userInfoCollectionRef = collection(FirebaseDB, "user-info") as CollectionReference<Omit<IUserInfo, 'id'>>;
 
@@ -19,7 +19,7 @@ export const registerUserWithEmailPassword = async ({ email, password, displayNa
     try {
         const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
         const { uid, photoURL } = resp.user;
-        console.log('displayName',displayName)
+        console.log('displayName', displayName)
         await updateProfile(resp.user, { displayName });
         await createUserInfo(uid, { rols: ['user'] })
         return {

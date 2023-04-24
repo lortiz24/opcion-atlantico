@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Timestamp } from 'firebase/firestore';
-import { IEvents } from '../interfaces/events-interfaces';
+import { IEvent } from '../interfaces/events-interfaces';
 
 
-const listEvents: IEvents[] = [
+const listEvents: IEvent[] = [
     {
         id: 'e51f5e1f5e1f65ef',
         img: 'https://www.cuc.edu.co/wp-content/uploads/2022/11/IMG_1377-scaled-600x450.jpg',
         title: 'Reunion beca opcion',
-        desciption: 'Reunion de todos los becados',
+        desciption: 'Reunion que se realiza los dias miercoles con el fin de que todos los becados esten al tanto de las nuevas iniciativas del programa, conocer su desempeño en el semestre y compartir un espacio en el que pueda dialogar y tener encuentros que fortalezcan los lasos que unen a cada uno de los miembros',
         date: Timestamp.now(),
         assistants: [
             {
@@ -25,7 +25,7 @@ const listEvents: IEvents[] = [
         id: 'e51f5e1f1egf1eg5e1f65ef',
         img: 'https://www.cuc.edu.co/wp-content/uploads/2022/11/IMG_1377-scaled-600x450.jpg',
         title: 'Reunion beca opcion',
-        desciption: 'Reunion de todos los becados',
+        desciption: 'Reunion que se realiza los dias miercoles con el fin de que todos los becados esten al tanto de las nuevas iniciativas del programa, conocer su desempeño en el semestre y compartir un espacio en el que pueda dialogar y tener encuentros que fortalezcan los lasos que unen a cada uno de los miembros',
         date: Timestamp.now(),
         assistants: [
             {
@@ -42,7 +42,7 @@ const listEvents: IEvents[] = [
         id: 'e51f5eefe45fe5f5ef65ef',
         img: 'https://www.cuc.edu.co/wp-content/uploads/2022/11/IMG_1377-scaled-600x450.jpg',
         title: 'Reunion beca opcion',
-        desciption: 'Reunion de todos los becados',
+        desciption: 'Reunion que se realiza los dias miercoles con el fin de que todos los becados esten al tanto de las nuevas iniciativas del programa, conocer su desempeño en el semestre y compartir un espacio en el que pueda dialogar y tener encuentros que fortalezcan los lasos que unen a cada uno de los miembros',
         date: Timestamp.now(),
         assistants: [
             {
@@ -59,7 +59,7 @@ const listEvents: IEvents[] = [
         id: '12f6e2f61e1f6e1f',
         img: 'https://www.cuc.edu.co/wp-content/uploads/2022/11/IMG_1377-scaled-600x450.jpg',
         title: 'Reunion beca opcion',
-        desciption: 'Reunion de todos los becados',
+        desciption: 'Reunion que se realiza los dias miercoles con el fin de que todos los becados esten al tanto de las nuevas iniciativas del programa, conocer su desempeño en el semestre y compartir un espacio en el que pueda dialogar y tener encuentros que fortalezcan los lasos que unen a cada uno de los miembros',
         date: Timestamp.now(),
         assistants: [
             {
@@ -74,7 +74,7 @@ const listEvents: IEvents[] = [
     }
 ]
 const useGetEvents = () => {
-    const [events, setEvents] = useState<IEvents[]>([]);
+    const [events, setEvents] = useState<IEvent[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export interface IEvents {
+export interface IEvent {
     id: string;
     img: string;
     title: string;

@@ -1,9 +1,10 @@
-import { Space, Typography } from 'antd'
+import { Button, Col, Row, Space, Typography } from 'antd'
 import React, { useState } from 'react'
 import { LevelTitlesModules } from '../../settings/properties-globals/levels-titles';
 import GenerateQr from './components/GenerateQr';
 import ReadQr from './components/ReadQr';
 import EventList from './events-all/EventList';
+import { PlusCircleFilled } from '@ant-design/icons';
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
@@ -40,7 +41,23 @@ const EventView = () => {
             {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
             <Typography.Title level={LevelTitlesModules}>Eventos</Typography.Title>
             <br />
-            <EventList onReadQr={onReadQr} onGenerateQR={onGenerateQR} />
+            <Row>
+                <Col>
+                    <Space style={{ marginBottom: 20 }}>
+                        <Button
+                            icon={<PlusCircleFilled />}
+                            type='primary'
+                        // onClick={() => dispatch(openDrawer())}
+                        >
+                            Crear evento
+                        </Button>
+                    </Space>
+                </Col>
+                <Col span={24}>
+                    <EventList onReadQr={onReadQr} onGenerateQR={onGenerateQR} />
+                </Col>
+            </Row>
+
         </>
     )
 }

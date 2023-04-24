@@ -1,7 +1,8 @@
 import { qrAttendanceCollectionRef } from "../providers";
 import { IModules, StatusMenuItem } from "../../interfaces/modules-interface";
 import { query, where, orderBy, limit, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, DocumentSnapshot, } from "firebase/firestore";
-import { IQrCode } from "../../interfaces/events-interfaces";
+import { IEvent, IQrCode } from "../../interfaces/events-interfaces";
+import { eventsCollectionRef } from "../providers";
 
 
 export const listeningQrAttendance = (codeQrID: string, onSet: (modules: IQrCode) => void) => {
@@ -36,6 +37,16 @@ export const deleteQrAttendance = async (idQrAttendanceId: string) => {
         await deleteDoc(moduleRef);
     } catch (error) {
         console.error("Error al eliminar el codigo QR: ", error);
+        throw error;
+    }
+}
+export const createEvent = async (newEvent: Omit<IEvent, 'id'>) => {
+    try {
+        const querySnapshot = await addDoc(eventsCollectionRef, newEvent);
+        const newEventId = querySnapshot.id;
+        return newEventId
+    } catch (error) {
+        console.error("Error al crear el evento: ", error);
         throw error;
     }
 }

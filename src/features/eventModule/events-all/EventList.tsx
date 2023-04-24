@@ -1,5 +1,5 @@
-import { List } from 'antd';
 import React from 'react'
+import { List } from 'antd';
 import useGetEvents from '../../../hooks/useGetEvents';
 import EventItem from './EventItem';
 
@@ -8,7 +8,6 @@ export interface IEventListProps {
     onReadQr: () => void;
     onGenerateQR: (eventId: string) => void;
 }
-
 
 
 const EventList = ({ onReadQr, onGenerateQR }: IEventListProps) => {
@@ -33,6 +32,7 @@ const EventList = ({ onReadQr, onGenerateQR }: IEventListProps) => {
 
             )}
         />
+
     )
 }
 
