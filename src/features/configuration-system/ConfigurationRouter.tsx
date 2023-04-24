@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import ModulesView from './ModulesView'
+import ModulesView from './modules/ModulesView'
 
 const ConfigurationRouter = () => {
     return (

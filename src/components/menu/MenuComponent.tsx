@@ -7,13 +7,13 @@ import * as IconsAntDesing from '@ant-design/icons';
 
 const MenuComponent = () => {
 	const [menuList, setMenuList] = useState<IModules[]>([]);
+	const [openKeys, setOpenKeys] = useState<string[]>([]);
 	const { modules } = useAppSelector(selector => selector.menu);
 	const navigate = useNavigate();
 
-	const {
-		token: { colorBgContainer },
-	} = theme.useToken();
-
+	const handleOpenChange = (keys: string[]) => {
+		setOpenKeys([keys.pop() || '']);
+	};
 
 
 	useEffect(() => {
@@ -25,6 +25,8 @@ const MenuComponent = () => {
 
 	return (
 		<Menu
+			onOpenChange={handleOpenChange}
+			openKeys={openKeys}
 			mode='inline'
 			defaultSelectedKeys={['1']}
 			defaultOpenKeys={['sub1']}

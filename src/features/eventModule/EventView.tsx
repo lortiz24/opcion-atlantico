@@ -5,7 +5,7 @@ import { LikeOutlined, MessageOutlined, QrcodeOutlined, StarOutlined } from '@an
 import { LevelTitlesModules } from '../../settings/properties-globals/levels-titles';
 import GenerateQr from './components/GenerateQr';
 import ReadQr from './components/ReadQr';
-import useIsMobile from '../../hooks/useIsMobile';
+import useGetMonitorSize from '../../hooks/useGetMonitorSize';
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
@@ -20,14 +20,13 @@ const EventView = () => {
     const [openGenerateQR, setOpenGenerateQR] = useState(false)
     const [eventAttendanceId, setEventAttendanceId] = useState('')
     const [isOpenReadQR, setisOpenReadQR] = useState(false)
-    const { isMobile } = useIsMobile()
+    const { width } = useGetMonitorSize()
     const onGenerateQR = (eventId: string) => {
         setOpenGenerateQR(true)
         setEventAttendanceId(eventId)
     }
 
     const onCancelGenerateQR = () => {
-        console.log('Aqui')
         setOpenGenerateQR(false)
     }
 
@@ -58,7 +57,7 @@ const EventView = () => {
                 dataSource={events}
                 renderItem={(eventItem) => (
                     <>
-                        {isMobile ? (<List.Item
+                        {width < 700 ? (<List.Item
                             key={eventItem.title}
                             actions={[
                                 <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
