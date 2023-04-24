@@ -61,7 +61,7 @@ export type TFormat =
     | 'DD/MM/YYYY HH:mm'
     | 'DD.MM.YYYY HH:mm:ss'
     | 'DD.MM.YYYY HH:mm'
-    
+
     | 'YYYY-MM-DDThh:mm:ss A'
     | 'YYYY-MM-DDThh:mm A'
     | 'YYYY-MM-DD hh:mm:ss A'
@@ -76,4 +76,5 @@ export type TFormat =
     | 'DD/MM/YYYY hh:mm A'
     | 'DD.MM.YYYY hh:mm:ss A'
     | 'DD.MM.YYYY hh:mm A'
+    | 'MM/DD/YYYY hh:mm A'
     ;

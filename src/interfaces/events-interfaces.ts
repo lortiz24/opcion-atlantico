@@ -4,8 +4,10 @@ export interface IEvent {
     id: string;
     img: string;
     title: string;
+    place:string
     desciption: string;
-    date: Timestamp
+    dateStart: Timestamp
+    dateEnd: Timestamp
     assistants: IAssistant[]
 }
 
