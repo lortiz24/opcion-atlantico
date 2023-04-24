@@ -12,7 +12,8 @@ export const store = configureStore({
         menu: menusSlice.reducer,
         statusConection: statusConectionSlice.reducer,
         auth: authSlice.reducer,
-        formModule: formModuleSlice.reducer
+        formModule: formModuleSlice.reducer,
+        formEvent: formModuleSlice.reducer
         // [menuApi.reducerPath]: menuApi.reducer
     },
     /* middleware: (getDefaultMiddleware) =>
