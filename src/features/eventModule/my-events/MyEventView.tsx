@@ -3,7 +3,7 @@ import { Button, Col, Row, Space } from 'antd'
 import React from 'react'
 import { useAppDispatch, useAppSelector } from '../../../store/store'
 import { openDrawerFormEvent } from '../../../store/form-events/formEventSlice'
-import DrawerEventForm from '../events-all/DrawerEventForm'
+import DrawerEventForm from './components/DrawerEventForm'
 import EventList from '../events-all/EventList'
 
 const MyEventView = () => {

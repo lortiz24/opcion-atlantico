@@ -6,7 +6,7 @@ import EventList from './EventList';
 import { PlusCircleFilled } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { openDrawerFormEvent } from '../../../store/form-events/formEventSlice';
-import DrawerEventForm from './DrawerEventForm';
+import DrawerEventForm from '../my-events/components/DrawerEventForm';
 
 const EventView = () => {
     const [openGenerateQR, setOpenGenerateQR] = useState(false)

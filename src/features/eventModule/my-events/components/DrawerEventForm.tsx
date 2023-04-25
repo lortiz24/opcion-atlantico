@@ -1,9 +1,9 @@
-import { Button, Drawer, DrawerProps, Space } from 'antd'
 import React from 'react'
-import { useAppDispatch, useAppSelector } from '../../../store/store'
-import { closeDrawerEvent } from '../../../store/form-events/formEventSlice'
-import FormModules from '../../configuration-system/modules/components/FormModules'
-import useGetMonitorSize from '../../../hooks/useGetMonitorSize'
+import { Button, Drawer, DrawerProps, Space } from 'antd'
+import { useAppDispatch, useAppSelector } from '../../../../store/store'
+import { closeDrawerEvent } from '../../../../store/form-events/formEventSlice'
+import useGetMonitorSize from '../../../../hooks/useGetMonitorSize'
+import EventForm from './EventForm'
 
 interface IDrawerEventFormProps extends DrawerProps {
 
@@ -25,7 +25,7 @@ const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) 
                 </Space>
             }
         >
-            <FormModules />
+            <EventForm onSetValuesForm={console.log} titleButton='Crear evento'/>
         </Drawer>
 
     )

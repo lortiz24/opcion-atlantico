@@ -5,7 +5,7 @@ import { useAppDispatch } from '../../../../store/store';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { activeModule, inactiveModule } from '../../../../store/menus/thunks';
 import { StatusToRender } from '../utils/status-render';
-import { StatusToRenderValues } from '../interfaces/form-modules';
+import { StatusToRenderValues } from '../interfaces/form-modules.interface';
 import ModuloItem from './ModuloItem';
 import useListeningModules from '../../../../hooks/useListeningModules';
 import { openEditionMode } from '../../../../store/form-modules/formModulesSlices';
