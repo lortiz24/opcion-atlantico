@@ -3,7 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { login, logout } from '../store/auth';
 import { FirebaseAuth } from '../firebase/ConfigFirebase';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { userInfoController } from '../controllers/userInfo/UserInfoController';
+import { userInfoController } from '../controllers/userInfo/user-info.controller';
 
 
 

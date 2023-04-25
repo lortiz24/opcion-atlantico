@@ -1,4 +1,4 @@
-import { UserServiceFirebase } from "../../firebase/user/user-firebase-services";
+import { UserServiceFirebase } from "../../firebase/user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 
 interface IResult {

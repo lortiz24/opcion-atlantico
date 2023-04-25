@@ -1,4 +1,4 @@
-import { menuFirebaseService } from "../../firebase/menu/menu-firebase-services";
+import { menuFirebaseService } from "../../firebase/menu/menu-firebase.service";
 import { IMenu } from "../../interfaces/modules-interface";
 
 export class MenuController {

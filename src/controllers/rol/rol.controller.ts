@@ -1,4 +1,4 @@
-import { RolFirebaseService } from "../../firebase/rols/RolServices";
+import { RolFirebaseService } from "../../firebase/rols/rol.service";
 
 export class RolController {
     constructor(

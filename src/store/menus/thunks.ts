@@ -4,7 +4,7 @@ import { startLoading, setModules, startMutation, stopMutation } from "./menuSli
 import { IMenu } from "../../interfaces/modules-interface";
 import { DispatchMessageService } from "../../components/message-response/DispatchMessageService";
 import { closeDrawer, closeEditionMode } from "../form-modules/formModulesSlices";
-import { menuController } from "../../controllers/menu/MenuControlller";
+import { menuController } from "../../controllers/menu/menu.controlller";
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IMenu } from '../../../../interfaces/modules-interface';
-import { menuController } from '../../../../controllers/menu/MenuControlller';
+import { menuController } from '../../../../controllers/menu/menu.controlller';
 
 const useListeningModule = (moduleId: string) => {
     const [module, setModule] = useState<IMenu>({} as IMenu);

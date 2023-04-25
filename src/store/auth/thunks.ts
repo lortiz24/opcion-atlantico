@@ -1,7 +1,7 @@
 import { checkingCredentials, logout, login } from '.';
 import { AppDispatch } from '../store';
 import { IStartCreatingUserWithEmailPasswordParams, IStartLoginWithEmailPasswordParams } from '../../interfaces/auth-interface';
-import { userInfoController } from '../../controllers/userInfo/UserInfoController';
+import { userInfoController } from '../../controllers/userInfo/user-info.controller';
 import { authController } from '../../controllers/auth/Auth.controller';
 
 export const checkingAuthentication = () => {

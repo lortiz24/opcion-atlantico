@@ -1,4 +1,4 @@
-import { AuthFirebaseService } from "../../firebase/auth/AuthFirebaseService";
+import { AuthFirebaseService } from "../../firebase/auth/auth-firebase.service";
 import { IRegisterUserWithEmailPasswordParams } from "../../interfaces/auth-interface";
 import { ILogin } from "../../interfaces/firebase-interfaces";
 

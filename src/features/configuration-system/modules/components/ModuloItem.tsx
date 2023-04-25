@@ -1,12 +1,12 @@
-import { Button, Modal, ModalProps, Popconfirm, Space, Table, Tag } from 'antd'
 import React from 'react'
+import { Button, Modal, ModalProps, Popconfirm, Space, Table, Tag } from 'antd'
 import { IChildrensModules } from '../../../../interfaces/modules-interface'
 import { ColumnsType } from 'antd/es/table';
 import { StatusToRenderValues } from '../interfaces/form-modules';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { StatusToRender } from '../utils/status-render';
 import useListeningModule from '../hooks/useListeningModule';
-import { menuController } from '../../../../controllers/menu/MenuControlller';
+import { menuController } from '../../../../controllers/menu/menu.controlller';
 
 
 interface DataType {

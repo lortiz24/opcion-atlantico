@@ -2,7 +2,7 @@ import { CloseOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/ico
 import { Button, Checkbox, Col, Form, Input, Row, Select } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import React, { Fragment, useEffect, useState } from 'react'
-import { IChildrensModules, IModules } from '../../../../interfaces/modules-interface'
+import { IChildrensModules, IMenu } from '../../../../interfaces/modules-interface'
 import { useForm } from 'antd/es/form/Form'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { createModule, updateModule } from '../../../../store/menus/thunks'
@@ -11,7 +11,7 @@ import LoadingComponent from '../../../../components/loading/LoadingComponent';
 import * as IconsAntDesign from '@ant-design/icons';
 import useGetIconStringList from '../hooks/useGetIconStringList'
 import useGetRols from '../../../../hooks/useGetRols'
-import { rolController } from '../../../../controllers/rol/RolController'
+import { rolController } from '../../../../controllers/rol/rol.controller'
 
 
 
@@ -57,7 +57,7 @@ const FormModules = () => {
                 }
             }
         }
-        const newModules: Omit<IModules, 'id'> = {
+        const newModules: Omit<IMenu, 'id'> = {
             label: values.nameMenu,
             path: values.pathMenu,
             order: isEdit ? module.order : modules.length,
