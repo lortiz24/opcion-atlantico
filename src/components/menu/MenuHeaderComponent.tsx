@@ -45,6 +45,7 @@ const MenuHeaderComponent = ({ collapsed, setCollapsed }: IMenuHeaderComponentPr
                             key: '1',
                             label: <Badge count={'Pronto'} size='small' color='gold-inverse'><Space style={{ width: '100%', }}><Typography.Text>Mi perfil</Typography.Text></Space></Badge>,
                             icon: <IconsAntDesing.UserOutlined />,
+                            onClick: () =>navigate('/my-profile')
                         },
                         {
                             key: '2',

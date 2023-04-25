@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IUserInfo, TRoles } from '../../interfaces/user-interfaces';
+import { IUserInfo } from '../../interfaces/user-interfaces';
 
 type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
@@ -31,6 +31,7 @@ export const authSlice = createSlice({
 	initialState,
 	reducers: {
 		login: (state, { payload }: { payload: Payload }) => {
+			console.log('payload.displayName',payload.displayName)
 			state.status = 'authenticated';
 			state.uid = payload.uid ?? '';
 			state.email = payload.email;

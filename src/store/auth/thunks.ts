@@ -2,7 +2,7 @@ import { checkingCredentials, logout, login } from '.';
 import { AppDispatch } from '../store';
 import { IStartCreatingUserWithEmailPasswordParams, IStartLoginWithEmailPasswordParams } from '../../interfaces/auth-interface';
 import { userInfoController } from '../../controllers/userInfo/user-info.controller';
-import { authController } from '../../controllers/auth/Auth.controller';
+import { authController } from '../../controllers/auth/auth.controller';
 
 export const checkingAuthentication = () => {
     return async (dispatch: AppDispatch) => {
@@ -42,12 +42,12 @@ export const startLoginWithEmailPassword = ({ email, password }: IStartLoginWith
         if (!userCredentials || !userCredentials.uid) return dispatch(logout(errorMessage));
 
         const userInfo = await userInfoController.getOneUserInfo(userCredentials.uid)
-
-        const user ={
-            displayname:userCredentials.displayName,
-            email:userCredentials.email,
-            photoURL:userCredentials.photoURL,
-            uid:userCredentials.uid
+        console.log('userCredentials', userCredentials)
+        const user = {
+            displayName: userCredentials.displayName,
+            email: userCredentials.email,
+            photoURL: userCredentials.photoURL,
+            uid: userCredentials.uid
         }
         dispatch(login({ ...user, userInfo }));
     }
