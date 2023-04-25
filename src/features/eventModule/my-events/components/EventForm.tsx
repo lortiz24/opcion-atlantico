@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { IEvent } from '../../../../interfaces/events-interfaces'
 import { Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
@@ -6,6 +6,8 @@ import { useForm } from 'antd/es/form/Form'
 import { useAppSelector } from '../../../../store/store'
 import MyTransferComponent from '../../../../components/transfer/MyTransferComponent'
 import useGetUsers from '../../../../hooks/useGetUsers'
+import { IUserInfo } from '../../../../interfaces/user-interfaces'
+import { Dayjs } from 'dayjs'
 
 
 interface IEventFormProps {
@@ -15,14 +17,24 @@ interface IEventFormProps {
 }
 
 interface IFormEvent {
-
+    title: string
+    assistants: IUserInfo[];
+    place: string;
+    desciption: string;
+    dateStart: Dayjs
+    dateEnd: Dayjs;
+    typeAttendance: string
+    img: string
 }
 
 
 const EventForm = ({ event, onSetValuesForm }: IEventFormProps) => {
     const [form] = useForm();
     const { isLoadingFormEvent } = useAppSelector(selector => selector.formEvent)
-    const { isLoadingUsers, users } = useGetUsers()
+    const { users } = useGetUsers()
+    const [userToAsist, setUserToAsist] = useState<IUserInfo[]>([] as IUserInfo[])
+
+
     return (
         <>
             <Fragment >
@@ -60,9 +72,7 @@ const EventForm = ({ event, onSetValuesForm }: IEventFormProps) => {
                                     </Space>
                                 </Col>
                                 <Col span={24}>
-                                    <Form.Item label='Asistentes' name={'assistants'} >
-                                        <MyTransferComponent onSetTargetKey={console.log} data={users} selectedRowKey={(recorder => recorder.id)} />
-                                    </Form.Item>
+                                    <MyTransferComponent<IUserInfo> onSetTargetKey={setUserToAsist} data={users} selectedRowKey={(recorder => recorder.id)} propertyRender={(item) => item.displayName} />
                                 </Col>
                                 <Col span={24}>
                                     <Form.Item label='Tipo de asistencia' name={'typeAttendance'} rules={[{ required: true, message: 'Es requerido' }]}>
