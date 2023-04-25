@@ -1,18 +1,19 @@
 import { Action, ThunkAction } from "@reduxjs/toolkit";
-import { AppDispatch, RootState } from "../store";
+import { AppDispatch, RootState, useAppSelector } from "../store";
 import { startLoading, setModules, startMutation, stopMutation } from "./menuSlice";
 import { IMenu } from "../../interfaces/modules-interface";
 import { DispatchMessageService } from "../../components/message-response/DispatchMessageService";
 import { closeDrawer, closeEditionMode } from "../form-modules/formModulesSlices";
 import { menuController } from "../../controllers/menu/menu.controlller";
+import { IUserInfo } from "../../interfaces/user-interfaces";
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 
-export const getModules = (): ThunkResult<void> => {
+export const getModules = (userInfo?: IUserInfo): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startLoading());
         try {
-            const modules = await menuController.getMenus({ order: true });
+            const modules = await menuController.getMenusWithCondition({ order: true, rols: userInfo?.rols });
             dispatch(setModules({ modules }));
         } catch (error) {
             console.error("Error getting documents: ", error);

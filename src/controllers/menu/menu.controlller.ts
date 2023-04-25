@@ -1,17 +1,22 @@
 import { menuFirebaseService } from "../../firebase/menu/menu-firebase.service";
-import { IMenu } from "../../interfaces/modules-interface";
+import { IConditionGetMenus, IMenu } from "../../interfaces/modules-interface";
 
 export class MenuController {
     constructor(
         private menuService = menuFirebaseService
     ) { }
 
-    async getMenus(condition?: { order: boolean }) {
+    async getMenus(condition?: IConditionGetMenus) {
         if (condition?.order) {
             const menus = await this.menuService.getMenusToSlice()
             return menus
         }
         const menus = await this.menuService.getMenus()
+        return menus
+    }
+    async getMenusWithCondition(condition?: IConditionGetMenus) {
+
+        const menus = await this.menuService.getMenusWithConditions(condition)
         return menus
     }
     async getMenu(menuId: string) {

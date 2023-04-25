@@ -7,8 +7,8 @@ export interface IMenu {
     path: string
     order: number
     status: StatusMenuItem
-    icon:string;
-    rolAcces:string[]
+    icon: string;
+    rolAcces: string[]
 }
 
 export interface IChildrensModules {
@@ -16,5 +16,10 @@ export interface IChildrensModules {
     path: string;
     order: number,
     status: StatusMenuItem
+}
+
+export interface IConditionGetMenus {
+    order?: boolean;
+    rols?: string[]
 }
 

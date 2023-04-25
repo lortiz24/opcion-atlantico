@@ -8,7 +8,7 @@ import { useAppSelector } from '../store/store';
 export const AppRouter = () => {
 	const status = useCheckAuth();
 	const user = useAppSelector(s => s.auth)
-	console.log('user', user)
+	// console.log('user', user)
 	if (status === 'checking') {
 		return <LoadingComponent isLoading={status === 'checking'} />
 	}

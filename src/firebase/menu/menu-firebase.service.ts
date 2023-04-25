@@ -1,6 +1,6 @@
 import { modulesCollectionRef } from "../providers";
-import { IMenu } from "../../interfaces/modules-interface";
-import { query, orderBy, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, getDoc, } from "firebase/firestore";
+import { IConditionGetMenus, IMenu } from "../../interfaces/modules-interface";
+import { query, orderBy, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, getDoc, where, } from "firebase/firestore";
 
 export class MenuFirebaseService {
     constructor(
@@ -11,6 +11,26 @@ export class MenuFirebaseService {
         try {
             let queryData
             queryData = query<Omit<IMenu, 'id'>>(this.modulesCollection, orderBy("order", "asc"));
+            const querySnapshot = await getDocs<Omit<IMenu, 'id'>>(queryData);
+            let modules: IMenu[] = []
+            querySnapshot.forEach((doc) => {
+                const data: Omit<IMenu, 'id'> = doc.data();
+                const childrens = data.children.filter((child) => child.status === "avalible")
+                modules.push({ id: doc.id, ...data, children: childrens })
+            });
+
+            return modules
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
+    async getMenusWithConditions(conditions?: IConditionGetMenus) {
+        try {
+            let queryData = query<Omit<IMenu, 'id'>>(this.modulesCollection, orderBy("order", "asc"));
+            if (conditions?.rols) {
+                queryData = query<Omit<IMenu, 'id'>>(this.modulesCollection, orderBy("order", "asc"), where('rolAcces', 'array-contains-any', conditions.rols));
+            }
             const querySnapshot = await getDocs<Omit<IMenu, 'id'>>(queryData);
             let modules: IMenu[] = []
             querySnapshot.forEach((doc) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, notification, theme } from 'antd';
+import { Layout, theme } from 'antd';
 import './MainLayout.style.css';
 import { LayoutCss } from './MainLayout.style';
 import { getModules } from '../store/menus/thunks';
@@ -11,13 +11,13 @@ import { setStatusConection } from '../store/status-conection/statusConectionSli
 import MenuComponent from '../components/menu/MenuComponent';
 import MenuHeaderComponent from '../components/menu/MenuHeaderComponent';
 import useGetMonitorSize from '../hooks/useGetMonitorSize';
-import './MainLayout.style.css'
 
 const { Header, Content, Sider } = Layout;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { statusConection } = useGetStatusConection();
 	const { isLoading } = useAppSelector(selector => selector.menu);
+    const { userInfo } = useAppSelector(selec => selec.auth)
 	const [collapsed, setCollapsed] = useState(false);
 	const dispatch = useAppDispatch();
 	const { isMobile } = useGetMonitorSize()
@@ -36,7 +36,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		const handleScroll = () => {
 			setScrollPosition(window.scrollY);
 		};
-		dispatch(getModules());
+		dispatch(getModules(userInfo));
 		window.addEventListener('scroll', handleScroll);
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
