@@ -1,13 +1,12 @@
 import React, { Fragment, useState } from 'react'
-import { IEvent } from '../../../../interfaces/events-interfaces'
-import { Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space } from 'antd'
+import { IEvent, IFormEvent } from '../../../../interfaces/events-interfaces'
+import { Button, Col, DatePicker, Form, Input, Row, Space } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
 import { useForm } from 'antd/es/form/Form'
 import { useAppSelector } from '../../../../store/store'
 import MyTransferComponent from '../../../../components/transfer/MyTransferComponent'
 import useGetUsers from '../../../../hooks/useGetUsers'
 import { IUserInfo } from '../../../../interfaces/user-interfaces'
-import { Dayjs } from 'dayjs'
 
 
 interface IEventFormProps {
@@ -16,16 +15,6 @@ interface IEventFormProps {
     titleButton: string
 }
 
-interface IFormEvent {
-    title: string
-    assistants: IUserInfo[];
-    place: string;
-    desciption: string;
-    dateStart: Dayjs
-    dateEnd: Dayjs;
-    typeAttendance: string
-    img: string
-}
 
 
 const EventForm = ({ event, onSetValuesForm }: IEventFormProps) => {

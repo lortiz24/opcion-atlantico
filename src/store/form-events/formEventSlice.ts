@@ -24,16 +24,16 @@ export const formEventSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-		startAction: (state) => {
+		startActionEvent: (state) => {
 			state.isLoadingFormEvent = true
 		},
-		stopAction: (state) => {
+		stopActionEvent: (state) => {
 			state.isLoadingFormEvent = false
 		},
-		startEdition: (state) => {
+		startEditionEvent: (state) => {
 			state.isEditFormEvent = true
 		},
-		stopEdition: (state) => {
+		stopEditionEvent: (state) => {
 			state.isEditFormEvent = false
 		},
 		openDrawerFormEvent: (state) => {
@@ -45,13 +45,13 @@ export const formEventSlice = createSlice({
 			state.eventId = ''
 		},
 
-		openEditionMode: (state, action: IAction) => {
+		openEditionModeEvent: (state, action: IAction) => {
 			if (action?.payload.eventId) state.eventId = action.payload.eventId
 			state.isEditFormEvent = true
 			state.isDrawerEventOpen = true
 
 		},
-		restoreState: (state) => {
+		restoreStateEvent: (state) => {
 			state.isDrawerEventOpen = false
 			state.isEditFormEvent = false
 			state.isLoadingFormEvent = false
@@ -61,4 +61,4 @@ export const formEventSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { closeDrawerEvent, openDrawerFormEvent, startAction, startEdition, stopAction, stopEdition, openEditionMode, restoreState } = formEventSlice.actions;
+export const { closeDrawerEvent, openDrawerFormEvent, openEditionModeEvent, restoreStateEvent, startActionEvent, startEditionEvent, stopActionEvent, stopEditionEvent } = formEventSlice.actions;

@@ -1,15 +1,17 @@
 import { Timestamp } from 'firebase/firestore';
+import { IUserInfo } from './user-interfaces';
+import { Dayjs } from 'dayjs';
 
 export interface IEvent {
     id: string;
     img: string;
-    typeAttendance:string
+    typeAttendance: string
     title: string;
-    place:string
+    place: string
     desciption: string;
     dateStart: Timestamp
     dateEnd: Timestamp
-    assistants: IAssistant[]
+    assistants: string[]
 }
 
 export interface IAssistant {
@@ -31,3 +33,14 @@ export interface IQrCode {
 }
 
 export type FacingMode = 'user' | 'environment'
+
+export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
+    title: string
+    assistants: string[];
+    place: string;
+    desciption: string;
+    dateStart: Dayjs
+    dateEnd: Dayjs;
+    typeAttendance: string
+    img: string
+}

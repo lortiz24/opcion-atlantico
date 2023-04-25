@@ -62,7 +62,6 @@ export class MenuFirebaseService {
             return modules
         } catch (error) {
             console.log(error)
-            return []
         }
     }
 

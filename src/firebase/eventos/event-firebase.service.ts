@@ -1,5 +1,5 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
-import { query, where,  addDoc,  deleteDoc, doc,  onSnapshot, } from "firebase/firestore";
+import { query, where, addDoc, deleteDoc, doc, onSnapshot, orderBy, getDocs, getDoc, } from "firebase/firestore";
 import { IEvent, IQrCode } from "../../interfaces/events-interfaces";
 
 
@@ -47,4 +47,51 @@ export const createEventFirebase = async (newEvent: Omit<IEvent, 'id'>) => {
         console.error("Error al crear el evento: ", error);
         throw error;
     }
+}
+
+export class EventFirebaseService {
+
+    constructor(
+        private readonly eventsCollection = eventsCollectionRef
+    ) { }
+
+    async getAll() {
+        try {
+
+            let queryData = query<Omit<IEvent, 'id'>>(this.eventsCollection);
+
+            const querySnapshot = await getDocs<Omit<IEvent, 'id'>>(queryData);
+            let events: IEvent[] = []
+            querySnapshot.forEach((doc) => {
+                const data: Omit<IEvent, 'id'> = doc.data();
+                events.push({ id: doc.id, ...data })
+            });
+
+            return events
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getOneById(eventId: string) {
+        try {
+            const moduleRef = doc(this.eventsCollection, eventId);
+
+            const querySnapshot = await getDoc<Omit<IEvent, 'id'>>(moduleRef);
+
+            return { id: querySnapshot.id, ...querySnapshot.data() } as IEvent
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async create(newEvent: Omit<IEvent, 'id'>) {
+        try {
+            const querySnapshot = await addDoc(this.eventsCollection, newEvent);
+            const newEventId = querySnapshot.id;
+            return newEventId
+        } catch (error) {
+            console.error("Error al crear evento: ", error);
+        }
+    }
+
+
 }

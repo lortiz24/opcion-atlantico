@@ -28,13 +28,12 @@ export const createModule = (newMenu: Omit<IMenu, 'id'>, call?: () => void): Thu
             await menuController.createMenu(newMenu);
             dispatch(stopMutation());
             DispatchMessageService({ action: 'show', type: "success", msj: 'Se creo el modulo correctamente' })
+            dispatch(closeDrawer())
         } catch (error) {
             dispatch(stopMutation());
             DispatchMessageService({ action: 'show', type: "error", msj: 'No se pudo crear el modulo' })
             console.error("Error getting documents: ", error);
-        } finally {
-            dispatch(closeDrawer())
-        }
+        } 
     };
 };
 export const updateModule = (menuId: string, newMenu: Omit<IMenu, 'id'>): ThunkResult<void> => {
