@@ -1,127 +1,136 @@
 import { modulesCollectionRef } from "../providers";
-import { IModules, StatusMenuItem } from "../../interfaces/modules-interface";
+import { IMenu } from "../../interfaces/modules-interface";
 import { query, orderBy, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, getDoc, } from "firebase/firestore";
-interface IConditionsMenu {
-    status?: {
-        isAvalible?: StatusMenuItem
+
+export class MenuFirebaseService {
+    constructor(
+        private modulesCollection = modulesCollectionRef,
+    ) { }
+
+    async getMenusToSlice() {
+        try {
+            let queryData
+            queryData = query<Omit<IMenu, 'id'>>(this.modulesCollection, orderBy("order", "asc"));
+            const querySnapshot = await getDocs<Omit<IMenu, 'id'>>(queryData);
+            let modules: IMenu[] = []
+            querySnapshot.forEach((doc) => {
+                const data: Omit<IMenu, 'id'> = doc.data();
+                const childrens = data.children.filter((child) => child.status === "avalible")
+                modules.push({ id: doc.id, ...data, children: childrens })
+            });
+
+            return modules
+        } catch (error) {
+            console.log(error)
+            return []
+        }
     }
-}
-export const getMenusToSlice = async (conditions?: IConditionsMenu) => {
-    try {
-        let queryData
-        queryData = query<Omit<IModules, 'id'>>(modulesCollectionRef, orderBy("order", "asc"));
-        const querySnapshot = await getDocs<Omit<IModules, 'id'>>(queryData);
-        let modules: IModules[] = []
-        querySnapshot.forEach((doc) => {
-            const data: Omit<IModules, 'id'> = doc.data();
-            const childrens = data.children.filter((child) => child.status === "avalible")
-            modules.push({ id: doc.id, ...data,children:childrens })
+
+
+    async getMenus() {
+        try {
+            let queryData
+            queryData = query<Omit<IMenu, 'id'>>(this.modulesCollection, orderBy("order", "asc"));
+
+            const querySnapshot = await getDocs<Omit<IMenu, 'id'>>(queryData);
+            let modules: IMenu[] = []
+            querySnapshot.forEach((doc) => {
+                const data: Omit<IMenu, 'id'> = doc.data();
+                modules.push({ id: doc.id, ...data })
+            });
+
+            return modules
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
+
+    async getModule(menuId: string) {
+        try {
+            const moduleRef = doc(this.modulesCollection, menuId);
+
+            const querySnapshot = await getDoc<Omit<IMenu, 'id'>>(moduleRef);
+
+            return { id: querySnapshot.id, ...querySnapshot.data() } as IMenu
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async createMenu(newMenu: Omit<IMenu, 'id'>) {
+        try {
+            const querySnapshot = await addDoc(this.modulesCollection, newMenu);
+            const newModuleId = querySnapshot.id;
+            return newModuleId
+        } catch (error) {
+            console.error("Error al crear el menú: ", error);
+        }
+    }
+
+    async deleteMenu(idMenu: string) {
+        try {
+            const moduleRef = doc(this.modulesCollection, idMenu);
+            await deleteDoc(moduleRef);
+        } catch (error) {
+            console.error("Error al eliminar el menú: ", error);
+        }
+    }
+
+    async updateMenu(idMenu: string, { id, ...newMenu }: IMenu) {
+        try {
+            const moduleRef = doc(this.modulesCollection, idMenu);
+            await updateDoc(moduleRef, newMenu);
+            return { ok: true }
+        } catch (error) {
+            return { ok: false }
+            console.error("Error al actualizar el menú: ", error);
+        }
+    }
+
+    async inactiveMenu(idMenu: string) {
+        try {
+            const moduleRef = doc(this.modulesCollection, idMenu);
+            await updateDoc(moduleRef, { status: "not-avalible" });
+            return { ok: true }
+        } catch (error) {
+            console.error("Error al inactivar el menú: ", error);
+            return { ok: false }
+        }
+    }
+
+    async activeMenu(idMenu: string) {
+        try {
+            const moduleRef = doc(this.modulesCollection, idMenu);
+            await updateDoc(moduleRef, { status: "avalible" });
+            return { ok: true }
+        } catch (error) {
+            console.error("Error activar el menú: ", error);
+            return { ok: false }
+        }
+    }
+
+    listeningModules(onSet: (modules: IMenu[]) => void) {
+        const queryData = query<Omit<IMenu, 'id'>>(this.modulesCollection, orderBy("order", "asc"));
+        return onSnapshot(queryData, (querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const modules: IMenu[] = []
+                querySnapshot.forEach((doc) => modules.push({ id: doc.id, ...doc.data() }));
+                onSet(modules)
+            } else {
+                onSet([])
+            }
         });
-        if (conditions?.status?.isAvalible) {
-            modules = modules.filter((module) => module.status === conditions?.status?.isAvalible);
-        }
-        return modules
-    } catch (error) {
-        console.log(error)
-        return []
     }
-}
-export const getMenus = async (conditions?: IConditionsMenu) => {
-    try {
-        let queryData
-        queryData = query<Omit<IModules, 'id'>>(modulesCollectionRef, orderBy("order", "asc"));
 
-        const querySnapshot = await getDocs<Omit<IModules, 'id'>>(queryData);
-        let modules: IModules[] = []
-        querySnapshot.forEach((doc) => {
-            const data: Omit<IModules, 'id'> = doc.data();
-            modules.push({ id: doc.id, ...data })
+    listeningModule(moduleId: string, onSet: (modules: IMenu) => void) {
+        const moduleRef = doc(this.modulesCollection, moduleId);
+        return onSnapshot(moduleRef, (doc) => {
+            const data = doc.data()
+            onSet({ id: doc.id, ...data } as IMenu)
         });
-        if (conditions?.status?.isAvalible) {
-            modules = modules.filter((module) => module.status === conditions?.status?.isAvalible);
-        }
-        return modules
-    } catch (error) {
-        console.log(error)
-        return []
     }
-}
-export const getModule = async (menuId: string, conditions?: IConditionsMenu) => {
-    try {
-        const moduleRef = doc(modulesCollectionRef, menuId);
 
-        const querySnapshot = await getDoc<Omit<IModules, 'id'>>(moduleRef);
-
-        return { id: querySnapshot.id, ...querySnapshot.data() } as IModules
-    } catch (error) {
-        console.log(error)
-    }
-}
-export const createMenus = async (newMenu: Omit<IModules, 'id'>) => {
-    try {
-        const querySnapshot = await addDoc(modulesCollectionRef, newMenu);
-        const newModuleId = querySnapshot.id;
-        return newModuleId
-    } catch (error) {
-        console.error("Error al crear el menú: ", error);
-        throw error;
-    }
-}
-export const deleteMenu = async (idMenu: string) => {
-    try {
-        const moduleRef = doc(modulesCollectionRef, idMenu);
-        await deleteDoc(moduleRef);
-    } catch (error) {
-        console.error("Error al eliminar el menú: ", error);
-        throw error;
-    }
-}
-export const updateMenu = async (idMenu: string, { id, ...newMenu }: IModules) => {
-    try {
-        const moduleRef = doc(modulesCollectionRef, idMenu);
-        await updateDoc(moduleRef, newMenu);
-    } catch (error) {
-        console.error("Error al actualizar el menú: ", error);
-        throw error;
-    }
-}
-export const inactiveMenu = async (idMenu: string) => {
-    try {
-        const moduleRef = doc(modulesCollectionRef, idMenu);
-
-        await updateDoc(moduleRef, { status: "not-avalible" });
-    } catch (error) {
-        console.error("Error al inactivar el menú: ", error);
-        throw error;
-    }
-}
-export const activeMenu = async (idMenu: string) => {
-    try {
-        const moduleRef = doc(modulesCollectionRef, idMenu);
-        await updateDoc(moduleRef, { status: "avalible" });
-    } catch (error) {
-        console.error("Error activar el menú: ", error);
-        throw error;
-    }
-}
-export const listeningModules = (onSet: (modules: IModules[]) => void) => {
-    const queryData = query<Omit<IModules, 'id'>>(modulesCollectionRef, orderBy("order", "asc"));
-    return onSnapshot(queryData, (querySnapshot) => {
-        if (!querySnapshot.empty) {
-            const modules: IModules[] = []
-            querySnapshot.forEach((doc) => modules.push({ id: doc.id, ...doc.data() }));
-            onSet(modules)
-        } else {
-            onSet([])
-        }
-    });
 }
 
-export const listeningModule = (moduleId: string, onSet: (modules: IModules) => void) => {
-    console.log("🚀 ~ file: menu-services.ts:83 ~ listeningModule ~ moduleId:", moduleId)
-    const moduleRef = doc(modulesCollectionRef, moduleId);
-    return onSnapshot(moduleRef, (doc) => {
-        const data = doc.data()
-        onSet({ id: doc.id, ...data } as IModules)
-    });
-}
+export const menuFirebaseService = new MenuFirebaseService()

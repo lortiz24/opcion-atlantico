@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getModules } from './thunks';
-import { IModules } from '../../interfaces/modules-interface';
+import { IMenu } from '../../interfaces/modules-interface';
 import { RootState } from '../store';
 
 
 interface MenuState {
-    modules: IModules[],
+    modules: IMenu[],
     isLoading: boolean,
     error: string | undefined
     isMutation: boolean

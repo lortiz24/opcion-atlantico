@@ -1,8 +1,8 @@
-import { loginWithEmailPassword, registerUserWithEmailPassword, logoutFirebase } from '../../firebase/providers';
 import { checkingCredentials, logout, login } from '.';
 import { AppDispatch } from '../store';
 import { IStartCreatingUserWithEmailPasswordParams, IStartLoginWithEmailPasswordParams } from '../../interfaces/auth-interface';
 import { userInfoController } from '../../controllers/userInfo/UserInfoController';
+import { authController } from '../../controllers/auth/Auth.controller';
 
 export const checkingAuthentication = () => {
     return async (dispatch: AppDispatch) => {
@@ -16,19 +16,18 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
     return async (dispatch: AppDispatch) => {
 
         dispatch(checkingCredentials());
-        const result = await registerUserWithEmailPassword({ email, password, displayName });
-        if (!result.ok || !result.uid) return dispatch(logout(result.errorMessage));
+        const { errorMessage, userCredentials } = await authController.registerUserWithEmailPassword({ email, password, displayName });
+        if (!userCredentials || !userCredentials.uid) return dispatch(logout(errorMessage));
 
-        const userInfo = await userInfoController.createUserInfo(result.uid, {
-            displayName: result.displayName ?? '',
-            email: result.email ?? '',
-            id: result.uid,
-            photoURL: result.photoURL ?? '',
+        const userInfo = await userInfoController.createUserInfo(userCredentials.uid, {
+            displayName: userCredentials.displayName ?? '',
+            email: userCredentials.email ?? '',
+            id: userCredentials.uid,
+            photoURL: userCredentials.photoURL ?? '',
             rols: ['user'],
-
         })
-        const { ok, ...restUser } = result
-        dispatch(login({ ...restUser, userInfo: userInfo }))
+
+        dispatch(login({ ...userCredentials, userInfo: userInfo }))
 
     }
 
@@ -39,19 +38,25 @@ export const startLoginWithEmailPassword = ({ email, password }: IStartLoginWith
 
         dispatch(checkingCredentials());
 
-        const result = await loginWithEmailPassword({ email, password });
-        if (!result.ok) return dispatch(logout(result));
+        const { errorMessage, userCredentials } = await authController.loginUserWithEmailPassword({ email, password });
+        if (!userCredentials || !userCredentials.uid) return dispatch(logout(errorMessage));
 
-        const userInfo = await userInfoController.getOneUserInfo(result.uid ?? '')
-        const { ok, ...restUser } = result
-        dispatch(login({ ...restUser, userInfo }));
+        const userInfo = await userInfoController.getOneUserInfo(userCredentials.uid)
+
+        const user ={
+            displayname:userCredentials.displayName,
+            email:userCredentials.email,
+            photoURL:userCredentials.photoURL,
+            uid:userCredentials.uid
+        }
+        dispatch(login({ ...user, userInfo }));
     }
 }
 
 export const startLogout = () => {
     return async (dispatch: AppDispatch) => {
 
-        await logoutFirebase();
+        await authController.logout();
         dispatch(logout({}));
 
     }

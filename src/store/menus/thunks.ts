@@ -1,10 +1,10 @@
 import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
 import { startLoading, setModules, startMutation, stopMutation } from "./menuSlice";
-import { activeMenu, createMenus, deleteMenu, getMenusToSlice, inactiveMenu, updateMenu } from "../../firebase/menu/menu-firebase-services";
-import { IModules } from "../../interfaces/modules-interface";
+import { IMenu } from "../../interfaces/modules-interface";
 import { DispatchMessageService } from "../../components/message-response/DispatchMessageService";
 import { closeDrawer, closeEditionMode } from "../form-modules/formModulesSlices";
+import { menuController } from "../../controllers/menu/MenuControlller";
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 
@@ -12,7 +12,7 @@ export const getModules = (): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startLoading());
         try {
-            const modules = await getMenusToSlice();
+            const modules = await menuController.getMenus({ order: true });
             dispatch(setModules({ modules }));
         } catch (error) {
             console.error("Error getting documents: ", error);
@@ -20,11 +20,11 @@ export const getModules = (): ThunkResult<void> => {
     };
 };
 
-export const createModule = (newMenu: Omit<IModules, 'id'>, call?: () => void): ThunkResult<void> => {
+export const createModule = (newMenu: Omit<IMenu, 'id'>, call?: () => void): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
-            await createMenus(newMenu);
+            await menuController.createMenu(newMenu);
             dispatch(stopMutation());
             DispatchMessageService({ action: 'show', type: "success", msj: 'Se creo el modulo correctamente' })
         } catch (error) {
@@ -36,11 +36,11 @@ export const createModule = (newMenu: Omit<IModules, 'id'>, call?: () => void): 
         }
     };
 };
-export const updateModule = (menuId: string, newMenu: Omit<IModules, 'id'>): ThunkResult<void> => {
+export const updateModule = (menuId: string, newMenu: Omit<IMenu, 'id'>): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
-            await updateMenu(menuId, { id: menuId, ...newMenu });
+            await menuController.updateMenu(menuId, { id: menuId, ...newMenu });
             dispatch(stopMutation());
             DispatchMessageService({ action: 'show', type: "success", msj: 'Se actualizo el modulo correctamente' })
         } catch (error) {
@@ -56,7 +56,7 @@ export const deleteModule = (id_menu: string): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
-            await deleteMenu(id_menu);
+            await menuController.deleteMenu(id_menu);
 
             dispatch(stopMutation());
 
@@ -74,7 +74,7 @@ export const inactiveModule = (menuId: string): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
-            await inactiveMenu(menuId);
+            await menuController.inactiveMenu(menuId);
 
             dispatch(stopMutation());
 
@@ -93,7 +93,7 @@ export const activeModule = (menuId: string): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startMutation());
         try {
-            await activeMenu(menuId);
+            await menuController.activeMenu(menuId);
 
             dispatch(stopMutation());
 
@@ -108,15 +108,4 @@ export const activeModule = (menuId: string): ThunkResult<void> => {
         }
     };
 };
-
-
-//Esto si queremos usar createAsyncThunk
-/* export const getModules = createAsyncThunk(
-    'menu/getModules',
-    async () => {
-        const response = await fetch(`/api/modules?page=${0}`);
-        const data = await response.json();
-        return { modules: ['Epaaa'] };
-    }
-); */
 

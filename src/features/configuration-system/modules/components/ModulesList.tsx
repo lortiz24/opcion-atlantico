@@ -8,8 +8,6 @@ import { StatusToRender } from '../utils/status-render';
 import { StatusToRenderValues } from '../interfaces/form-modules';
 import ModuloItem from './ModuloItem';
 import useListeningModules from '../../../../hooks/useListeningModules';
-import FormModules from './FormModules';
-import { IModules } from '../../../../interfaces/modules-interface';
 import { openEditionMode } from '../../../../store/form-modules/formModulesSlices';
 
 interface DataType {

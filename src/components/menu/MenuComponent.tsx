@@ -1,12 +1,12 @@
-import { Menu, theme } from 'antd';
+import { Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { IModules } from '../../interfaces/modules-interface';
+import { IMenu } from '../../interfaces/modules-interface';
 import { useAppSelector } from '../../store/store';
 import { useNavigate } from 'react-router-dom';
 import * as IconsAntDesing from '@ant-design/icons';
 
 const MenuComponent = () => {
-	const [menuList, setMenuList] = useState<IModules[]>([]);
+	const [menuList, setMenuList] = useState<IMenu[]>([]);
 	const [openKeys, setOpenKeys] = useState<string[]>([]);
 	const { modules } = useAppSelector(selector => selector.menu);
 	const navigate = useNavigate();

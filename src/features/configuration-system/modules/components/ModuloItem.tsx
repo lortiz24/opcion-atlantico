@@ -6,7 +6,7 @@ import { StatusToRenderValues } from '../interfaces/form-modules';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { StatusToRender } from '../utils/status-render';
 import useListeningModule from '../hooks/useListeningModule';
-import { updateMenu } from '../../../../firebase/menu/menu-firebase-services';
+import { menuController } from '../../../../controllers/menu/MenuControlller';
 
 
 interface DataType {
@@ -45,7 +45,7 @@ const ModuloItem = ({ onCancel, onOk, moduleId, open }: IModuloItemProps) => {
             }
             return submenu
         })
-        updateMenu(moduleId, newModule)
+        menuController.updateMenu(moduleId, newModule)
     }
     return (
         <Modal open={open} onCancel={onCancel} onOk={onOk} destroyOnClose>

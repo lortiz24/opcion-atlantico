@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { IModules } from '../../../../interfaces/modules-interface';
-import { getModule } from '../../../../firebase/menu/menu-firebase-services';
+import { IMenu } from '../../../../interfaces/modules-interface';
+import { menuController } from '../../../../controllers/menu/MenuControlller';
 
 const useGetModule = (moduleId: string) => {
-	const [module, setModule] = useState<IModules>({} as IModules);
+	const [module, setModule] = useState<IMenu>({} as IMenu);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -11,7 +11,7 @@ const useGetModule = (moduleId: string) => {
 	}, [moduleId]);
 
 	const getModuleAsync = async () => {
-		const data = await getModule(moduleId);
+		const data = await menuController.getMenu(moduleId);
 		if (data) {
 			setModule(data);
 		}

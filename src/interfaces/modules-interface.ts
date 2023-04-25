@@ -1,5 +1,6 @@
+
 export type StatusMenuItem = 'avalible' | 'not-avalible'
-export interface IModules {
+export interface IMenu {
     id: string
     label: string;
     children: IChildrensModules[];
@@ -7,6 +8,7 @@ export interface IModules {
     order: number
     status: StatusMenuItem
     icon:string;
+    rolAcces:string[]
 }
 
 export interface IChildrensModules {

@@ -10,6 +10,10 @@ import useGetModule from '../hooks/useGetModule'
 import LoadingComponent from '../../../../components/loading/LoadingComponent';
 import * as IconsAntDesign from '@ant-design/icons';
 import useGetIconStringList from '../hooks/useGetIconStringList'
+import useGetRols from '../../../../hooks/useGetRols'
+import { rolController } from '../../../../controllers/rol/RolController'
+
+
 
 //todo: cambiar al formmulario dinamico de ant desing
 const FormModules = () => {
@@ -19,6 +23,7 @@ const FormModules = () => {
     const [subMenus, setSubMenus] = useState<number[]>([1])
     //custom Hooks
     const { iconListString } = useGetIconStringList()
+    const { isLoadingRols, rolList } = useGetRols()
     //store
     const { isEdit, moduleID } = useAppSelector(selector => selector.formModule)
     //herramientas
@@ -58,7 +63,8 @@ const FormModules = () => {
             order: isEdit ? module.order : modules.length,
             status: 'avalible',
             icon: values.icon ?? '',
-            children: childrens
+            children: childrens,
+            rolAcces: values.rolsAccess
         }
         if (isEdit) {
             return dispatch(updateModule(moduleID, newModules))
@@ -86,6 +92,7 @@ const FormModules = () => {
             form.setFieldValue('nameMenu', module.label)
             form.setFieldValue('pathMenu', module.path)
             form.setFieldValue('haveSubmenus', true)
+            form.setFieldValue('rolsAccess', module.rolAcces)
             form.setFieldValue('icon', module.icon)
             if (module?.children && module.children.length > 0) {
                 form.setFieldValue('haveSubmenus', true)
@@ -115,6 +122,15 @@ const FormModules = () => {
                             </Form.Item>
                             <Form.Item label='Path' name={'pathMenu'} rules={[{ required: true, message: 'El path del menu es requerido' }]}>
                                 <Input />
+                            </Form.Item>
+                            <Form.Item label='Roles permitidos' name='rolsAccess'>
+                                <Select mode='multiple' allowClear showSearch filterOption={filterOption} >
+                                    {rolList.map(item => {
+                                        return (
+                                            <Select.Option key={item.id} value={item.value} children={item.value} />
+                                        )
+                                    })}
+                                </Select>
                             </Form.Item>
                             <Form.Item label='Escoga un icono' name='icon'>
                                 <Select allowClear showSearch filterOption={filterOption} >

@@ -1,4 +1,4 @@
-import { UserServiceFirebase, useServiceFirebase } from "../../firebase/user/user-firebase-services";
+import { UserServiceFirebase } from "../../firebase/user/user-firebase-services";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 
 interface IResult {
@@ -6,7 +6,9 @@ interface IResult {
 }
 
 export class UserInfoController {
-    constructor(private userInfoService: UserServiceFirebase) { }
+    constructor(
+        private userInfoService = new UserServiceFirebase()
+    ) { }
 
     async getUsersInfos() {
         const usersInfo = this.userInfoService.getUsersInfo()
@@ -28,4 +30,4 @@ export class UserInfoController {
 
 }
 
-export const userInfoController = new UserInfoController(useServiceFirebase)
+export const userInfoController = new UserInfoController()

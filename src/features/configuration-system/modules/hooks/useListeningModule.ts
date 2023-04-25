@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { IModules } from '../../../../interfaces/modules-interface';
-import { listeningModule } from '../../../../firebase/menu/menu-firebase-services';
+import { IMenu } from '../../../../interfaces/modules-interface';
+import { menuController } from '../../../../controllers/menu/MenuControlller';
 
 const useListeningModule = (moduleId: string) => {
-    const [module, setModule] = useState<IModules>({} as IModules);
+    const [module, setModule] = useState<IMenu>({} as IMenu);
     const [loading, setLoading] = useState(true);
-    const onSet = (modulesRealTime: IModules) => {
+    const onSet = (modulesRealTime: IMenu) => {
         setModule(modulesRealTime)
         setLoading(false)
     }
     useEffect(() => {
-        const unsubscribe = listeningModule(moduleId, onSet)
+        const unsubscribe = menuController.listeningMenu(moduleId, onSet)
         return () => {
             unsubscribe()
         }
