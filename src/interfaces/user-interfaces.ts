@@ -14,5 +14,5 @@ export interface IUser {
     email: string;
     displayName: string;
     photoURL: string | null;
-    password: string;
+    password?: string | null;
 }

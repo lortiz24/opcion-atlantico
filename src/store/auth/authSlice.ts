@@ -3,14 +3,18 @@ import { IUserInfo, TRoles } from '../../interfaces/user-interfaces';
 
 type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
+
 interface AuthState {
 	status: StatusAuth;
 	uid: string | null;
-	email: string | null;
+	email?: string | null;
 	displayName: string | null;
 	photoURL: string | null;
-	errorMessage: any;
-	userInfo: IUserInfo | null
+	errorMessage?: any;
+	userInfo?: IUserInfo
+}
+
+interface Payload extends Partial<Omit<AuthState, 'status'>> {
 }
 
 const initialState: AuthState = {
@@ -20,19 +24,18 @@ const initialState: AuthState = {
 	displayName: null,
 	photoURL: null,
 	errorMessage: null,
-	userInfo: null
 
 };
 export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-		login: (state, { payload }) => {
+		login: (state, { payload }: { payload: Payload }) => {
 			state.status = 'authenticated';
-			state.uid = payload.uid;
+			state.uid = payload.uid ?? '';
 			state.email = payload.email;
-			state.displayName = payload.displayName;
-			state.photoURL = payload.photoURL;
+			state.displayName = payload.displayName ?? '';
+			state.photoURL = payload.photoURL ?? '';
 			state.errorMessage = null;
 			state.userInfo = payload.userInfo;
 		},

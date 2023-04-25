@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, theme } from 'antd';
+import { Layout, notification, theme } from 'antd';
 import './MainLayout.style.css';
 import { LayoutCss } from './MainLayout.style';
 import { getModules } from '../store/menus/thunks';
@@ -12,6 +12,7 @@ import MenuComponent from '../components/menu/MenuComponent';
 import MenuHeaderComponent from '../components/menu/MenuHeaderComponent';
 import useGetMonitorSize from '../hooks/useGetMonitorSize';
 import './MainLayout.style.css'
+
 const { Header, Content, Sider } = Layout;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -24,6 +25,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
+
 
 	useEffect(() => {
 		dispatch(setStatusConection({ statusConection }));
@@ -44,7 +46,6 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	useEffect(() => {
 		if (isMobile) setCollapsed(true)
 	}, [isMobile])
-
 
 	return (
 		<>

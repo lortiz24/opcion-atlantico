@@ -79,7 +79,6 @@ export const deleteMenu = async (idMenu: string) => {
 export const updateMenu = async (idMenu: string, { id, ...newMenu }: IModules) => {
     try {
         const moduleRef = doc(modulesCollectionRef, idMenu);
-        console.log('newMenu', idMenu)
         await updateDoc(moduleRef, newMenu);
     } catch (error) {
         console.error("Error al actualizar el menú: ", error);

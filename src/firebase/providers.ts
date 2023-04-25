@@ -1,12 +1,11 @@
-import { collection, CollectionReference, getFirestore } from "firebase/firestore";
+import { collection, CollectionReference } from "firebase/firestore";
 import { FirebaseAuth, FirebaseDB } from "./ConfigFirebase";
 import { IModules } from "../interfaces/modules-interface";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, updateEmail, updatePassword, deleteUser } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, updateEmail, updatePassword } from "firebase/auth";
 import { IRegisterUserWithEmailPasswordParams } from "../interfaces/auth-interface";
 import { IEvent, IQrCode } from "../interfaces/events-interfaces";
 import { ILogin } from "../interfaces/firebase-interfaces";
 import { IUser, IUserInfo } from "../interfaces/user-interfaces";
-import { createUserInfo } from "./user/user-firebase-services";
 
 export const modulesCollectionRef = collection(FirebaseDB, "modules") as CollectionReference<Omit<IModules, 'id'>>;
 export const eventsCollectionRef = collection(FirebaseDB, "events") as CollectionReference<Omit<IEvent, 'id'>>;
@@ -20,12 +19,10 @@ export const registerUserWithEmailPassword = async ({ email, password, displayNa
         const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
         const { uid, photoURL } = resp.user;
         await updateProfile(resp.user, { displayName });
-        await createUserInfo(uid, { rols: ['user'], displayName, email, photoURL })
         return {
             ok: true,
-            uid, photoURL, email, displayName, userInfo: { rols: ['user'] }
+            uid, photoURL, email, displayName
         }
-
     } catch (error: any) {
         console.log(error);
         return { ok: false, errorMessage: error.message }
@@ -42,7 +39,7 @@ export const loginWithEmailPassword = async ({ email: emailLogin, password }: IL
 
         return {
             ok: true,
-            uid, photoURL, displayName, email
+            uid, photoURL, email, displayName
         }
 
     } catch (error: any) {
@@ -71,6 +68,10 @@ export const updatePasswordUser = async (newPassword: string) => {
     const userToUpdate = FirebaseAuth.currentUser
     if (!userToUpdate) return null
     await updatePassword(userToUpdate, newPassword);
+}
+
+export class AuthFirebaseService {
+
 }
 
 
