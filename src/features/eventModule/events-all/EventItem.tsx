@@ -8,7 +8,6 @@ import { timestampAfterNow, timestampBeforeNow, timestampToString } from '../../
 import { ResultStatusType } from 'antd/es/result';
 
 
-const { Countdown } = Statistic;
 interface IEventItemProps extends IEventListProps {
     eventItem: IEvent
 }
@@ -22,7 +21,7 @@ const IconText = ({ icon, text, onClick }: { icon: React.FC; text: string, onCli
 );
 
 const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItemProps) => {
-    const { width } = useGetMonitorSize()
+    const { windowSize: { width } } = useGetMonitorSize()
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')
     const [messageByState, setMessageByState] = useState('')
     useEffect(() => {
@@ -71,10 +70,11 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
                     title={messageByState}
                     extra={
                         statusResult === 'info' && (
-                            <Countdown
+                            <Statistic.Countdown
                                 style={{ margin: 'auto' }}
                                 value={timestampToString(eventItem.dateStart, 'MM/DD/YYYY hh:mm A')}
                                 format='D [días] H [horas] m [minutos] s [segundos]'
+                                onFinish={()=>console.log('epa finalize')}
                             />
                         )
                     }

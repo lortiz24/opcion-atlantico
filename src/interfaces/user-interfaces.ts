@@ -8,6 +8,10 @@ export interface IUserInfo extends Omit<IUser,'password'> {
     dateBirth?: Timestamp;
     dateUpdated?: Timestamp;
     dateCreated?: Timestamp;
+    address?: string;
+    city?:string;
+    promocion?: string;
+
 }
 
 export interface IUser {

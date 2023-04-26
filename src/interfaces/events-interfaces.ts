@@ -1,17 +1,21 @@
 import { Timestamp } from 'firebase/firestore';
-import { IUserInfo } from './user-interfaces';
 import { Dayjs } from 'dayjs';
+import { UploadFile } from 'antd';
 
 export interface IEvent {
     id: string;
-    img: string;
-    typeAttendance: string
     title: string;
-    place: string
+    place: string //parametrizable
     desciption: string;
     dateStart: Timestamp
     dateEnd: Timestamp
-    assistants: string[]
+    assistants: string[] //array de ids de user
+    moderators: string[] //array de ids de user
+    typeAttendance: 'manual' | 'automatic'
+    typeEvent: 'face-to-face' | 'virtual'
+    urlMeet?: string
+    img: string;
+    anfitrion: string;
 }
 
 export interface IAssistant {
@@ -41,6 +45,5 @@ export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
     desciption: string;
     dateStart: Dayjs
     dateEnd: Dayjs;
-    typeAttendance: string
-    img: string
+    imgForm: UploadFile<any> | UploadFile<any>[]
 }

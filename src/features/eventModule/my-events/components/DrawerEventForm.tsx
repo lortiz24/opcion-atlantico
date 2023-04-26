@@ -3,9 +3,8 @@ import { Button, Drawer, DrawerProps, Space } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { closeDrawerEvent } from '../../../../store/form-events/formEventSlice'
 import useGetMonitorSize from '../../../../hooks/useGetMonitorSize'
-import EventForm from './EventForm'
+import EventForm from './FormEvent'
 import { IEvent, IFormEvent } from '../../../../interfaces/events-interfaces'
-import { eventController } from '../../../../controllers/events/event.controller'
 import { Timestamp } from 'firebase/firestore'
 import { createEventAsync } from '../../../../store/form-events/event-thunk'
 
@@ -14,7 +13,7 @@ interface IDrawerEventFormProps extends DrawerProps {
 }
 const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) => {
     const { isDrawerEventOpen, isEditFormEvent } = useAppSelector(selector => selector.formEvent)
-    const { width: widthMonitor } = useGetMonitorSize()
+    const { isTable } = useGetMonitorSize()
     const dispatch = useAppDispatch()
 
     const onCreateEvent = async (formEvent: IFormEvent) => {
@@ -23,7 +22,8 @@ const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) 
             dateStart: Timestamp.fromDate(formEvent.dateStart.toDate()),
             dateEnd: Timestamp.fromDate(formEvent.dateEnd.toDate()),
         }
-        if(isEditFormEvent)return console.log('vales monda')
+        return console.log(newEvent)
+        if (isEditFormEvent) return console.log('vales monda')
         dispatch(createEventAsync(newEvent))
     }
 
@@ -31,7 +31,7 @@ const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) 
         <Drawer
             title={isEditFormEvent ? 'Edicion de evento' : 'Creacion de eventos'}
             placement={'right'}
-            width={width ? width : widthMonitor < 900 ? '100%' : 900}
+            width={isTable ? '100%' : '90%'}
             onClose={() => dispatch(closeDrawerEvent())}
             open={isDrawerEventOpen}
             extra={

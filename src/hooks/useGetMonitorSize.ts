@@ -3,23 +3,26 @@ import { useState, useEffect } from 'react';
 interface WindowSize {
     width: number;
     height: number;
-    isMobile: boolean;
 }
 
-const useGetMonitorSize = (): WindowSize => {
+const useGetMonitorSize = () => {
     const [windowSize, setWindowSize] = useState<WindowSize>({
         width: 1920,
         height: 1080,
-        isMobile: false
     });
+
+    const [isTable, setIsTable] = useState(false);
+    const [isMobile, setisMobile] = useState(false)
+
     useEffect(() => {
 
         const handleResize = () => {
             setWindowSize({
                 width: window.innerWidth,
                 height: window.innerHeight,
-                isMobile: window.innerWidth < 500
             });
+            setisMobile(window.innerWidth < 500)
+            setIsTable(window.innerWidth < 900)
         }
 
         window.addEventListener('resize', handleResize);
@@ -28,7 +31,11 @@ const useGetMonitorSize = (): WindowSize => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    return windowSize;
+    return {
+        windowSize,
+        isTable,
+        isMobile
+    };
 };
 
 export default useGetMonitorSize;

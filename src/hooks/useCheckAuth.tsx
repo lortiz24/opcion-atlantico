@@ -13,10 +13,9 @@ export const useCheckAuth = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         onAuthStateChanged(FirebaseAuth, async (user) => {
-            console.log('user',user)
-            const userInfo = await userInfoController.getOneUserInfo(user?.uid ?? '')
-            console.log('userInfo',userInfo)
+
             if (!user) return dispatch(logout({}));
+            const userInfo = await userInfoController.getOneUserInfo(user?.uid ?? '')
             if (!userInfo || !userInfo.rols) {
                 userInfoController.createUserInfo(user?.uid ?? '', {
                     displayName: user.displayName ?? '',
