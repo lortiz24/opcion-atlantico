@@ -17,6 +17,7 @@ export class EventController {
         return event
     }
     async createEvent(newEvent: Omit<IEvent, 'id'>) {
+        console.log('newEvent',newEvent)
         const event = await this.eventService.create(newEvent)
         return event
     }

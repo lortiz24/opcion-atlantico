@@ -9,7 +9,7 @@ import { FormItemLabelProps } from 'antd/es/form/FormItemLabel';
 
 
 interface IMyUploadComponentProps extends FormItemLabelProps {
-    onSetFile: (item: UploadFile | UploadFile[]) => void;
+    onSetFile: (item: RcFile[]) => void;
     maxFiles?: number;
     name?: string
     typeFile?: string,
@@ -20,6 +20,7 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle }: I
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [filesToUpdate, setFilesToUpdate] = useState<RcFile[]>([]);
 
     const handleCancel = () => setPreviewOpen(false);
 
@@ -30,11 +31,19 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle }: I
 
         setPreviewImage(file.url || (file.preview as string));
         setPreviewOpen(true);
-        // setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
     };
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-        onSetFile(newFileList)
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList, file }) => {
+        console.log('epa', file)
+        if (file.status === 'removed') {
+            const newListFile = filesToUpdate.filter(item => item.name !== file.name)
+            onSetFile(newListFile)
+            setFilesToUpdate(newListFile)
+        } else {
+            onSetFile(filesToUpdate)
+            setFilesToUpdate(filesToUpdate)
+        }
+
         setFileList(newFileList);
     }
 
@@ -43,7 +52,8 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle }: I
         <Form.Item label={label} name={name} >
             <Upload
                 beforeUpload={(file) => {
-                    onSetFile([...fileList, file])
+                    onSetFile([...filesToUpdate, file])
+                    setFilesToUpdate([...filesToUpdate, file])
                     setFileList([...fileList, file])
                     return false;
                 }}

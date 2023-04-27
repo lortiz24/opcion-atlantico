@@ -14,7 +14,7 @@ export interface IEvent {
     typeAttendance: 'manual' | 'automatic'
     typeEvent: 'face-to-face' | 'virtual'
     urlMeet?: string
-    img: string;
+    img: string | undefined;
     anfitrion: string;
 }
 
@@ -45,5 +45,5 @@ export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
     desciption: string;
     dateStart: Dayjs
     dateEnd: Dayjs;
-    imgForm: UploadFile<any> | UploadFile<any>[]
+    imgForm: UploadFile<any>[]
 }

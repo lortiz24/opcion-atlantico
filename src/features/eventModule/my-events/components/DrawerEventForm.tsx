@@ -7,6 +7,8 @@ import EventForm from './FormEvent'
 import { IEvent, IFormEvent } from '../../../../interfaces/events-interfaces'
 import { Timestamp } from 'firebase/firestore'
 import { createEventAsync } from '../../../../store/form-events/event-thunk'
+import { storageController } from '../../../../controllers/storage/storage.controller'
+import { DispatchMessageService } from '../../../../components/message-response/DispatchMessageService'
 
 interface IDrawerEventFormProps extends DrawerProps {
 
@@ -16,13 +18,20 @@ const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) 
     const { isTable } = useGetMonitorSize()
     const dispatch = useAppDispatch()
 
-    const onCreateEvent = async (formEvent: IFormEvent) => {
+    const onCreateEvent = async ({ imgForm, ...formEvent }: IFormEvent) => {
         const newEvent: Omit<IEvent, 'id'> = {
             ...formEvent,
             dateStart: Timestamp.fromDate(formEvent.dateStart.toDate()),
             dateEnd: Timestamp.fromDate(formEvent.dateEnd.toDate()),
         }
-        return console.log(newEvent)
+        let nameImage = undefined
+        if (imgForm[0]) {
+            //todo: validar si el nombre de la imagen ya existe y preguntar si desea reemplazar
+            nameImage = await storageController.uploadImage(imgForm[0], 'events-image', imgForm[0].name)
+            if (!nameImage) return DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo subir la imagen, verifique nuevamente' })
+        }
+        delete newEvent.img
+        newEvent.img = nameImage ?? ''
         if (isEditFormEvent) return console.log('vales monda')
         dispatch(createEventAsync(newEvent))
     }

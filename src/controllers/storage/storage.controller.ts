@@ -5,8 +5,9 @@ class StorageController {
         private readonly storageService = new StorageFirebaseService()
     ) { }
 
-    async uploadImage(file: any) {
-        this.storageService.uploadImg(file)
+    async uploadImage(file: any, directory: string, nameImg: string) {
+        const newNameImage = await this.storageService.uploadImg(file, directory, nameImg)
+        return newNameImage
     }
 }
 

@@ -6,7 +6,7 @@ import { IEventListProps } from './EventList';
 import useGetMonitorSize from '../../../hooks/useGetMonitorSize';
 import { timestampAfterNow, timestampBeforeNow, timestampToString } from '../../../services/date-treatment/conversions-date.utils';
 import { ResultStatusType } from 'antd/es/result';
-
+import './eventAll.css'
 
 interface IEventItemProps extends IEventListProps {
     eventItem: IEvent
@@ -21,7 +21,7 @@ const IconText = ({ icon, text, onClick }: { icon: React.FC; text: string, onCli
 );
 
 const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItemProps) => {
-    const { windowSize: { width } } = useGetMonitorSize()
+    const { windowSize: { width }, isTable } = useGetMonitorSize()
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')
     const [messageByState, setMessageByState] = useState('')
     useEffect(() => {
@@ -42,73 +42,88 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
     }, [eventItem.dateStart])
 
     return (
-        <List.Item
-            onClick={() => {
-                if (onSelected) onSelected(eventItem)
-            }}
-            /*  actions={[
-                 <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" key="list-vertical-message" />,
-                 <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" key="list-vertical-message" />,
-             ]} */
-            extra={
-                width > 700 ? (
-                    <Image
-                        width={272}
-                        src={eventItem.img}
-                        alt="logo"
-                        preview={false}
-                        style={{ borderRadius: 20 }}
-                    />
-                ) : <></>
-            }
-
-        >
-            <Card hoverable={!!onSelected} bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }} >
-                <Result
-                    style={{ paddingTop: '2px', paddingBottom: '20px' }}
-                    status={statusResult}
-                    title={messageByState}
-                    extra={
-                        statusResult === 'info' && (
-                            <Statistic.Countdown
-                                style={{ margin: 'auto' }}
-                                value={timestampToString(eventItem.dateStart, 'MM/DD/YYYY hh:mm A')}
-                                format='D [días] H [horas] m [minutos] s [segundos]'
-                                onFinish={()=>console.log('epa finalize')}
-                            />
-                        )
-                    }
+        <Card hoverable bordered={false} style={{ height: '100%', cursor: 'default', borderRadius: 50 }}>
+            <List.Item
+                onClick={() => {
+                    if (onSelected) onSelected(eventItem)
+                }}
+                /*   actions={[
+                      <Space wrap key={'f216e1f5e1f'}>
+                          {onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
+                          {onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
+                      </Space>
+                  ]} */
+                extra={
+                    !isTable ? (
+                        <>
+                            <Col span={24}>
+                                <Image
+                                    width={272}
+                                    src={eventItem.img}
+                                    alt="logo"
+                                    preview={false}
+                                    style={{ borderRadius: 20 }}
+                                />
+                            </Col>
+                            <Space wrap key={'f216e1f5e1f'} style={{ marginTop: 10 }}>
+                                {onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
+                                {onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
+                            </Space>
+                        </>
+                    ) : <></>
+                }
+            >
+                <List.Item.Meta
+                    avatar={<Avatar icon='L'/>}
+                    title={onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
+                    description={onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
                 />
-                <Row justify='center' align='middle' gutter={[16, 16]} wrap>
-                    <Col>
-                        <Space wrap>
-                            <Typography.Text strong>Fecha incio:</Typography.Text>
-                            <Typography.Text code>{timestampToString(eventItem.dateStart, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
-                        </Space>
-                    </Col>
-                    <Col>
-                        <Space wrap>
-                            <Typography.Text strong>Fecha fin: </Typography.Text>
-                            <Typography.Text code>{timestampToString(eventItem.dateEnd, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
-                        </Space>
-                    </Col>
-                    <Col>
-                        <Space wrap>
-                            <Typography.Text strong>Lugar: </Typography.Text>
-                            <Typography.Text code style={{ textTransform: 'uppercase' }}>
-                                {eventItem.place}
-                            </Typography.Text>
-                        </Space>
-                    </Col>
+                <Row justify='center' align='middle' gutter={[16, 16]} style={{ alignItems: 'flex-end' }}>
                     <Col span={24}>
+                        <Result
+                            style={{ paddingTop: '2px', paddingBottom: '20px' }}
+                            status={statusResult}
+                            title={<Typography.Title level={3} >{messageByState}</Typography.Title>}
+                            extra={
+                                statusResult === 'info' && (
+                                    <Statistic.Countdown
+                                        style={{ margin: 'auto' }}
+                                        value={timestampToString(eventItem.dateStart, 'MM/DD/YYYY hh:mm A')}
+                                        format='D [días] H [horas] m [minutos] s [segundos]'
+                                        onFinish={() => console.log('epa finalize')}
+                                    />
+                                )
+                            }
+                        />
+                    </Col>
+                    <Col>
                         <Space wrap>
-                            {onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
-                            {onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
+                            <Space wrap>
+                                <Typography.Text strong>Fecha incio:</Typography.Text>
+                                <Typography.Text code>{timestampToString(eventItem.dateStart, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
+                            </Space>
+                            <Space wrap>
+                                <Typography.Text strong>Fecha fin: </Typography.Text>
+                                <Typography.Text code>{timestampToString(eventItem.dateEnd, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
+                            </Space>
+                            <Space wrap>
+                                <Typography.Text strong>Lugar: </Typography.Text>
+                                <Typography.Text code style={{ textTransform: 'uppercase' }}>
+                                    {eventItem.place}
+                                </Typography.Text>
+                            </Space>
                         </Space>
+
+                    </Col>
+                    <Col>
+
+                    </Col>
+                    <Col>
+
                     </Col>
                 </Row>
-            </Card>
-        </List.Item >
+            </List.Item >
+        </Card>
     )
 }
 

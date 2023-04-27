@@ -35,11 +35,7 @@ const EventView = () => {
             {isOpenReadQR && <ReadQr open={isOpenReadQR} onCancel={onCloseReadQr} onOk={onCloseReadQr} />}
             {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
 
-            <Row>
-                <Col span={24}>
-                    <EventList onReadQr={onReadQr} onGenerateQR={onGenerateQR} />
-                </Col>
-            </Row>
+            <EventList onReadQr={onReadQr} onGenerateQR={onGenerateQR} />
 
         </>
     )

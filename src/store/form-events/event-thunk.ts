@@ -12,11 +12,13 @@ export const createEventAsync = (newEvent: Omit<IEvent, 'id'>): ThunkResult<void
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startActionEvent());
         try {
-            await eventController.createEvent(newEvent);
-            DispatchMessageService({ action: 'show', type: "success", msj: 'Se creo el evento correctamente' })
+            const newEventId = await eventController.createEvent(newEvent);
+            dispatch(stopActionEvent())
+            if(!newEventId) return DispatchMessageService({ action: 'show', type: "error", msj: 'No se pudo crear el evento' })
             dispatch(closeDrawerEvent())
+            DispatchMessageService({ action: 'show', type: "success", msj: 'Se creo el evento correctamente' })
         } catch (error) {
-            dispatch(stopActionEvent)
+            dispatch(stopActionEvent())
             DispatchMessageService({ action: 'show', type: "error", msj: 'No se pudo crear el evento' })
             console.error("Error getting documents: ", error);
         }
