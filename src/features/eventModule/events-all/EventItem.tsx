@@ -5,7 +5,6 @@ import { IEvent } from '../../../interfaces/events-interfaces';
 import { IEventListProps } from './EventList';
 import { timestampAfterNow, timestampBeforeNow, timestampToString } from '../../../services/date-treatment/conversions-date.utils';
 import { ResultStatusType } from 'antd/es/result';
-import './eventAll.css'
 import MyGradiantBackground from '../../../components/gradiant-bacground/MyGradiantBackground';
 
 interface IEventItemProps extends IEventListProps {

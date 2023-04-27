@@ -1,5 +1,5 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
-import { query, where, addDoc, deleteDoc, doc, onSnapshot, orderBy, getDocs, getDoc, } from "firebase/firestore";
+import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, } from "firebase/firestore";
 import { IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { UserServiceFirebase } from "../user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";

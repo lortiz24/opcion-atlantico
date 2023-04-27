@@ -11,7 +11,6 @@ import LoadingComponent from '../../../../components/loading/LoadingComponent';
 import * as IconsAntDesign from '@ant-design/icons';
 import useGetIconStringList from '../hooks/useGetIconStringList'
 import useGetRols from '../../../../hooks/useGetRols'
-import { rolController } from '../../../../controllers/rol/rol.controller'
 
 
 

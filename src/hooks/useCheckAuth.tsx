@@ -13,20 +13,20 @@ export const useCheckAuth = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         onAuthStateChanged(FirebaseAuth, async (user) => {
-
+            //todo: si no tiene info usuario o no alcanza a encontrarlo, no realizar el login
             if (!user) return dispatch(logout({}));
             const userInfo = await userInfoController.getOneUserInfo(user?.uid ?? '')
             if (!userInfo || !userInfo.rols) {
-                userInfoController.createUserInfo(user?.uid ?? '', {
-                    displayName: user.displayName ?? '',
-                    email: user.email ?? '',
-                    id: user.uid,
-                    photoURL: user.photoURL,
-                    rols: ['user']
-                })
+                return dispatch(logout({ errorMessage: 'Su usuario no tiene configurado correctamente su informacion, consulte con el administrador o intentelo de nuevo' }));
+                /*  userInfoController.createUserInfo(user?.uid ?? '', {
+                     displayName: user.displayName ?? '',
+                     email: user.email ?? '',
+                     id: user.uid,
+                     photoURL: user.photoURL,
+                     rols: ['user']
+                 }) */
             }
             const { uid, email, displayName, photoURL } = user;
-            console.log('displayName',displayName)
             dispatch(login({ uid, email, displayName, photoURL, userInfo }));
         })
     }, []);
