@@ -27,11 +27,11 @@ const EventList = ({ onReadQr, onGenerateQR, onSelected }: IEventListProps) => {
             />
             <List
                 grid={{
-                    gutter: 16,
+                    gutter: 8,
                     xs: 1,
                     sm: 1,
                     md: 1,
-                    lg: 2,
+                    lg: 1,
                     xl: 2,
                     xxl: 2,
                 }}
