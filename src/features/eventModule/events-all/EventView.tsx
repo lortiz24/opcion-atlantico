@@ -3,10 +3,7 @@ import React, { useState } from 'react'
 import GenerateQr from './components/GenerateQr';
 import ReadQr from './components/ReadQr';
 import EventList from './EventList';
-import { PlusCircleFilled } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { openDrawerFormEvent } from '../../../store/form-events/formEventSlice';
-import DrawerEventForm from '../my-events/components/DrawerEventForm';
 
 const EventView = () => {
     const [openGenerateQR, setOpenGenerateQR] = useState(false)

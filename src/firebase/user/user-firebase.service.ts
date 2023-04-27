@@ -39,7 +39,6 @@ export class UserServiceFirebase {
             const moduleRef = doc(this.userInfoCollection, userInfoId);
 
             const querySnapshot = await getDoc<Omit<IUserInfo, 'id'>>(moduleRef);
-
             return { id: querySnapshot.id, ...querySnapshot.data() } as IUserInfo
         } catch (error) {
             console.log(error)

@@ -20,3 +20,4 @@ export interface IUser {
     photoURL: string | null;
     password?: string | null;
 }
+

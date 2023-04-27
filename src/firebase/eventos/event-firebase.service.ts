@@ -1,6 +1,8 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
 import { query, where, addDoc, deleteDoc, doc, onSnapshot, orderBy, getDocs, getDoc, } from "firebase/firestore";
-import { IEvent, IQrCode } from "../../interfaces/events-interfaces";
+import { IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { UserServiceFirebase } from "../user/user-firebase.service";
+import { IUserInfo } from "../../interfaces/user-interfaces";
 
 
 export const listeningQrAttendanceFirebase = (codeQrID: string, onSet: (modules: IQrCode) => void) => {
@@ -52,22 +54,29 @@ export const createEventFirebase = async (newEvent: Omit<IEvent, 'id'>) => {
 export class EventFirebaseService {
 
     constructor(
-        private readonly eventsCollection = eventsCollectionRef
+        private readonly eventsCollection = eventsCollectionRef,
+        private readonly userService = new UserServiceFirebase()
     ) { }
 
-    async getAll() {
+    async getAll({ assistants, moderators }: ISelectedForeign) {
         try {
-
             let queryData = query<Omit<IEvent, 'id'>>(this.eventsCollection);
-
             const querySnapshot = await getDocs<Omit<IEvent, 'id'>>(queryData);
             let events: IEvent[] = []
-            querySnapshot.forEach((doc) => {
+            let promises: Promise<IUserInfo[]>[] = [] // array para almacenar las promesas
+
+            querySnapshot.forEach(async (doc) => {
                 const data: Omit<IEvent, 'id'> = doc.data();
-                events.push({ id: doc.id, ...data })
+                const moderatorsData = Promise.all(data.moderators.map(async (moderatorId) => await this.userService.getUserInfo(moderatorId) as IUserInfo));
+                promises.push(moderatorsData);
+
+                const moderators: IUserInfo[] = await moderatorsData;
+                events.push({ id: doc.id, ...data, forengData: { moderators: moderators } })
             });
 
-            return events
+            await Promise.all(promises); // esperamos a que todas las promesas se completen
+
+            return events;
         } catch (error) {
             console.log(error)
         }

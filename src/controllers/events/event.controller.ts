@@ -1,13 +1,13 @@
 import { EventFirebaseService } from "../../firebase/eventos/event-firebase.service";
-import { IEvent } from "../../interfaces/events-interfaces";
+import { IEvent, ISelectedForeign } from "../../interfaces/events-interfaces";
 
 export class EventController {
     constructor(
         private readonly eventService = new EventFirebaseService()
     ) { }
 
-    async getEvents(): Promise<IEvent[] | undefined> {
-        const events = await this.eventService.getAll();
+    async getEvents({ assistants, moderators }: ISelectedForeign): Promise<IEvent[] | undefined> {
+        const events = await this.eventService.getAll({ assistants, moderators });
 
         return events
 
@@ -17,7 +17,7 @@ export class EventController {
         return event
     }
     async createEvent(newEvent: Omit<IEvent, 'id'>) {
-        console.log('newEvent',newEvent)
+        console.log('newEvent', newEvent)
         const event = await this.eventService.create(newEvent)
         return event
     }

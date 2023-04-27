@@ -40,9 +40,8 @@ export const startLoginWithEmailPassword = ({ email, password }: IStartLoginWith
 
         const { errorMessage, userCredentials } = await authController.loginUserWithEmailPassword({ email, password });
         if (!userCredentials || !userCredentials.uid) return dispatch(logout(errorMessage));
-
+        //todo: revisar ya que si falla te quitara los roles de admin 
         const userInfo = await userInfoController.getOneUserInfo(userCredentials.uid)
-        console.log('userCredentials', userCredentials)
         const user = {
             displayName: userCredentials.displayName,
             email: userCredentials.email,

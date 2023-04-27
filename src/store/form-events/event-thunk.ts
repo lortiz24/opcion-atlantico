@@ -4,14 +4,24 @@ import { DispatchMessageService } from "../../components/message-response/Dispat
 import { IEvent } from "../../interfaces/events-interfaces";
 import { closeDrawerEvent, startActionEvent, stopActionEvent } from "./formEventSlice";
 import { eventController } from "../../controllers/events/event.controller";
+import { UploadFile } from "antd";
+import { storageController } from "../../controllers/storage/storage.controller";
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 
 
-export const createEventAsync = (newEvent: Omit<IEvent, 'id'>): ThunkResult<void> => {
+export const createEventAsync = (newEvent: Omit<IEvent, 'id'>, imgForm:UploadFile<any>[]): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startActionEvent());
         try {
+            let nameImage = undefined
+            if (imgForm[0]) {
+                //todo: validar si el nombre de la imagen ya existe y preguntar si desea reemplazar
+                nameImage = await storageController.uploadImage(imgForm[0], 'events-image', imgForm[0].name)
+                if (!nameImage) return DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo subir la imagen, verifique nuevamente' })
+            }
+            delete newEvent.img
+            newEvent.img = nameImage ?? ''
             const newEventId = await eventController.createEvent(newEvent);
             dispatch(stopActionEvent())
             if(!newEventId) return DispatchMessageService({ action: 'show', type: "error", msj: 'No se pudo crear el evento' })

@@ -8,7 +8,7 @@ const useGetEvents = () => {
     const [loading, setLoading] = useState(true);
 
     const getDate = async () => {
-        const events = await eventController.getEvents()
+        const events = await eventController.getEvents({ moderators: true })
         if (events) setEvents(events)
         setLoading(false)
     }

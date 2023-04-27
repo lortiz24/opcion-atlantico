@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import { Dayjs } from 'dayjs';
 import { UploadFile } from 'antd';
+import { IUserInfo } from './user-interfaces';
 
 export interface IEvent {
     id: string;
@@ -11,12 +12,24 @@ export interface IEvent {
     dateEnd: Timestamp
     assistants: string[] //array de ids de user
     moderators: string[] //array de ids de user
-    typeAttendance: 'manual' | 'automatic'
-    typeEvent: 'face-to-face' | 'virtual'
+    typeAttendance: 'manual' | 'automatic' | 'hybrid'
+    typeEvent: 'face-to-face' | 'virtual' | 'hybrid'
     urlMeet?: string
     img: string | undefined;
     anfitrion: string;
+    forengData?: IForenData
 }
+
+interface IForenData {
+    moderators?: IUserInfo[];
+    assistants?: IUserInfo[];
+}
+
+export interface ISelectedForeign {
+    moderators?: boolean
+    assistants?: boolean
+}
+
 
 export interface IAssistant {
     id: string;

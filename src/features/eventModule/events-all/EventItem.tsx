@@ -1,4 +1,4 @@
-import { QrcodeOutlined, ScanOutlined, SmileOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, QrcodeOutlined, ScanOutlined, SmileOutlined } from '@ant-design/icons';
 import { Avatar, Card, Col, Image, List, Result, Row, Space, Statistic, Tooltip, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { IEvent } from '../../../interfaces/events-interfaces';
@@ -21,7 +21,7 @@ const IconText = ({ icon, text, onClick }: { icon: React.FC; text: string, onCli
 );
 
 const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItemProps) => {
-    const { windowSize: { width }, isTable } = useGetMonitorSize()
+    const { isTable } = useGetMonitorSize()
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')
     const [messageByState, setMessageByState] = useState('')
     useEffect(() => {
@@ -42,46 +42,43 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
     }, [eventItem.dateStart])
 
     return (
-        <Card hoverable bordered={false} style={{ height: '100%', cursor: 'default', borderRadius: 50 }}>
-            <List.Item
-                onClick={() => {
-                    if (onSelected) onSelected(eventItem)
-                }}
-                /*   actions={[
-                      <Space wrap key={'f216e1f5e1f'}>
-                          {onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
-                          {onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
-                      </Space>
-                  ]} */
-                extra={
-                    !isTable ? (
-                        <>
-                            <Col span={24}>
-                                <Image
-                                    width={272}
-                                    src={eventItem.img}
-                                    alt="logo"
-                                    preview={false}
-                                    style={{ borderRadius: 20 }}
-                                />
-                            </Col>
-                            <Space wrap key={'f216e1f5e1f'} style={{ marginTop: 10 }}>
-                                {onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
-                                {onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
-                            </Space>
-                        </>
-                    ) : <></>
-                }
+        <List.Item
+        /*  extra={<Image
+             width={272}
+             src={eventItem.img}
+             alt="logo"
+             preview={false}
+             style={{ borderRadius: 20 }}
+         />} */
+        >
+            <Card
+                hoverable
+                style={{ cursor: 'default', borderRadius: 15, }}
+            // cover={<img alt="example" src={eventItem.img} />} 
             >
-                <List.Item.Meta
-                    avatar={<Avatar icon='L'/>}
-                    title={onGenerateQR && <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />}
-                    description={onReadQr && <IconText onClick={() => onReadQr()} icon={ScanOutlined} text="Marcar asistencia" />}
+                <Card.Meta
+                    title={eventItem.title}
+                    description={eventItem.desciption}
+                    avatar={
+                        <Avatar.Group
+                            maxCount={4}
+                            maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
+                            {eventItem.forengData?.moderators?.map((moderator, key) => {
+                                return (
+                                    <Tooltip key={moderator.id} title={moderator.displayName} placement='top'>
+                                        <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
+                                            {moderator.displayName.charAt(0).toUpperCase()}
+                                        </Avatar>
+                                    </Tooltip>
+                                )
+                            })}
+                        </Avatar.Group>}
+                    style={{ marginBottom: 10 }}
                 />
-                <Row justify='center' align='middle' gutter={[16, 16]} style={{ alignItems: 'flex-end' }}>
-                    <Col span={24}>
+                <Row style={{ width: '100%' }} justify={'center'} gutter={[16, 16]}  >
+                    <Col span={24} >
                         <Result
-                            style={{ paddingTop: '2px', paddingBottom: '20px' }}
+                            style={{ paddingTop: '20px', paddingBottom: '0px' }}
                             status={statusResult}
                             title={<Typography.Title level={3} >{messageByState}</Typography.Title>}
                             extra={
@@ -95,35 +92,40 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
                                 )
                             }
                         />
+
                     </Col>
-                    <Col>
+                    <Col span={24}>
                         <Space wrap>
-                            <Space wrap>
-                                <Typography.Text strong>Fecha incio:</Typography.Text>
-                                <Typography.Text code>{timestampToString(eventItem.dateStart, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
-                            </Space>
-                            <Space wrap>
-                                <Typography.Text strong>Fecha fin: </Typography.Text>
-                                <Typography.Text code>{timestampToString(eventItem.dateEnd, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
-                            </Space>
-                            <Space wrap>
-                                <Typography.Text strong>Lugar: </Typography.Text>
-                                <Typography.Text code style={{ textTransform: 'uppercase' }}>
-                                    {eventItem.place}
-                                </Typography.Text>
-                            </Space>
+                            <Typography.Text strong>Fecha incio:</Typography.Text>
+                            <Typography.Text code>{timestampToString(eventItem.dateStart, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
                         </Space>
-
+                        <Space wrap>
+                            <Typography.Text strong>Fecha fin: </Typography.Text>
+                            <Typography.Text code>{timestampToString(eventItem.dateEnd, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
+                        </Space>
+                        <Space wrap>
+                            <Typography.Text strong>Lugar: </Typography.Text>
+                            <Typography.Text code style={{ textTransform: 'uppercase' }}>
+                                {eventItem.place}
+                            </Typography.Text>
+                        </Space>
                     </Col>
-                    <Col>
 
-                    </Col>
-                    <Col>
-
+                    <Col span={24}>
+                        <Space wrap>
+                            {(onGenerateQR && (eventItem.typeAttendance === 'automatic' || eventItem.typeAttendance === 'hybrid')) && (
+                                <>
+                                    <IconText onClick={() => onGenerateQR(eventItem.id)} icon={QrcodeOutlined} text="Generar QR" />
+                                    <IconText onClick={() => onGenerateQR(eventItem.id)} icon={ScanOutlined} text="Leer QR" />
+                                </>
+                            )}
+                            {(onReadQr && (eventItem.typeAttendance === 'automatic' || eventItem.typeAttendance === 'hybrid')) && <IconText onClick={() => onReadQr()} icon={CheckCircleOutlined} text="Marcar asistencia"
+                            />}
+                        </Space>
                     </Col>
                 </Row>
-            </List.Item >
-        </Card>
+            </Card>
+        </List.Item >
     )
 }
 
