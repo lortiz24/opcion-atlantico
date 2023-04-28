@@ -1,5 +1,5 @@
 import { EventFirebaseService } from "../../firebase/eventos/event-firebase.service";
-import { ICoditionsGetEvents, IEvent, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 
 export class EventController {
     constructor(
@@ -29,10 +29,36 @@ export class EventController {
         return event
     }
     listeningMenus(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[]) {
-    const newMenuId = this.eventService.listeningEvents(onSet, conditions)
-    return newMenuId
-}
+        const newMenuId = this.eventService.listeningEvents(onSet, conditions)
+        return newMenuId
+    }
+    listeningQrCode(eventId: string, qrCode: string, onSet: (events: IQrCode) => void) {
+        const newMenuId = this.eventService.listeningQrAttendanceFirebase(eventId, qrCode, onSet)
+        return newMenuId
+    }
 
+    async createToken(eventId: string, token: string) {
+        const qrId = await this.eventService.createToken(eventId, token)
+        return qrId
+    }
+    async getTokenByEventId(eventId: string) {
+        const qrId = await this.eventService.getTokenByEventId(eventId)
+        if (qrId)
+            return qrId[0]
+        else
+            return undefined
+    }
+    async checkingToken(token: string, userId: string, eventId: string) {
+        const alreadycheck = await this.eventService.alreadyCheck(token, userId, eventId)
+        if (alreadycheck === undefined) return alreadycheck
+        if (!alreadycheck) {
+            const checking = await this.eventService.checkingToken(token, userId, eventId)
+            if (checking === undefined) return checking
+            return { checking, alreadycheck }
+        }
+
+        return { alreadycheck, checking: false }
+    }
 }
 
 export const eventController = new EventController()

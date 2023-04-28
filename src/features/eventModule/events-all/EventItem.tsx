@@ -128,7 +128,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
                 bordered={false}
                 actions={actionsList}
             >
-                <Button onClick={() => setestado(!estado)}>ea</Button>
                 <MyGradiantBackground colorLeft='#FAF9F7' colorRight='#E9BDCF' />
                 <Row justify={'center'} style={{ width: '100%' }} gutter={[8, 8]}>
                     <Col xs={24} sm={24} md={14} lg={16} xl={15} xxl={17}

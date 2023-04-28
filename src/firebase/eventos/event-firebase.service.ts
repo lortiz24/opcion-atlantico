@@ -1,25 +1,9 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
-import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, } from "firebase/firestore";
-import { ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, collection, CollectionReference, } from "firebase/firestore";
+import { IAttendanceByEvent, ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { UserServiceFirebase } from "../user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 
-
-export const listeningQrAttendanceFirebase = (codeQrID: string, onSet: (modules: IQrCode) => void) => {
-    const qrAttendanceDocRef = doc(qrAttendanceCollectionRef, codeQrID);
-    const queryData = query<Omit<IQrCode, 'id'>>(qrAttendanceCollectionRef, where('codeQr', '==', codeQrID));
-    return onSnapshot(qrAttendanceDocRef, (doc) => {
-        console.log(doc.data());
-    });
-    /* return onSnapshot(queryData, (querySnapshot) => {
-        if (!querySnapshot.empty) {
-            querySnapshot.forEach((doc) => modules.push({ id: doc.id, ...doc.data() }));
-            onSet(modules)
-        } else {
-            onSet([])
-        }
-    }); */
-}
 
 export const createQrAttendanceFirebase = async (newQrAttendance: Omit<IQrCode, 'id'>) => {
     try {
@@ -55,6 +39,7 @@ export class EventFirebaseService {
 
     constructor(
         private readonly eventsCollection = eventsCollectionRef,
+        private readonly qrColecction = qrAttendanceCollectionRef,
         private readonly userService = new UserServiceFirebase()
     ) { }
 
@@ -149,4 +134,90 @@ export class EventFirebaseService {
             }
         });
     }
+
+    listeningQrAttendanceFirebase(eventId: string, qrCodeId: string, onSet: (qrCode: IQrCode) => void) {
+        const qrCodeRef = doc(this.qrColecction, qrCodeId);
+        return onSnapshot(qrCodeRef, (doc) => {
+            const data = doc.data()
+            onSet({ id: doc.id, ...data } as IQrCode)
+        });
+    }
+
+
+    async createToken(eventId: string, token: string) {
+        try {
+            const querySnapshot = await addDoc(this.qrColecction, { eventId, token });
+            const newTokenId = querySnapshot.id;
+            return newTokenId
+        } catch (error) {
+            console.error("Error al crear evento: ", error);
+        }
+    }
+
+    async getTokenByEventId(eventId: string) {
+        try {
+            let qrCode: IQrCode[] = []
+
+            let queryData = query<Omit<IQrCode, 'id'>>(this.qrColecction, where("eventId", "==", eventId));
+            const querySnapshot = await getDocs(queryData)
+            querySnapshot.forEach((doc) => {
+                console.log('epa')
+                const data: Omit<IQrCode, 'id'> = doc.data();
+                qrCode.push({ id: doc.id, ...data })
+            });
+
+            return qrCode
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async checkingToken(token: string, userId: string, eventId: string) {
+        try {
+            let qrCode: IQrCode[] = []
+            let queryData = query<Omit<IQrCode, 'id'>>(this.qrColecction, where("token", "==", token));
+            const querySnapshot = await getDocs(queryData)
+            querySnapshot.forEach((doc) => {
+                console.log('epa')
+                const data: Omit<IQrCode, 'id'> = doc.data();
+                qrCode.push({ id: doc.id, ...data })
+            });
+
+            if (qrCode.length > 0) {
+                const eventDocRef = doc(eventsCollectionRef, eventId);
+                const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent');
+                const querySnapshot = await addDoc(attendanceByEvent, { userId });
+                return true
+            } else {
+                false
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async alreadyCheck(token: string, userId: string, eventId: string) {
+        try {
+            let chekingUser: IAttendanceByEvent[] = []
+
+            const eventDocRef = doc(eventsCollectionRef, eventId);
+
+            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
+
+            let queryData = query<Omit<IAttendanceByEvent, 'id'>>(attendanceByEvent, where('userId', '==', userId));
+
+            const querySnapshot = await getDocs(queryData)
+            querySnapshot.forEach((doc) => {
+                const data: Omit<IAttendanceByEvent, 'id'> = doc.data();
+                chekingUser.push({ id: doc.id, ...data })
+            });
+            return chekingUser.length > 0
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+
+
 }

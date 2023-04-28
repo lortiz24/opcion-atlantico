@@ -8,6 +8,7 @@ interface IReadQrProps extends ModalProps {
 }
 const ReadQr = ({ onCancel, onOk, open }: IReadQrProps) => {
     const [facingMode, setFacingMode] = useState<FacingMode>('user');
+    
     const handleScan = (data: string | null) => {
         console.log(data)
     };

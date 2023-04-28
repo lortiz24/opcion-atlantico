@@ -1,7 +1,7 @@
 import { collection, CollectionReference } from "firebase/firestore";
 import { FirebaseDB } from "./ConfigFirebase";
 import { IMenu } from "../interfaces/modules-interface";
-import { IEvent, IQrCode } from "../interfaces/events-interfaces";
+import { IAttendanceByEvent, IEvent, IQrCode } from "../interfaces/events-interfaces";
 import { IUserInfo } from "../interfaces/user-interfaces";
 import { IRol } from "../interfaces/rols-interfaces";
 

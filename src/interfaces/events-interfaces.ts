@@ -46,7 +46,8 @@ export interface IEventsRender {
 
 export interface IQrCode {
     id: string
-    codeQr: string;
+    token: string;
+    eventId:string
 }
 
 export type FacingMode = 'user' | 'environment'
@@ -61,8 +62,14 @@ export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
     imgForm: UploadFile<any>[]
 }
 
+//todo: cambiar name a algo mas generico
 export interface ICoditionsGetEvents {
     nameProperty: string
     value: string,
     operation: WhereFilterOp
+}
+
+export interface IAttendanceByEvent{
+    id:string;
+    userId:string
 }

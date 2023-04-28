@@ -5,11 +5,11 @@ import EventList from './EventList';
 
 const EventView = () => {
     const [openGenerateQR, setOpenGenerateQR] = useState(false)
-    const [eventAttendanceId, setEventAttendanceId] = useState('')
+    const [eventId, setEventId] = useState('')
     const [isOpenReadQR, setisOpenReadQR] = useState(false)
     const onGenerateQR = (eventId: string) => {
         setOpenGenerateQR(true)
-        setEventAttendanceId(eventId)
+        setEventId(eventId)
     }
 
     const onCancelGenerateQR = () => {
@@ -26,7 +26,7 @@ const EventView = () => {
     return (
         <>
             {isOpenReadQR && <ReadQr open={isOpenReadQR} onCancel={onCloseReadQr} onOk={onCloseReadQr} />}
-            {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventAttendanceId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
+            {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
 
             <EventList onReadQr={onReadQr} onGenerateQR={onGenerateQR} />
 
