@@ -1,5 +1,6 @@
 import { EventFirebaseService } from "../../firebase/eventos/event-firebase.service";
 import { ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { IUserInfo } from "../../interfaces/user-interfaces";
 
 export class EventController {
     constructor(
@@ -47,6 +48,14 @@ export class EventController {
     }
     listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[], selectedForeing?: ISelectedForeign) {
         const newMenuId = this.eventService.listeningEvents(onSet, conditions, selectedForeing)
+        return newMenuId
+    }
+    listeningUsersInfoCheck(eventId: string, onSet: (events: IUserInfo[]) => void) {
+        const newMenuId = this.eventService.listeningUsersInfoCheck(eventId, onSet)
+        return newMenuId
+    }
+    listeningUsersNotCheckedByEvent(eventId: string, onSet: (events: IUserInfo[]) => void) {
+        const newMenuId = this.eventService.listeningUsersInfoNotCheck(eventId, onSet)
         return newMenuId
     }
     listeningQrCode(eventId: string, qrCode: string, onSet: (events: IQrCode) => void) {

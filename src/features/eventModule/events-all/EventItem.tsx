@@ -17,13 +17,6 @@ interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
 }
 
 
-const IconText = ({ icon, text, onClick }: { icon: React.FC; text: string, onClick: () => void }) => (
-    <Space style={{ cursor: 'pointer' }} onClick={onClick}>
-        {React.createElement(icon)}
-        {text}
-    </Space>
-);
-
 
 const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, editable }: IEventItemProps) => {
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')

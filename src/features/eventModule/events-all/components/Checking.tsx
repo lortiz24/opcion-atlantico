@@ -1,18 +1,16 @@
 import { Button, Modal, ModalProps, Popconfirm, Space, Table, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { eventController } from '../../../../controllers/events/event.controller'
-import { useAppSelector } from '../../../../store/store'
 import useGetEventById from '../../../../hooks/useGetEventById'
 import { IUserInfo } from '../../../../interfaces/user-interfaces'
 import { ColumnsType } from 'antd/es/table'
 import { CheckOutlined, DeleteOutlined } from '@ant-design/icons'
+import useListeningUsersCheckedByEvent from '../../../../hooks/useListeningUsersCheckedByEvent'
 
 interface ICheckingProps extends ModalProps {
     isChecking: boolean
     eventId: string
 }
-
-
 
 interface DataType {
     key: string;
@@ -38,25 +36,26 @@ const columns: ColumnsType<DataType> = [
 ];
 
 
-
-
-
 const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
     const { event } = useGetEventById(eventId)
     const [confirmados, setconfirmados] = useState<string[]>([])
-    const [noConfirmados, setNoConfirmados] = useState<string[]>([])
     const [usersAsistentesInfo, setusersAsistentesInfo] = useState<IUserInfo[]>([])
     const [isLoading, setisLoading] = useState(true)
+    const { userInfoCheck } = useListeningUsersCheckedByEvent({ eventId })
 
 
     const epa = async () => {
+
         setisLoading(true)
+
         if (!event) return setisLoading(false)
-        const asistentesConfirmados = await eventController.getUsersIdAttendanceByEventId(eventId) as string[]
-        setconfirmados(asistentesConfirmados)
-        const notAsistend = event.assistants.filter(asistente => !asistentesConfirmados.includes(asistente))
-        setNoConfirmados(notAsistend)
+
+        const idUsersInfoCheck = userInfoCheck.map(asistenteConfirmado => asistenteConfirmado.id)
+
+        setconfirmados(idUsersInfoCheck)
+
         const usersInfoByEventId = await eventController.getUsersInfoAttendanceByEventId(eventId) as IUserInfo[]
+
         setusersAsistentesInfo(usersInfoByEventId)
         setisLoading(false)
     }
@@ -72,7 +71,7 @@ const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
 
     useEffect(() => {
         epa()
-    }, [event])
+    }, [userInfoCheck])
 
     return (
         <Modal

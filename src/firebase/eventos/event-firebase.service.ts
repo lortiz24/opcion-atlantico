@@ -244,6 +244,62 @@ export class EventFirebaseService {
             }
         });
     }
+    listeningUsersInfoCheck(eventId: string, onSet: (usersInfo: IUserInfo[]) => void) {
+
+        const eventDocRef = doc(this.eventsCollection, eventId);
+        const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
+        let queryData = query<Omit<IAttendanceByEvent, "id">>(attendanceByEvent);
+
+        return onSnapshot(queryData, async (querySnapshot) => {
+            if (!querySnapshot.empty) {
+
+                const userInfo: IUserInfo[] = [];
+
+                const promises: Promise<IUserInfo | undefined>[] = []
+
+                querySnapshot.forEach(async (doc) => {
+
+                    const data: Omit<IAttendanceByEvent, "id"> = doc.data();
+
+                    promises.push(this.userService.getUserInfo(doc.id))
+
+                    const moderatorsData = await this.userService.getUserInfo(doc.id)
+
+                    if (moderatorsData)
+                        userInfo.push(moderatorsData);
+                });
+                await Promise.all(promises)
+                onSet(userInfo);
+            } else {
+                onSet([]);
+            }
+        });
+    }
+    listeningUsersInfoNotCheck(eventId: string, onSet: (usersInfo: IUserInfo[]) => void) {
+        const eventDocRef = doc(this.eventsCollection, eventId);
+        return onSnapshot(eventDocRef, async (querySnapshot) => {
+
+            const usersInfo: IUserInfo[] = [];
+
+            const promises: Promise<IUserInfo | undefined>[] = []
+
+            const data = querySnapshot.data();
+
+            data?.assistants.forEach(async (asistente) => {
+                const userInfo = await this.userService.getUserInfo(asistente)
+                if (userInfo)
+                    usersInfo.push(userInfo)
+
+                promises.push(this.userService.getUserInfo(asistente))
+            })
+
+
+            await Promise.all(promises)
+            onSet(usersInfo);
+        });
+    }
+
+
     listeningQrAttendanceFirebase(eventId: string, qrCodeId: string, onSet: (qrCode: IQrCode) => void) {
         const qrCodeRef = doc(this.qrColecction, qrCodeId);
         return onSnapshot(qrCodeRef, (doc) => {
@@ -295,7 +351,6 @@ export class EventFirebaseService {
     }
     async createCheck(userId: string, eventId: string) {
         try {
-            console.log('Awqio')
             const eventDocRef = doc(this.eventsCollection, eventId);
             const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
             const docRef = doc(attendanceByEvent, userId)
