@@ -73,7 +73,8 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
                 </Tooltip>
             )
         }
-        if (onChecking && (['automatic', 'hybrid'].includes(eventItem.typeAttendance))) {
+        if (onChecking && (['manual', 'hybrid'].includes(eventItem.typeAttendance))) {
+            console.log('viendo')
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
                     <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => onChecking(eventItem.id)} />

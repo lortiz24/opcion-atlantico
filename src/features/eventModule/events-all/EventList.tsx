@@ -18,7 +18,6 @@ export interface IEventListProps {
 
 const EventList = ({ onReadQr, onGenerateQR, onSelected, eventList, isLoading, onChecking, editable }: IEventListProps) => {
     const { events, loading } = useGetEvents()
-
     return (
         <>
             <Pagination
