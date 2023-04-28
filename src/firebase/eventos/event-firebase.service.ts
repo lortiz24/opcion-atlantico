@@ -97,6 +97,69 @@ export class EventFirebaseService {
             console.log(error)
         }
     }
+    async getUsersAttendanceByEventId(eventId: string) {
+        try {
+            const eventDocRef = doc(this.eventsCollection, eventId);
+            const usersByEvent: IAttendanceByEvent[] = []
+            const promiseUsersInfo: Promise<IUserInfo | undefined>[] = []
+
+            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
+            const queryData = query<Omit<IAttendanceByEvent, "id">>(attendanceByEvent)
+            const querySnapshot = await getDocs(queryData)
+
+            querySnapshot.forEach(snapshot => {
+                const data: Omit<IAttendanceByEvent, "id"> = snapshot.data()
+                usersByEvent.push({ id: snapshot.id, ...data })
+                promiseUsersInfo.push(this.userService.getUserInfo(snapshot.id))
+            })
+
+            const usersInfoByEvent = await Promise.all(promiseUsersInfo)
+            return usersInfoByEvent
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getUsersIdAttendanceByEventId(eventId: string) {
+        try {
+            const eventDocRef = doc(this.eventsCollection, eventId);
+            const usersByEvent: string[] = []
+
+
+            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
+            const queryData = query<Omit<IAttendanceByEvent, "id">>(attendanceByEvent)
+            const querySnapshot = await getDocs(queryData)
+
+            querySnapshot.forEach(snapshot => {
+                const data: Omit<IAttendanceByEvent, "id"> = snapshot.data()
+                usersByEvent.push(snapshot.id)
+            })
+
+            return usersByEvent
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getUsersInfoAttendanceByEventId(eventId: string) {
+        try {
+            const eventDocRef = doc(this.eventsCollection, eventId);
+            const usersByEvent: string[] = []
+            const promiseUsersInfo: Promise<IUserInfo | undefined>[] = []
+
+            const documentRef = await getDoc(eventDocRef)
+            const asistentes = documentRef.data()?.assistants
+
+            asistentes?.forEach(asistente => {
+                promiseUsersInfo.push(this.userService.getUserInfo(asistente))
+            })
+
+
+            const usersInfoAsistentes = Promise.all(promiseUsersInfo)
+            return usersInfoAsistentes
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     async existEvent(eventId: string) {
         try {
             const moduleRef = doc(this.eventsCollection, eventId);
@@ -232,10 +295,22 @@ export class EventFirebaseService {
     }
     async createCheck(userId: string, eventId: string) {
         try {
+            console.log('Awqio')
             const eventDocRef = doc(this.eventsCollection, eventId);
             const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
             const docRef = doc(attendanceByEvent, userId)
             await setDoc(docRef, { userId })
+            return 201
+        } catch (error) {
+            return this.eventLogger.hanledError(error)
+        }
+    }
+    async deleteCheck(userId: string, eventId: string) {
+        try {
+            const eventDocRef = doc(this.eventsCollection, eventId);
+            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
+            const docRef = doc(attendanceByEvent, userId)
+            await deleteDoc(docRef)
             return 201
         } catch (error) {
             return this.eventLogger.hanledError(error)

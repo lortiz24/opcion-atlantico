@@ -1,17 +1,15 @@
 import * as IconsAntDesing from '@ant-design/icons';
-import { Avatar, Badge, Button, Card, Col, Dropdown, Image, List, MenuProps, Popconfirm, Result, Row, Space, Statistic, Tooltip, Typography } from 'antd'
+import { Avatar, Badge, Button, Card, Col, Image, List, Popconfirm, Result, Row, Space, Statistic, Tooltip, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { IEvent } from '../../../interfaces/events-interfaces';
 import { IEventListProps } from './EventList';
-import { timestampAfterNow, timestampBeforeNow, timestampToString } from '../../../services/date-treatment/conversions-date.utils';
+import { timestampToString } from '../../../services/date-treatment/conversions-date.utils';
 import { ResultStatusType } from 'antd/es/result';
 import MyGradiantBackground from '../../../components/gradiant-bacground/MyGradiantBackground';
-import { useAppSelector } from '../../../store/store';
-import { useAppDispatch } from '../../../store/store';
+import { useAppSelector, useAppDispatch } from '../../../store/store';
 import { openEditionModeEvent } from '../../../store/form-events/formEventSlice';
 import { deleteEventAsync } from '../../../store/form-events/event-thunk';
 import { DateAdapter } from '../../../services/date-service/Daily';
-import dayjs from 'dayjs';
 import { eventController } from '../../../controllers/events/event.controller';
 
 interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
@@ -34,15 +32,14 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
     const [iconResult, seticonResult] = useState('ClockCircleOutlined')
     const [actionsList, setActionsList] = useState<JSX.Element[]>([])
     const { uid } = useAppSelector(selector => selector.auth)
-    const [checkUsersEvent, setcheckUsersEvent] = useState(false)
-
+    const [checkUsersEvent, setcheckUsersEvent] = useState<'checking' | 'check' | 'not-check'>('checking')
 
     const userAlreadyCheck = async () => {
         const alreadyCheck = await eventController.alreadyCheck(uid ?? '', eventItem.id)
         if (alreadyCheck !== undefined && alreadyCheck === true) {
-            setcheckUsersEvent(true)
+            setcheckUsersEvent('check')
         } else {
-            setcheckUsersEvent(false)
+            setcheckUsersEvent('not-check')
         }
     }
     const dispatch = useAppDispatch()
@@ -88,7 +85,10 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
         if (onChecking && (['manual', 'hybrid'].includes(eventItem.typeAttendance)) && uid === eventItem.anfitrion) {
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
-                    <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => onChecking(eventItem.id)} />
+                    <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
+                        console.log('first')
+                        onChecking(eventItem.id)
+                    }} />
                 </Tooltip>
             )
         }
@@ -113,6 +113,7 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
                 </Popconfirm>
             )
         }
+        
         setActionsList(actionsList)
     }, [])
 
@@ -144,10 +145,13 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
                 bordered={false}
                 actions={actionsList}
             >
+
                 <MyGradiantBackground colorLeft='#FAF9F7' colorRight='#E9BDCF' />
                 <Badge.Ribbon
-                    text={checkUsersEvent ? 'Asistencia' : 'Sin asistir'}
-                    color={checkUsersEvent ? 'green' : 'red'}
+                    /* todo: Alguien corriga esta empanadas aaaaaa */
+                    style={{ display: checkUsersEvent === 'checking' ? 'none' : 'block' }}
+                    text={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'Asistencia' : 'Sin asistir'}
+                    color={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'green' : 'red'}
                 >
 
                     <Row justify={'center'} style={{ width: '100%' }} gutter={[8, 8]}>

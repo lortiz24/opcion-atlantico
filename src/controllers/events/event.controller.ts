@@ -12,6 +12,19 @@ export class EventController {
         return events
 
     }
+    async getUsersAttendanceByEventId(eventId: string) {
+        const events = await this.eventService.getUsersAttendanceByEventId(eventId);
+
+        return events
+    }
+    async getUsersIdAttendanceByEventId(eventId: string) {
+        const events = await this.eventService.getUsersIdAttendanceByEventId(eventId);
+        return events
+    }
+    async getUsersInfoAttendanceByEventId(eventId: string) {
+        const events = await this.eventService.getUsersInfoAttendanceByEventId(eventId);
+        return events
+    }
     async getEventById(eventId: string): Promise<IEvent | undefined> {
         const event = await this.eventService.getOneById(eventId)
         return event
@@ -65,6 +78,10 @@ export class EventController {
 
     async createCheck(userId: string, eventId: string) {
         const check = await this.eventService.createCheck(userId, eventId)
+        return check
+    }
+    async deleteCheck(userId: string, eventId: string) {
+        const check = await this.eventService.deleteCheck(userId, eventId)
         return check
     }
 }

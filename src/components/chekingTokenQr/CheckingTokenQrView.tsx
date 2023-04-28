@@ -19,7 +19,6 @@ const CheckingTokenQrView = () => {
     dispatch(logout({}))
     return <Navigate to={'/auth/login'} />
   }
-  console.log(status)
   const handledError = (status: '500' | '403' | 'success' | 'warning' | '404') => {
     switch (status) {
       case '500':

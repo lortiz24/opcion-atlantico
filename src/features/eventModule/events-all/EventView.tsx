@@ -15,12 +15,14 @@ const EventView = () => {
     const { events, loading } = useGetEvents(conditions, { moderators: true, assistants: false })
     const [keyActive, setkeyActive] = useState('1')
     const { uid } = useAppSelector(selector => selector.auth)
+
     const onGenerateQR = (eventId: string) => {
         setOpenGenerateQR(true)
         setEventId(eventId)
     }
     const onCancelGenerateQR = () => {
         setOpenGenerateQR(false)
+        setEventId('')
     }
 
     const onChangeTab = (e: string) => {
@@ -33,9 +35,14 @@ const EventView = () => {
             setConditions(current => [...current, { nameProperty: 'assistants', operation: 'array-contains', value: uid ?? '' }])
         }
     }
+
+    const onCheking = (eventId: string) => {
+        setIsChecking(true)
+        setEventId(eventId)
+    }
     return (
         <>
-            {isChecking && <Checking isChecking={isChecking} onCancel={() => setIsChecking(false)} onOk={() => setIsChecking(false)} />}
+            {isChecking && <Checking isChecking={isChecking} onCancel={() => setIsChecking(false)} onOk={() => setIsChecking(false)} eventId={eventId} />}
             {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
 
 
@@ -43,12 +50,12 @@ const EventView = () => {
                 {
                     key: '1',
                     label: 'Todos los eventos',
-                    children: <EventList onGenerateQR={onGenerateQR} onChecking={() => setIsChecking(true)} eventList={events} isLoading={loading} />
+                    children: <EventList onGenerateQR={onGenerateQR} onChecking={onCheking} eventList={events} isLoading={loading} />
                 },
                 {
                     key: '2',
                     label: 'Mis eventos',
-                    children: <EventList onGenerateQR={onGenerateQR} onChecking={() => setIsChecking(true)} eventList={events} isLoading={loading} />
+                    children: <EventList onGenerateQR={onGenerateQR} onChecking={onCheking} eventList={events} isLoading={loading} />
                 },
             ]}>
 
