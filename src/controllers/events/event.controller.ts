@@ -33,11 +33,11 @@ export class EventController {
         return event
     }
     listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[], selectedForeing?: ISelectedForeign) {
-        const newMenuId = this.eventService.listeningEvents(onSet, conditions,selectedForeing)
+        const newMenuId = this.eventService.listeningEvents(onSet, conditions, selectedForeing)
         return newMenuId
     }
     listeningQrCode(eventId: string, qrCode: string, onSet: (events: IQrCode) => void) {
-        const newMenuId = this.eventService.listeningQrAttendanceFirebase(eventId, qrCode, onSet)
+        const newMenuId = this.eventService.listeningQrAttendanceFirebase(eventId, qrCode, onSet,)
         return newMenuId
     }
 

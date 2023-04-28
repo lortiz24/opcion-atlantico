@@ -56,7 +56,8 @@ export class EventFirebaseService {
 
             const querySnapshot = await getDocs<Omit<IEvent, "id">>(queryData);
             let events: IEvent[] = [];
-            let promises: Promise<IUserInfo[]>[] = [];
+            let moderatorsPromises: Promise<IUserInfo[]>[] = [];
+            let assitantsPromises: Promise<IUserInfo[]>[] = [];
 
             querySnapshot.forEach(async (doc) => {
                 const data: Omit<IEvent, "id"> = doc.data();
@@ -70,16 +71,16 @@ export class EventFirebaseService {
                     const assistansData = Promise.all(
                         data.assistants.map(async (assistantsId) => await this.userService.getUserInfo(assistantsId) as IUserInfo)
                     );
-                    promises.push(moderatorsData);
+                    moderatorsPromises.push(moderatorsData);
                     moderatorsList = selectedForeinge.moderators === true ? await moderatorsData : [];
 
-                    promises.push(assistansData);
+                    assitantsPromises.push(assistansData);
                     assistansList = selectedForeinge.assistants === true ? await assistansData : [];
                 }
                 events.push({ id: doc.id, ...data, forengData: { moderators: moderatorsList, assistants: assistansList } });
             });
-            await Promise.all(promises);
-            console.log(events)
+            await Promise.all(moderatorsPromises);
+            await Promise.all(assitantsPromises);
             return events;
         } catch (error) {
             console.log(error);
@@ -117,8 +118,6 @@ export class EventFirebaseService {
     }
     async update(eventId: string, newEvent: Omit<IEvent, 'id'>) {
         try {
-            console.log('eventId', eventId)
-            console.log('newEvent', newEvent)
             const eventRef = doc(this.eventsCollection, eventId);
             await updateDoc(eventRef, newEvent);
             return { ok: true }
@@ -148,8 +147,8 @@ export class EventFirebaseService {
         return onSnapshot(queryData, async (querySnapshot) => {
             if (!querySnapshot.empty) {
                 const events: IEvent[] = [];
-                let promises: Promise<IUserInfo[]>[] = [];
-                let promisesAssistens: Promise<IUserInfo[]>[] = [];
+                let assistansPromise: Promise<IUserInfo[]>[] = [];
+                let moderatorsPromises: Promise<IUserInfo[]>[] = [];
 
                 querySnapshot.forEach(async (doc) => {
                     const data: Omit<IEvent, "id"> = doc.data();
@@ -163,17 +162,18 @@ export class EventFirebaseService {
                         const assistansData = Promise.all(
                             data.assistants.map(async (assistantsId) => await this.userService.getUserInfo(assistantsId) as IUserInfo)
                         );
-                        promises.push(moderatorsData);
+                        assistansPromise.push(moderatorsData);
                         moderators = selectedForeing.moderators === true ? await moderatorsData : [];
 
-                        promises.push(assistansData);
+                        moderatorsPromises.push(assistansData);
                         assistansList = selectedForeing.assistants === true ? await assistansData : [];
                     }
 
                     events.push({ id: doc.id, ...data, forengData: { moderators: moderators, assistants: assistansList } });
                 });
 
-                await Promise.all([...promises, ...promisesAssistens]); // esperamos a que todas las promesas se completen
+                await Promise.all(assistansPromise); // esperamos a que todas las promesas se completen
+                await Promise.all(moderatorsPromises); // esperamos a que todas las promesas se completen
 
                 onSet(events);
             } else {
@@ -204,7 +204,6 @@ export class EventFirebaseService {
             let queryData = query<Omit<IQrCode, 'id'>>(this.qrColecction, where("eventId", "==", eventId));
             const querySnapshot = await getDocs(queryData)
             querySnapshot.forEach((doc) => {
-                console.log('epa')
                 const data: Omit<IQrCode, 'id'> = doc.data();
                 qrCode.push({ id: doc.id, ...data })
             });

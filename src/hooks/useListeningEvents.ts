@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ICoditionsGetEvents, IEvent, ISelectedForeign } from '../interfaces/events-interfaces';
 import { eventController } from '../controllers/events/event.controller';
-import { Unsubscribe } from 'firebase/auth';
 
 
 const useListeningEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEvents, selectedForeing?: ISelectedForeign) => {
@@ -13,12 +12,15 @@ const useListeningEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEve
         setLoading(false)
     }
     useEffect(() => {
-        let unsubscribe: Unsubscribe
-        if (Array.isArray(condition) || (!Array.isArray(condition) && !condition)) {
-            unsubscribe = eventController.listeningEvents(onSet, undefined, selectedForeing)
-        } else {
-            unsubscribe = eventController.listeningEvents(onSet, undefined, selectedForeing)
+        let conditions
+
+        if (Array.isArray(condition)) {
+            conditions = condition
+        } else if (condition) {
+            conditions = [condition]
         }
+
+        const unsubscribe = eventController.listeningEvents(onSet, conditions, selectedForeing)
         return () => {
             unsubscribe()
         }

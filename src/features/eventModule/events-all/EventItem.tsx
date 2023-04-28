@@ -73,7 +73,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
             )
         }
         if (onChecking && (['manual', 'hybrid'].includes(eventItem.typeAttendance))) {
-            console.log('viendo')
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
                     <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => onChecking(eventItem.id)} />
@@ -103,7 +102,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
         }
         setActionsList(actionsList)
     }, [])
-console.log('moderadores',eventItem.forengData?.moderators)
     return (
         <List.Item
         >
@@ -141,7 +139,6 @@ console.log('moderadores',eventItem.forengData?.moderators)
                                         maxCount={4}
                                         maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
                                         {eventItem.forengData?.moderators?.map((moderator, key) => {
-                                            console.log('',moderator)
                                             return (
                                                 <Tooltip key={moderator.id} title={moderator.displayName} placement='top'>
                                                     <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
