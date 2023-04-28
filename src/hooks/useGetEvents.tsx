@@ -6,8 +6,9 @@ import { eventController } from '../controllers/events/event.controller';
 const useGetEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEvents, selectedForeing?: ISelectedForeign) => {
     const [events, setEvents] = useState<IEvent[]>([]);
     const [loading, setLoading] = useState(true);
-    
+
     const getDate = async () => {
+        setLoading(true)
         let events: IEvent[] | undefined = []
         if (Array.isArray(condition) || (!Array.isArray(condition) && !condition)) {
             events = await eventController.getEvents({ moderators: selectedForeing?.moderators, assistants: selectedForeing?.assistants }, condition)
@@ -20,7 +21,7 @@ const useGetEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEvents, s
     }
     useEffect(() => {
         getDate()
-    }, [])
+    }, [condition])
 
 
     return {

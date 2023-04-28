@@ -49,7 +49,7 @@ export class EventFirebaseService {
         try {
             const queryList: QueryFieldFilterConstraint[] = [];
             conditions?.map((condition) => {
-                queryList.push(where("anfitrion", condition.operation, condition.value));
+                queryList.push(where(condition.nameProperty, condition.operation, condition.value));
             });
 
             let queryData = query<Omit<IEvent, "id">>(this.eventsCollection, ...queryList);

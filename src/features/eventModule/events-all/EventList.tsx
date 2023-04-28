@@ -9,7 +9,7 @@ export interface IEventListProps {
     onReadQr?: () => void;
     onGenerateQR?: (eventId: string) => void;
     onSelected?: (item: IEvent) => void
-    eventList?: IEvent[]
+    eventList: IEvent[]
     isLoading?: boolean
     onChecking?: (eventId: string) => void
     editable?: boolean
@@ -17,7 +17,6 @@ export interface IEventListProps {
 
 
 const EventList = ({ onReadQr, onGenerateQR, onSelected, eventList, isLoading, onChecking, editable }: IEventListProps) => {
-    const { events, loading } = useGetEvents(undefined, { moderators: true, assistants: false })
     // TODO: realziar paginacions
     return (
         <>
@@ -26,7 +25,7 @@ const EventList = ({ onReadQr, onGenerateQR, onSelected, eventList, isLoading, o
                     console.log(page);
                 }}
                 pageSize={3}
-                total={events.length}
+                total={eventList.length}
                 style={{ marginBottom: 10 }}
             />
             <List
@@ -39,8 +38,8 @@ const EventList = ({ onReadQr, onGenerateQR, onSelected, eventList, isLoading, o
                     xl: 2,
                     xxl: 2,
                 }}
-                loading={isLoading ? isLoading : loading}
-                dataSource={eventList ? eventList : events}
+                loading={isLoading}
+                dataSource={eventList}
                 renderItem={(eventItem) => (
                     <EventItem key={eventItem.title} eventItem={eventItem} onGenerateQR={onGenerateQR} onReadQr={onReadQr} onSelected={onSelected} onChecking={onChecking} editable={editable} />
                 )}

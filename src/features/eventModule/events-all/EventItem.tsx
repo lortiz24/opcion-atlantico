@@ -13,7 +13,7 @@ import { deleteEventAsync } from '../../../store/form-events/event-thunk';
 import { DateAdapter } from '../../../services/date-service/Daily';
 import dayjs from 'dayjs';
 
-interface IEventItemProps extends IEventListProps {
+interface IEventItemProps extends Omit<IEventListProps,'eventList'> {
     eventItem: IEvent
 }
 
