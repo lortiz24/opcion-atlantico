@@ -79,7 +79,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
                     <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
-                        console.log('first')
                         onChecking(eventItem.id)
                     }} />
                 </Tooltip>

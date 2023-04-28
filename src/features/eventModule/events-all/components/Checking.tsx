@@ -40,26 +40,15 @@ const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
     const { event } = useGetEventById(eventId)
     const [confirmados, setconfirmados] = useState<string[]>([])
     const [usersAsistentesInfo, setusersAsistentesInfo] = useState<IUserInfo[]>([])
-    const [isLoading, setisLoading] = useState(true)
-    const { userInfoCheck } = useListeningUsersCheckedByEvent({ eventId })
+    const { userInfoCheck, loading } = useListeningUsersCheckedByEvent({ eventId })
 
+    useEffect(() => {
+        eventController.getUsersInfoAttendanceByEventId(eventId)
+            .then(item => {
+                setusersAsistentesInfo(item as IUserInfo[])
+            })
 
-    const epa = async () => {
-
-        setisLoading(true)
-
-        if (!event) return setisLoading(false)
-
-        const idUsersInfoCheck = userInfoCheck.map(asistenteConfirmado => asistenteConfirmado.id)
-
-        setconfirmados(idUsersInfoCheck)
-
-        const usersInfoByEventId = await eventController.getUsersInfoAttendanceByEventId(eventId) as IUserInfo[]
-
-        setusersAsistentesInfo(usersInfoByEventId)
-        setisLoading(false)
-    }
-
+    }, [])
     const onDeleteCheck = async (userId: string) => {
         await eventController.deleteCheck(userId, eventId)
     }
@@ -70,7 +59,11 @@ const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
 
 
     useEffect(() => {
-        epa()
+
+        const idUsersInfoCheck = userInfoCheck.map(asistenteConfirmado => asistenteConfirmado.id)
+
+        setconfirmados(idUsersInfoCheck)
+
     }, [userInfoCheck])
 
     return (
@@ -81,7 +74,7 @@ const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
             onOk={onOk}>
 
             <Table
-                loading={isLoading}
+                loading={loading}
                 dataSource={usersAsistentesInfo.map(assistan => ({ key: assistan.id, name: assistan.displayName, promocion: assistan.promocion, check: confirmados.includes(assistan.id) })) as DataType[]}
                 columns={[...columns, {
                     title: 'Acciones',
@@ -91,7 +84,7 @@ const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
                         <Space size="middle">
                             {
                                 check ? (
-                                    <Tooltip placement="topLeft" title={'Eliminar asistencia'} >
+                                    <Tooltip placement="right" title={'Eliminar asistencia'} >
                                         <Popconfirm
                                             placement="topRight"
                                             title={'Inactivar modulo'}
@@ -105,7 +98,7 @@ const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
                                     </Tooltip>
 
                                 ) : (
-                                    <Tooltip placement="topLeft" title={'Marcar asistencia'} >
+                                    <Tooltip placement="right" title={'Marcar asistencia'} >
                                         <Button
                                             onClick={() => onChek(record.key)}
                                             icon={<CheckOutlined />}></Button>

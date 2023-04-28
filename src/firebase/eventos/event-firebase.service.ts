@@ -293,7 +293,6 @@ export class EventFirebaseService {
                 promises.push(this.userService.getUserInfo(asistente))
             })
 
-
             await Promise.all(promises)
             onSet(usersInfo);
         });

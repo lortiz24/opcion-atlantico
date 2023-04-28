@@ -10,7 +10,6 @@ const useListeningUsersCheckedByEvent = ({ eventId }: IuseListeningUsersCheckedB
     const [userInfoCheck, setModule] = useState<IUserInfo[]>([] as IUserInfo[]);
     const [loading, setLoading] = useState(true);
 
-    console.log(userInfoCheck)
     const onSet = (modulesRealTime: IUserInfo[]) => {
         setModule(modulesRealTime)
         setLoading(false)
