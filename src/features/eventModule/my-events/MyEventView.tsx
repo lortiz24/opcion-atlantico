@@ -10,9 +10,8 @@ import useListeningEvents from '../../../hooks/useListeningEvents'
 const MyEventView = () => {
     const { isDrawerEventOpen } = useAppSelector(selector => selector.formEvent)
     const { uid } = useAppSelector(selector => selector.auth)
-    const { eventsListening, loading } = useListeningEvents([{ value: uid ?? '', operation: '==', nameProperty: 'anfitrion' }])
+    const { eventsListening, loading } = useListeningEvents([{ value: uid ?? '', operation: '==', nameProperty: 'anfitrion' }], { moderators: true, assistants: true })
     const dispatch = useAppDispatch()
-
     return (
         <Row>
             <Col span={24}>

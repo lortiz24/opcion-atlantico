@@ -45,33 +45,44 @@ export class EventFirebaseService {
         private readonly eventLogger = new ErrorFirebaseService()
     ) { }
 
-    async getAll({ assistants, moderators, }: ISelectedForeign, conditions?: ICoditionsGetEvents[]) {
+    async getAll(selectedForeinge: ISelectedForeign, conditions?: ICoditionsGetEvents[]) {
         try {
-            const queryList: QueryFieldFilterConstraint[] = []
-            conditions?.map(condition => {
-                queryList.push(where('anfitrion', condition.operation, condition.value))
-            })
-
-            let queryData = query<Omit<IEvent, 'id'>>(this.eventsCollection, ...queryList);
-
-            const querySnapshot = await getDocs<Omit<IEvent, 'id'>>(queryData);
-            let events: IEvent[] = []
-            let promises: Promise<IUserInfo[]>[] = [] // array para almacenar las promesas
-
-            querySnapshot.forEach(async (doc) => {
-                const data: Omit<IEvent, 'id'> = doc.data();
-                const moderatorsData = Promise.all(data.moderators.map(async (moderatorId) => await this.userService.getUserInfo(moderatorId) as IUserInfo));
-                promises.push(moderatorsData);
-
-                const moderators: IUserInfo[] = await moderatorsData;
-                events.push({ id: doc.id, ...data, forengData: { moderators: moderators } })
+            const queryList: QueryFieldFilterConstraint[] = [];
+            conditions?.map((condition) => {
+                queryList.push(where("anfitrion", condition.operation, condition.value));
             });
 
-            await Promise.all(promises); // esperamos a que todas las promesas se completen
+            let queryData = query<Omit<IEvent, "id">>(this.eventsCollection, ...queryList);
 
+            const querySnapshot = await getDocs<Omit<IEvent, "id">>(queryData);
+            let events: IEvent[] = [];
+            let promises: Promise<IUserInfo[]>[] = [];
+
+            querySnapshot.forEach(async (doc) => {
+                const data: Omit<IEvent, "id"> = doc.data();
+                let moderatorsList: IUserInfo[] = [];
+                let assistansList: IUserInfo[] = [];
+
+                if (selectedForeinge) {
+                    const moderatorsData = Promise.all(
+                        data.moderators.map(async (moderatorId) => await this.userService.getUserInfo(moderatorId) as IUserInfo)
+                    );
+                    const assistansData = Promise.all(
+                        data.assistants.map(async (assistantsId) => await this.userService.getUserInfo(assistantsId) as IUserInfo)
+                    );
+                    promises.push(moderatorsData);
+                    moderatorsList = selectedForeinge.moderators === true ? await moderatorsData : [];
+
+                    promises.push(assistansData);
+                    assistansList = selectedForeinge.assistants === true ? await assistansData : [];
+                }
+                events.push({ id: doc.id, ...data, forengData: { moderators: moderatorsList, assistants: assistansList } });
+            });
+            await Promise.all(promises);
+            console.log(events)
             return events;
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
     async getOneById(eventId: string) {
@@ -126,27 +137,50 @@ export class EventFirebaseService {
             return { ok: false }
         }
     }
+    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[], selectedForeing?: ISelectedForeign) {
+        const queryList: QueryFieldFilterConstraint[] = [];
+        conditions?.map((condition) => {
+            queryList.push(where("anfitrion", condition.operation, condition.value));
+        });
 
+        let queryData = query<Omit<IEvent, "id">>(this.eventsCollection, orderBy("dateStart", "asc"), ...queryList);
 
-    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[]) {
-        const queryList: QueryFieldFilterConstraint[] = []
-        conditions?.map(condition => {
-            queryList.push(where('anfitrion', condition.operation, condition.value))
-        })
-
-        let queryData = query<Omit<IEvent, 'id'>>(this.eventsCollection, orderBy("dateStart", "asc"), ...queryList);
-
-        return onSnapshot(queryData, (querySnapshot) => {
+        return onSnapshot(queryData, async (querySnapshot) => {
             if (!querySnapshot.empty) {
-                const events: IEvent[] = []
-                querySnapshot.forEach((doc) => events.push({ id: doc.id, ...doc.data() }));
-                onSet(events)
+                const events: IEvent[] = [];
+                let promises: Promise<IUserInfo[]>[] = [];
+                let promisesAssistens: Promise<IUserInfo[]>[] = [];
+
+                querySnapshot.forEach(async (doc) => {
+                    const data: Omit<IEvent, "id"> = doc.data();
+                    let moderators: IUserInfo[] = [];
+                    let assistansList: IUserInfo[] = [];
+
+                    if (selectedForeing) {
+                        const moderatorsData = Promise.all(
+                            data.moderators.map(async (moderatorId) => await this.userService.getUserInfo(moderatorId) as IUserInfo)
+                        );
+                        const assistansData = Promise.all(
+                            data.assistants.map(async (assistantsId) => await this.userService.getUserInfo(assistantsId) as IUserInfo)
+                        );
+                        promises.push(moderatorsData);
+                        moderators = selectedForeing.moderators === true ? await moderatorsData : [];
+
+                        promises.push(assistansData);
+                        assistansList = selectedForeing.assistants === true ? await assistansData : [];
+                    }
+
+                    events.push({ id: doc.id, ...data, forengData: { moderators: moderators, assistants: assistansList } });
+                });
+
+                await Promise.all([...promises, ...promisesAssistens]); // esperamos a que todas las promesas se completen
+
+                onSet(events);
             } else {
-                onSet([])
+                onSet([]);
             }
         });
     }
-
     listeningQrAttendanceFirebase(eventId: string, qrCodeId: string, onSet: (qrCode: IQrCode) => void) {
         const qrCodeRef = doc(this.qrColecction, qrCodeId);
         return onSnapshot(qrCodeRef, (doc) => {
@@ -154,8 +188,6 @@ export class EventFirebaseService {
             onSet({ id: doc.id, ...data } as IQrCode)
         });
     }
-
-
     async createToken(eventId: string, token: string) {
         try {
             const querySnapshot = await addDoc(this.qrColecction, { eventId, token });
@@ -165,7 +197,6 @@ export class EventFirebaseService {
             console.error("Error al crear evento: ", error);
         }
     }
-
     async getTokenByEventId(eventId: string) {
         try {
             let qrCode: IQrCode[] = []
@@ -200,7 +231,6 @@ export class EventFirebaseService {
             this.eventLogger.hanledError(error)
         }
     }
-
     async createCheck(userId: string, eventId: string) {
         try {
             const eventDocRef = doc(this.eventsCollection, eventId);

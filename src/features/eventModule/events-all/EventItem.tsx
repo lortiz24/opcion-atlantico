@@ -33,7 +33,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
     const [iconResult, seticonResult] = useState('ClockCircleOutlined')
     const [actionsList, setActionsList] = useState<JSX.Element[]>([])
     const dispatch = useAppDispatch()
-
     useEffect(() => {
         const dateStart = new DateAdapter(eventItem.dateStart.toDate())
         const dateEnd = new DateAdapter(eventItem.dateEnd.toDate())
@@ -104,7 +103,7 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
         }
         setActionsList(actionsList)
     }, [])
-
+console.log('moderadores',eventItem.forengData?.moderators)
     return (
         <List.Item
         >
@@ -142,6 +141,7 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
                                         maxCount={4}
                                         maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
                                         {eventItem.forengData?.moderators?.map((moderator, key) => {
+                                            console.log('',moderator)
                                             return (
                                                 <Tooltip key={moderator.id} title={moderator.displayName} placement='top'>
                                                     <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>

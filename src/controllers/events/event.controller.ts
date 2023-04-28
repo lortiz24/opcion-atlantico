@@ -32,8 +32,8 @@ export class EventController {
         const event = await this.eventService.delete(eventId)
         return event
     }
-    listeningMenus(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[]) {
-        const newMenuId = this.eventService.listeningEvents(onSet, conditions)
+    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[], selectedForeing?: ISelectedForeign) {
+        const newMenuId = this.eventService.listeningEvents(onSet, conditions,selectedForeing)
         return newMenuId
     }
     listeningQrCode(eventId: string, qrCode: string, onSet: (events: IQrCode) => void) {
