@@ -243,7 +243,7 @@ export class EventFirebaseService {
     }
     async alreadyCheck(userId: string, eventId: string) {
         try {
-            const eventDocRef = doc(eventsCollectionRef, eventId);
+            const eventDocRef = doc(this.eventsCollection, eventId);
 
             const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
 

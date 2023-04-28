@@ -8,7 +8,6 @@ const EventsRouter = () => {
     return (
         <Routes>
             <Route path="/all-events" element={<TitleModule title='Todos los eventos'><EventView /></TitleModule>} />
-            <Route path="/events-management" element={<TitleModule title='Mis eventos'><MyEventView /></TitleModule>} />
         </Routes>
     )
 }
