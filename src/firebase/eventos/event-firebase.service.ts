@@ -1,8 +1,9 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
-import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, collection, CollectionReference, } from "firebase/firestore";
+import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, collection, CollectionReference, setDoc, } from "firebase/firestore";
 import { IAttendanceByEvent, ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { UserServiceFirebase } from "../user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";
+import { ErrorFirebaseService } from "../error/error-firebase-service";
 
 
 export const createQrAttendanceFirebase = async (newQrAttendance: Omit<IQrCode, 'id'>) => {
@@ -40,7 +41,8 @@ export class EventFirebaseService {
     constructor(
         private readonly eventsCollection = eventsCollectionRef,
         private readonly qrColecction = qrAttendanceCollectionRef,
-        private readonly userService = new UserServiceFirebase()
+        private readonly userService = new UserServiceFirebase(),
+        private readonly eventLogger = new ErrorFirebaseService()
     ) { }
 
     async getAll({ assistants, moderators, }: ISelectedForeign, conditions?: ICoditionsGetEvents[]) {
@@ -77,8 +79,18 @@ export class EventFirebaseService {
             const moduleRef = doc(this.eventsCollection, eventId);
 
             const querySnapshot = await getDoc<Omit<IEvent, 'id'>>(moduleRef);
-
+            if (!querySnapshot.exists()) return { ...querySnapshot.data() } as IEvent
             return { id: querySnapshot.id, ...querySnapshot.data() } as IEvent
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async existEvent(eventId: string) {
+        try {
+            const moduleRef = doc(this.eventsCollection, eventId);
+
+            const querySnapshot = await getDoc<Omit<IEvent, 'id'>>(moduleRef);
+            return querySnapshot.exists()
         } catch (error) {
             console.log(error)
         }
@@ -178,40 +190,39 @@ export class EventFirebaseService {
             let queryData = query<Omit<IQrCode, 'id'>>(this.qrColecction, where("token", "==", token));
             const querySnapshot = await getDocs(queryData)
             querySnapshot.forEach((doc) => {
-                console.log('epa')
                 const data: Omit<IQrCode, 'id'> = doc.data();
                 qrCode.push({ id: doc.id, ...data })
             });
-
-            if (qrCode.length > 0) {
-                const eventDocRef = doc(eventsCollectionRef, eventId);
-                const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent');
-                const querySnapshot = await addDoc(attendanceByEvent, { userId });
-                return true
-            } else {
-                false
-            }
+            //token valido
+            return qrCode.length > 0
 
         } catch (error) {
-            console.log(error)
+            this.eventLogger.hanledError(error)
         }
     }
-    async alreadyCheck(token: string, userId: string, eventId: string) {
-        try {
-            let chekingUser: IAttendanceByEvent[] = []
 
+    async createCheck(userId: string, eventId: string) {
+        try {
+            const eventDocRef = doc(this.eventsCollection, eventId);
+            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
+            const docRef = doc(attendanceByEvent, userId)
+            await setDoc(docRef, { userId })
+            return 201
+        } catch (error) {
+            return this.eventLogger.hanledError(error)
+        }
+    }
+    async alreadyCheck(userId: string, eventId: string) {
+        try {
             const eventDocRef = doc(eventsCollectionRef, eventId);
 
             const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
 
-            let queryData = query<Omit<IAttendanceByEvent, 'id'>>(attendanceByEvent, where('userId', '==', userId));
+            const attendancRef = doc(attendanceByEvent, userId)
 
-            const querySnapshot = await getDocs(queryData)
-            querySnapshot.forEach((doc) => {
-                const data: Omit<IAttendanceByEvent, 'id'> = doc.data();
-                chekingUser.push({ id: doc.id, ...data })
-            });
-            return chekingUser.length > 0
+            const querySnapshot = await getDoc<Omit<IAttendanceByEvent, 'id'>>(attendancRef);
+            return querySnapshot.exists()
+
         } catch (error) {
             console.log(error)
         }

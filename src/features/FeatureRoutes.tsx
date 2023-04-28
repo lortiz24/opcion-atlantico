@@ -10,7 +10,8 @@ export const FeatureRoutes = () => {
 		<>
 			<MainLayout>
 				<Routes>
-					<Route path='/:eventId/:token' element={<CheckingTokenQrView />} />
+					<Route path='/check-qr-Attendance/:eventId/:token' element={<CheckingTokenQrView />} />
+					<Route path='/auth/login' element={<Navigate to='/events/all-events' />} />
 					<Route path='/my-profile/*' element={<MyProfileView />} />
 					<Route path='/events/*' element={<EventsRouter />} />
 					<Route path='/configuration/*' element={<ConfigurationRouter />} />

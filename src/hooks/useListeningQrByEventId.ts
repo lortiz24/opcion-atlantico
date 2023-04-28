@@ -12,10 +12,8 @@ const useListeningQrByEventId = (eventId: string, qrCodeId: string | undefined) 
         setLoading(false)
     }
     useEffect(() => {
-        console.log(qrCodeId)
         if (!qrCodeId) return
         let unsubscribe: Unsubscribe
-        console.log(eventId, qrCodeId, onSet)
         unsubscribe = eventController.listeningQrCode(eventId, qrCodeId, onSet)
 
         return () => {

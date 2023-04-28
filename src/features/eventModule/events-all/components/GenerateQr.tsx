@@ -27,7 +27,7 @@ const GenerateQr = ({ open, eventAttendanceId, onCancel, onOk }: IGenerateQrProp
     }, []);
     return (
         <Modal onOk={onOk} destroyOnClose width={'100%'} open={open} onCancel={onCancel} style={{ display: 'flex', justifyContent: 'center' }} >
-            {loading ? <LoadingComponent isLoading /> : <QRCode value={`http:\/\/${window.location.host}/#/${eventAttendanceId}/${qrToken.token}`} size={400} />}
+            {loading ? <LoadingComponent isLoading={loading} /> : <QRCode value={`http:\/\/${window.location.host}/#/check-qr-Attendance/${eventAttendanceId}/${qrToken.token}`} size={400} />}
         </Modal>
     )
 }

@@ -16,6 +16,10 @@ export class EventController {
         const event = await this.eventService.getOneById(eventId)
         return event
     }
+    async eventExist(eventId: string) {
+        const event = await this.eventService.existEvent(eventId)
+        return event
+    }
     async createEvent(newEvent: Omit<IEvent, 'id'>) {
         const event = await this.eventService.create(newEvent)
         return event
@@ -49,15 +53,21 @@ export class EventController {
             return undefined
     }
     async checkingToken(token: string, userId: string, eventId: string) {
-        const alreadycheck = await this.eventService.alreadyCheck(token, userId, eventId)
-        if (alreadycheck === undefined) return alreadycheck
-        if (!alreadycheck) {
-            const checking = await this.eventService.checkingToken(token, userId, eventId)
-            if (checking === undefined) return checking
-            return { checking, alreadycheck }
-        }
+        const validToken = await this.eventService.checkingToken(token, userId, eventId)
+        if (validToken === undefined) return validToken
+        return validToken
 
-        return { alreadycheck, checking: false }
+        return false
+    }
+    async alreadyCheck(userId: string, eventId: string) {
+        const alreadycheck = await this.eventService.alreadyCheck(userId, eventId)
+        if (alreadycheck === undefined) return alreadycheck
+        return alreadycheck
+    }
+
+    async createCheck(userId: string, eventId: string) {
+        const check = await this.eventService.createCheck(userId, eventId)
+        return check
     }
 }
 
