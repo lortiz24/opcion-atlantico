@@ -20,7 +20,7 @@ export const timestampBeforeNow = (date_first: Timestamp) => {
     return dayjs(date_first.toDate()).isBefore(dayjs(new Date()))
 }
 export const timestampAfterNow = (date_first: Timestamp) => {
-    return dayjs(date_first.toDate()).isAfter(dayjs(new Date()))
+    return dayjs(date_first.toDate()).isAfter(dayjs(new Date())) && !dayjs(date_first.toDate()).isSame(dayjs(new Date()))
 }
 
 export const transforDateToDayjs = (date: Date | string) => {

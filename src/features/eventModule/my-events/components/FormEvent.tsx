@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { IEvent, IFormEvent } from '../../../../interfaces/events-interfaces'
 import { Button, Col, DatePicker, Form, Input, Row, Space, Checkbox, Select, UploadFile } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
@@ -10,6 +10,11 @@ import { IUserInfo } from '../../../../interfaces/user-interfaces'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import MyUploadComponent from '../../../../components/upload/MyUploadComponent'
 import TextArea from 'antd/es/input/TextArea'
+import useGetEvents from '../../../../hooks/useGetEvents'
+import useGetEventById from '../../../../hooks/useGetEventById'
+import LoadingComponent from '../../../../components/loading/LoadingComponent'
+import { DateAdapter } from '../../../../services/date-service/Daily'
+import dayjs from 'dayjs'
 
 
 interface IEventFormProps {
@@ -20,13 +25,14 @@ interface IEventFormProps {
 
 
 
-const FormEvent = ({ event, onSetValuesForm }: IEventFormProps) => {
+const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
     const [form] = useForm<IFormEvent>();
-    const { isLoadingFormEvent } = useAppSelector(selector => selector.formEvent)
+    const { isLoadingFormEvent, eventId, isEditFormEvent } = useAppSelector(selector => selector.formEvent)
     const { users } = useGetUsers()
-    const [userToAsist, setUserToAsist] = useState<IUserInfo[]>([] as IUserInfo[])
+    const { event, loading: isLoadingEvent } = useGetEventById(eventId)
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [image, setImage] = useState<UploadFile[]>([])
+    const [currenImage, setcurrenImage] = useState<UploadFile[]>([])
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
     }
@@ -34,8 +40,42 @@ const FormEvent = ({ event, onSetValuesForm }: IEventFormProps) => {
 
     const onSetDataForm = (data: IFormEvent) => {
         data.imgForm = image
+        if (isEditFormEvent) {
+            data.img = event?.img
+        }
+        data.dateStart = data.dateStart.second(0)
+        data.dateEnd = data.dateEnd.second(0)
+        console.log(data)
         onSetValuesForm(data)
     }
+    useEffect(() => {
+        if (isEditFormEvent && event) {
+            if (event.img) {
+                setcurrenImage([{
+                    url: event?.img?.url ?? '',
+                    name: event?.img?.name ?? '',
+                    uid: '-1'
+                }])
+            }
+            const dateStart = new DateAdapter(event.dateStart.toDate())
+            const dateEnd = new DateAdapter(event.dateEnd.toDate())
+            form.setFieldValue('title', event.title)
+            form.setFieldValue('place', event.place)
+            form.setFieldValue('desciption', event.desciption)
+            form.setFieldValue('dateStart', dateStart.toDayjs())
+            form.setFieldValue('dateEnd', dateEnd.toDayjs())
+            form.setFieldValue('title', event?.title)
+            form.setFieldValue('title', event?.title)
+            if (event.moderators.length > 0) setHaveChildrens(true)
+            form.setFieldValue('typeAttendance', event?.typeAttendance)
+            form.setFieldValue('typeEvent', event?.typeEvent)
+            form.setFieldValue('moderators', event?.moderators)
+            form.setFieldValue('assistants', event?.assistants)
+        }
+    }, [eventId, event])
+
+    if (isLoadingEvent) return <LoadingComponent isLoading={isLoadingEvent} />
+
     return (
         <>
             <Fragment >
@@ -43,7 +83,6 @@ const FormEvent = ({ event, onSetValuesForm }: IEventFormProps) => {
                     <Col span={16}>
                         <Form form={form} onFinish={onSetDataForm} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
                             <Row>
-
                                 <Col span={24}>
                                     <Form.Item label='Nombre del evento' name={'title'} rules={[{ required: true, message: 'Es requerido' }]}>
                                         <Input />
@@ -57,8 +96,7 @@ const FormEvent = ({ event, onSetValuesForm }: IEventFormProps) => {
                                 </Col>
 
                                 <Col span={24}>
-
-                                    <Form.Item label='Descripcion del evento' name={'desciption'} rules={[{ required: true, message: 'Es requerido' }]}>
+                                    <Form.Item label='Descripcion del evento' name={'desciption'} >
                                         <TextArea />
                                     </Form.Item>
                                 </Col>
@@ -74,7 +112,7 @@ const FormEvent = ({ event, onSetValuesForm }: IEventFormProps) => {
                                 </Col>
                                 <Col span={24}>
                                     <MyTransferComponent
-                                        onSetTargetKey={setUserToAsist}
+                                        targetKeys={event?.assistants}
                                         data={users}
                                         selectedRowKey={(recorder => recorder.id)} propertyRender={(item) => item.displayName}
                                         name={'assistants'}
@@ -89,7 +127,7 @@ const FormEvent = ({ event, onSetValuesForm }: IEventFormProps) => {
                                 </Form.Item>
                                 {haveChildrens && <Col span={24}>
                                     <MyTransferComponent
-                                        onSetTargetKey={setUserToAsist}
+                                        targetKeys={event?.moderators}
                                         data={users}
                                         selectedRowKey={(recorder => recorder.id)} propertyRender={(item) => item.displayName}
                                         name={'moderators'}
@@ -140,7 +178,7 @@ const FormEvent = ({ event, onSetValuesForm }: IEventFormProps) => {
                                     </Form.Item>
                                 </Col>
                                 <Col span={24}>
-                                    <MyUploadComponent onSetFile={setImage} maxFiles={1} label='Imagen de perfil' name='img' />
+                                    <MyUploadComponent onSetFile={setImage} maxFiles={1} label='Imagen de perfil' name='img' currentFiles={currenImage} />
                                 </Col>
 
                                 <Button loading={isLoadingFormEvent} icon={<SaveOutlined />} type='primary' htmlType='submit'>Guardar</Button>

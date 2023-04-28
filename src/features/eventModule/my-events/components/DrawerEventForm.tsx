@@ -6,24 +6,29 @@ import useGetMonitorSize from '../../../../hooks/useGetMonitorSize'
 import EventForm from './FormEvent'
 import { IEvent, IFormEvent } from '../../../../interfaces/events-interfaces'
 import { Timestamp } from 'firebase/firestore'
-import { createEventAsync } from '../../../../store/form-events/event-thunk'
+import { createEventAsync, updateEventAsync } from '../../../../store/form-events/event-thunk'
+import { DispatchMessageService } from '../../../../components/message-response/DispatchMessageService'
 
 interface IDrawerEventFormProps extends DrawerProps {
 
 }
 const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) => {
-    const { isDrawerEventOpen, isEditFormEvent } = useAppSelector(selector => selector.formEvent)
+    const { uid } = useAppSelector(selector => selector.auth)
+    const { isDrawerEventOpen, isEditFormEvent, eventId } = useAppSelector(selector => selector.formEvent)
     const { isTable } = useGetMonitorSize()
     const dispatch = useAppDispatch()
 
+
     const onCreateEvent = async ({ imgForm, ...formEvent }: IFormEvent) => {
+        if (!uid) return DispatchMessageService({ action: 'show', msj: 'No puede crear eventos si no esta autenticado' })
         const newEvent: Omit<IEvent, 'id'> = {
             ...formEvent,
             dateStart: Timestamp.fromDate(formEvent.dateStart.toDate()),
             dateEnd: Timestamp.fromDate(formEvent.dateEnd.toDate()),
+            anfitrion: uid
         }
-       
-        if (isEditFormEvent) return console.log('vales monda')
+        
+        if (isEditFormEvent) return dispatch(updateEventAsync(eventId, newEvent, imgForm))
         dispatch(createEventAsync(newEvent, imgForm))
     }
 

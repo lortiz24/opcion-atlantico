@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IEvent } from '../../interfaces/events-interfaces';
 
 type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
@@ -43,12 +44,15 @@ export const formEventSlice = createSlice({
 			state.isDrawerEventOpen = false
 			state.isEditFormEvent = false
 			state.eventId = ''
+			state.isLoadingFormEvent = false
 		},
 
 		openEditionModeEvent: (state, action: IAction) => {
-			if (action?.payload.eventId) state.eventId = action.payload.eventId
-			state.isEditFormEvent = true
-			state.isDrawerEventOpen = true
+			if (action?.payload.eventId) {
+				state.eventId = action.payload.eventId
+				state.isEditFormEvent = true
+				state.isDrawerEventOpen = true
+			}
 
 		},
 		restoreStateEvent: (state) => {

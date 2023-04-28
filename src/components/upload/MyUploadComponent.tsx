@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Form, Modal, Upload } from 'antd';
 import type { RcFile, UploadProps } from 'antd/es/upload';
@@ -14,11 +14,13 @@ interface IMyUploadComponentProps extends FormItemLabelProps {
     name?: string
     typeFile?: string,
     previewTitle?: string
+    currentFiles?: UploadFile[]
 }
 
-const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle }: IMyUploadComponentProps) => {
+const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle, currentFiles = [] }: IMyUploadComponentProps) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
+
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [filesToUpdate, setFilesToUpdate] = useState<RcFile[]>([]);
 
@@ -28,13 +30,12 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle }: I
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj as RcFile);
         }
-
         setPreviewImage(file.url || (file.preview as string));
         setPreviewOpen(true);
     };
 
     const handleChange: UploadProps['onChange'] = ({ fileList: newFileList, file }) => {
-        console.log('epa', file)
+
         if (file.status === 'removed') {
             const newListFile = filesToUpdate.filter(item => item.name !== file.name)
             onSetFile(newListFile)
@@ -46,6 +47,9 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle }: I
 
         setFileList(newFileList);
     }
+    useEffect(() => {
+        setFileList(currentFiles)
+    }, [currentFiles])
 
 
     return (

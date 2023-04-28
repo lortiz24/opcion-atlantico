@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp, WhereFilterOp } from 'firebase/firestore';
 import { Dayjs } from 'dayjs';
 import { UploadFile } from 'antd';
 import { IUserInfo } from './user-interfaces';
@@ -15,11 +15,11 @@ export interface IEvent {
     typeAttendance: 'manual' | 'automatic' | 'hybrid'
     typeEvent: 'face-to-face' | 'virtual' | 'hybrid'
     urlMeet?: string
-    img: string | undefined;
+    img?: IImageEvent | undefined | null;
     anfitrion: string;
     forengData?: IForenData
 }
-
+export interface IImageEvent { url: string, name: string }
 interface IForenData {
     moderators?: IUserInfo[];
     assistants?: IUserInfo[];
@@ -59,4 +59,10 @@ export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
     dateStart: Dayjs
     dateEnd: Dayjs;
     imgForm: UploadFile<any>[]
+}
+
+export interface ICoditionsGetEvents {
+    nameProperty: string
+    value: string,
+    operation: WhereFilterOp
 }

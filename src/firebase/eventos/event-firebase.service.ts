@@ -1,6 +1,6 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
-import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, } from "firebase/firestore";
-import { IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, } from "firebase/firestore";
+import { ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { UserServiceFirebase } from "../user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 
@@ -58,9 +58,15 @@ export class EventFirebaseService {
         private readonly userService = new UserServiceFirebase()
     ) { }
 
-    async getAll({ assistants, moderators }: ISelectedForeign) {
+    async getAll({ assistants, moderators, }: ISelectedForeign, conditions?: ICoditionsGetEvents[]) {
         try {
-            let queryData = query<Omit<IEvent, 'id'>>(this.eventsCollection);
+            const queryList: QueryFieldFilterConstraint[] = []
+            conditions?.map(condition => {
+                queryList.push(where('anfitrion', condition.operation, condition.value))
+            })
+
+            let queryData = query<Omit<IEvent, 'id'>>(this.eventsCollection, ...queryList);
+
             const querySnapshot = await getDocs<Omit<IEvent, 'id'>>(queryData);
             let events: IEvent[] = []
             let promises: Promise<IUserInfo[]>[] = [] // array para almacenar las promesas
@@ -101,6 +107,46 @@ export class EventFirebaseService {
             console.error("Error al crear evento: ", error);
         }
     }
+    async update(eventId: string, newEvent: Omit<IEvent, 'id'>) {
+        try {
+            console.log('eventId', eventId)
+            console.log('newEvent', newEvent)
+            const eventRef = doc(this.eventsCollection, eventId);
+            await updateDoc(eventRef, newEvent);
+            return { ok: true }
+        } catch (error) {
+            console.error("Error al actualizar el evento: ", error);
+            return { ok: false }
+        }
+    }
+    async delete(eventId: string) {
+        try {
+            const eventRef = doc(this.eventsCollection, eventId);
+            await deleteDoc(eventRef);
+            return { ok: true }
+        } catch (error) {
+            console.error("Error al eliminar el evento: ", error);
+            return { ok: false }
+        }
+    }
 
 
+    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[]) {
+        const queryList: QueryFieldFilterConstraint[] = []
+        conditions?.map(condition => {
+            queryList.push(where('anfitrion', condition.operation, condition.value))
+        })
+
+        let queryData = query<Omit<IEvent, 'id'>>(this.eventsCollection, orderBy("dateStart", "asc"), ...queryList);
+
+        return onSnapshot(queryData, (querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const events: IEvent[] = []
+                querySnapshot.forEach((doc) => events.push({ id: doc.id, ...doc.data() }));
+                onSet(events)
+            } else {
+                onSet([])
+            }
+        });
+    }
 }

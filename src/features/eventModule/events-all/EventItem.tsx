@@ -1,11 +1,17 @@
 import * as IconsAntDesing from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, List, Result, Row, Space, Statistic, Tooltip, Typography } from 'antd'
+import { Avatar, Button, Card, Col, Dropdown, Image, List, MenuProps, Popconfirm, Result, Row, Space, Statistic, Tooltip, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { IEvent } from '../../../interfaces/events-interfaces';
 import { IEventListProps } from './EventList';
 import { timestampAfterNow, timestampBeforeNow, timestampToString } from '../../../services/date-treatment/conversions-date.utils';
 import { ResultStatusType } from 'antd/es/result';
 import MyGradiantBackground from '../../../components/gradiant-bacground/MyGradiantBackground';
+import { useAppSelector } from '../../../store/store';
+import { useAppDispatch } from '../../../store/store';
+import { openEditionModeEvent } from '../../../store/form-events/formEventSlice';
+import { deleteEventAsync } from '../../../store/form-events/event-thunk';
+import { DateAdapter } from '../../../services/date-service/Daily';
+import dayjs from 'dayjs';
 
 interface IEventItemProps extends IEventListProps {
     eventItem: IEvent
@@ -19,31 +25,88 @@ const IconText = ({ icon, text, onClick }: { icon: React.FC; text: string, onCli
     </Space>
 );
 
-const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItemProps) => {
+
+const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, editable }: IEventItemProps) => {
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')
     const [messageByState, setMessageByState] = useState('')
     const [estado, setestado] = useState(true)
     const [iconResult, seticonResult] = useState('ClockCircleOutlined')
+    const [actionsList, setActionsList] = useState<JSX.Element[]>([])
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        if (timestampAfterNow(eventItem.dateStart) && timestampAfterNow(eventItem.dateEnd)) {
-            setMessageByState('Por empezar')
-            setstatusResult('info')
-            seticonResult('ClockCircleOutlined')
+        const dateStart = new DateAdapter(eventItem.dateStart.toDate())
+        const dateEnd = new DateAdapter(eventItem.dateEnd.toDate())
+        console.log('Fecha inicial', eventItem.dateStart.toDate())
+
+        if (dateStart.isBeforeNow() && dateEnd.isBeforeNow()) {
+            setMessageByState('Finalizado')
+            setstatusResult('error')
+            seticonResult('CheckCircleOutlined')
             return
         }
-        if (timestampBeforeNow(eventItem.dateStart) && timestampAfterNow(eventItem.dateEnd)) {
+        console.log(dayjs().toDate(), 'fecha inicial menor o igual a ahora===>', dateStart.isSameOrBeforeNow())
+        console.log(dayjs().toDate(), 'fecha final mayor a ahora===>', dateEnd.isAfterNow())
+        if (dateStart.isSameOrBeforeNow() && dateEnd.isAfterNow()) {
             setMessageByState('En curso')
             setstatusResult('success')
             seticonResult('LoadingOutlined')
             return
         }
-        if (timestampBeforeNow(eventItem.dateEnd)) {
-            setMessageByState('Finalizado')
-            setstatusResult('error')
-            seticonResult('CheckCircleOutlined')
+
+        if (dateStart.isAfterNow() && dateEnd.isAfterNow()) {
+            setMessageByState('Por empezar')
+            setstatusResult('info')
+            seticonResult('ClockCircleOutlined')
         }
-    }, [eventItem.dateStart])
+
+    }, [eventItem.dateStart, estado])
+
+    useEffect(() => {
+        const actionsList = []
+        if (onGenerateQR) {
+            actionsList.push(<Tooltip placement="topLeft" title={'Generar QR'} >
+                <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => onGenerateQR(eventItem.id)} />
+            </Tooltip>)
+        }
+        if (onReadQr) {
+            actionsList.push(
+                <Tooltip placement="topLeft" title={'Leer QR'} >
+                    <Button type='text' icon={<IconsAntDesing.ScanOutlined />} onClick={() => onReadQr()} />
+                </Tooltip>
+            )
+        }
+        if (onChecking && (['automatic', 'hybrid'].includes(eventItem.typeAttendance))) {
+            actionsList.push(
+                <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
+                    <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => onChecking(eventItem.id)} />
+                </Tooltip>
+            )
+        }
+        if (editable) {
+            actionsList.push(
+                <Tooltip placement="topLeft" title={'Editar evento'} >
+                    <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={() => dispatch(openEditionModeEvent({ eventId: eventItem.id }))} />
+                </Tooltip>
+            )
+            actionsList.push(
+                <Popconfirm
+                    placement="bottom"
+                    title='Eliminar el evento'
+                    description={'Esta seguro que desea inactivar el submodulo'}
+                    onConfirm={() => dispatch(deleteEventAsync(eventItem.id))}
+                    okText="Si"
+                    cancelText="No"
+                >
+                    <Tooltip placement="topLeft" title={'Eliminar evento'} >
+                        <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} />
+                    </Tooltip>
+                </Popconfirm>
+            )
+        }
+        setActionsList(actionsList)
+    }, [])
+
     return (
         <List.Item
         >
@@ -66,14 +129,9 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
                     zIndex: 1,
                 }}
                 bordered={false}
-                actions={[
-                    (onGenerateQR && <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => onGenerateQR(eventItem.id)} />),
-                    (onReadQr && <Button type='text' icon={<IconsAntDesing.ScanOutlined />} onClick={() => onReadQr()} />),
-                    (onReadQr && (eventItem.typeAttendance === 'automatic' || eventItem.typeAttendance === 'hybrid'))
-                    &&
-                    <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => onReadQr()} />
-                ]}
+                actions={actionsList}
             >
+                <Button onClick={() => setestado(!estado)}>ea</Button>
                 <MyGradiantBackground colorLeft='#FAF9F7' colorRight='#E9BDCF' />
                 <Row justify={'center'} style={{ width: '100%' }} gutter={[8, 8]}>
                     <Col xs={24} sm={24} md={14} lg={16} xl={15} xxl={17}
@@ -112,9 +170,11 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
                                             style={{ margin: 'auto' }}
                                             value={timestampToString(eventItem.dateStart, 'MM/DD/YYYY hh:mm A')}
                                             format='D [días] H [horas] m [minutos] s [segundos]'
+                                            //no se porque sin el settimeout no funciona la verdad
                                             onFinish={() => {
-                                                console.log('epa finalize')
-                                                setestado(!estado)
+                                                setTimeout(() => {
+                                                    setestado(!estado)
+                                                }, 2000)
                                             }}
                                         />
                                     )
@@ -123,14 +183,19 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
 
                         </Col>
                         <Col span={24}>
+
                             <Space wrap>
                                 <Typography.Text strong>Fecha incio:</Typography.Text>
                                 <Typography.Text code>{timestampToString(eventItem.dateStart, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
                             </Space>
+
+
                             <Space wrap>
                                 <Typography.Text strong>Fecha fin: </Typography.Text>
                                 <Typography.Text code>{timestampToString(eventItem.dateEnd, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
                             </Space>
+
+
                             <Space wrap>
                                 <Typography.Text strong>Lugar: </Typography.Text>
                                 <Typography.Text code style={{ textTransform: 'uppercase' }}>
@@ -142,9 +207,10 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
 
                     <Col xs={0} sm={0} md={10} lg={8} xl={9} xxl={7}
                     > <Image
+                            fallback={'../../../../public/opcion.jpg'}
                             width={'100%'}
                             height={'100%'}
-                            src={eventItem.img}
+                            src={eventItem.img?.url}
                             alt="logo"
                             preview={false}
                             style={{ borderRadius: 20, objectFit: 'cover' }}
@@ -154,6 +220,7 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected }: IEventItem
                 </Row>
             </Card>
         </List.Item >
+
     )
 }
 

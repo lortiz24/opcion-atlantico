@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { IEvent } from '../interfaces/events-interfaces';
+import { ICoditionsGetEvents, IEvent } from '../interfaces/events-interfaces';
 import { eventController } from '../controllers/events/event.controller';
 
 
-const useGetEvents = () => {
+const useGetEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEvents) => {
     const [events, setEvents] = useState<IEvent[]>([]);
     const [loading, setLoading] = useState(true);
 
     const getDate = async () => {
-        const events = await eventController.getEvents({ moderators: true })
-        if (events) setEvents(events)
+        let events: IEvent[] | undefined = []
+        if (Array.isArray(condition) || (!Array.isArray(condition) && !condition)) {
+            events = await eventController.getEvents({ moderators: true }, condition)
+            if (events) setEvents(events)
+        } else {
+            events = await eventController.getEvents({ moderators: true }, [condition])
+            if (events) setEvents(events)
+        }
         setLoading(false)
     }
     useEffect(() => {

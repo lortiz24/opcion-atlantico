@@ -22,7 +22,7 @@ const FormModules = () => {
     const [subMenus, setSubMenus] = useState<number[]>([1])
     //custom Hooks
     const { iconListString } = useGetIconStringList()
-    const { isLoadingRols, rolList } = useGetRols()
+    const {  rolList } = useGetRols()
     //store
     const { isEdit, moduleID } = useAppSelector(selector => selector.formModule)
     //herramientas

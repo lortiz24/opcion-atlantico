@@ -1,13 +1,16 @@
+import React from 'react'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { Button, Col, Row, Space } from 'antd'
-import React from 'react'
 import { useAppDispatch, useAppSelector } from '../../../store/store'
 import { openDrawerFormEvent } from '../../../store/form-events/formEventSlice'
 import DrawerEventForm from './components/DrawerEventForm'
 import EventList from '../events-all/EventList'
+import useListeningEvents from '../../../hooks/useListeningEvents'
 
 const MyEventView = () => {
     const { isDrawerEventOpen } = useAppSelector(selector => selector.formEvent)
+    const { uid } = useAppSelector(selector => selector.auth)
+    const { eventsListening, loading } = useListeningEvents([{ value: uid ?? '', operation: '==', nameProperty: 'anfitrion' }])
     const dispatch = useAppDispatch()
 
     return (
@@ -32,7 +35,7 @@ const MyEventView = () => {
                 </Space>
             </Col>
             <Col span={24}>
-                <EventList onSelected={console.log} />
+                <EventList onSelected={console.log} eventList={eventsListening} isLoading={loading} editable />
             </Col>
         </Row>
     )

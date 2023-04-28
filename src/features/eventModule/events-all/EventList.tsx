@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, Pagination } from 'antd';
+import { Dropdown, List, MenuProps, Pagination } from 'antd';
 import useGetEvents from '../../../hooks/useGetEvents';
 import EventItem from './EventItem';
 import { IEvent } from '../../../interfaces/events-interfaces';
@@ -9,10 +9,14 @@ export interface IEventListProps {
     onReadQr?: () => void;
     onGenerateQR?: (eventId: string) => void;
     onSelected?: (item: IEvent) => void
+    eventList?: IEvent[]
+    isLoading?: boolean
+    onChecking?: (eventId: string) => void
+    editable?: boolean
 }
 
 
-const EventList = ({ onReadQr, onGenerateQR, onSelected }: IEventListProps) => {
+const EventList = ({ onReadQr, onGenerateQR, onSelected, eventList, isLoading, onChecking, editable }: IEventListProps) => {
     const { events, loading } = useGetEvents()
 
     return (
@@ -35,10 +39,10 @@ const EventList = ({ onReadQr, onGenerateQR, onSelected }: IEventListProps) => {
                     xl: 2,
                     xxl: 2,
                 }}
-                loading={loading}
-                dataSource={events}
+                loading={isLoading ? isLoading : loading}
+                dataSource={eventList ? eventList : events}
                 renderItem={(eventItem) => (
-                    <EventItem key={eventItem.title} eventItem={eventItem} onGenerateQR={onGenerateQR} onReadQr={onReadQr} onSelected={onSelected} />
+                    <EventItem key={eventItem.title} eventItem={eventItem} onGenerateQR={onGenerateQR} onReadQr={onReadQr} onSelected={onSelected} onChecking={onChecking} editable={editable} />
                 )}
             />
         </>

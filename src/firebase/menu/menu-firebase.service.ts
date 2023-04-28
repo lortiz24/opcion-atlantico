@@ -88,6 +88,7 @@ export class MenuFirebaseService {
     }
 
     async deleteMenu(idMenu: string) {
+        //todo:terminar el return 
         try {
             const moduleRef = doc(this.modulesCollection, idMenu);
             await deleteDoc(moduleRef);
@@ -149,6 +150,7 @@ export class MenuFirebaseService {
             onSet({ id: doc.id, ...data } as IMenu)
         });
     }
+    
 
 }
 

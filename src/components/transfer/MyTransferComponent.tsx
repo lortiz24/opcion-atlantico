@@ -5,7 +5,7 @@ import { NamePath } from 'antd/es/form/interface';
 import { Rule } from 'antd/es/form';
 
 interface IMyTransferComponentProps<T extends TransferItem> extends TransferProps<T> {
-    onSetTargetKey: (selectedDataList: T[]) => void,
+    onSetTargetKey?: (selectedDataList: T[]) => void,
     data: T[],
     selectedRowKey: (record: T) => string;
     propertyRender: (record: T) => string;
@@ -25,7 +25,7 @@ const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetT
 
     const onChange = (nextAttendeeKeyTarget: string[]) => {
         setAttendeesKeyTarget(nextAttendeeKeyTarget);
-        onSetTargetKey(data.filter((item) => nextAttendeeKeyTarget.includes(selectedRowKey(item))));
+        if (onSetTargetKey) onSetTargetKey(data.filter((item) => nextAttendeeKeyTarget.includes(selectedRowKey(item))));
     };
 
 
@@ -34,6 +34,7 @@ const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetT
     };
 
     useEffect(() => {
+        if (targetKeys) setAttendeesKeyTarget(targetKeys)
     }, [])
 
     return (
