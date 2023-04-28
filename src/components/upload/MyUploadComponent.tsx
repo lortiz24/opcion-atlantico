@@ -37,6 +37,7 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle, cur
     const handleChange: UploadProps['onChange'] = ({ fileList: newFileList, file }) => {
 
         if (file.status === 'removed') {
+            console.log('efedfefef')
             const newListFile = filesToUpdate.filter(item => item.name !== file.name)
             onSetFile(newListFile)
             setFilesToUpdate(newListFile)
@@ -48,7 +49,8 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle, cur
         setFileList(newFileList);
     }
     useEffect(() => {
-        setFileList(currentFiles)
+        if (currentFiles.length > 0)
+            setFileList(currentFiles)
     }, [currentFiles])
 
 

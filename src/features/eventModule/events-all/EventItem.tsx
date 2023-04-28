@@ -37,7 +37,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
     useEffect(() => {
         const dateStart = new DateAdapter(eventItem.dateStart.toDate())
         const dateEnd = new DateAdapter(eventItem.dateEnd.toDate())
-        console.log('Fecha inicial', eventItem.dateStart.toDate())
 
         if (dateStart.isBeforeNow() && dateEnd.isBeforeNow()) {
             setMessageByState('Finalizado')
@@ -45,8 +44,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
             seticonResult('CheckCircleOutlined')
             return
         }
-        console.log(dayjs().toDate(), 'fecha inicial menor o igual a ahora===>', dateStart.isSameOrBeforeNow())
-        console.log(dayjs().toDate(), 'fecha final mayor a ahora===>', dateEnd.isAfterNow())
         if (dateStart.isSameOrBeforeNow() && dateEnd.isAfterNow()) {
             setMessageByState('En curso')
             setstatusResult('success')

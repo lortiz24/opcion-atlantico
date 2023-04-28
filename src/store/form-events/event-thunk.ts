@@ -42,17 +42,18 @@ export const updateEventAsync = (eventId: string, newEvent: Omit<IEvent, 'id'>, 
         dispatch(startActionEvent());
         try {
             let nameImage = undefined
-            if (imgForm[0]) {
+            if (imgForm[0] && imgForm[0].uid !== '-1') {
                 nameImage = await storageController.uploadImage(imgForm[0], 'events-image', newEvent.img?.name ?? imgForm[0].name)
                 if (!nameImage) return DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo subir la imagen, verifique nuevamente' })
                 const newImage: IImageEvent = { url: nameImage, name: imgForm[0].name }
                 newEvent.img = newImage
             } else {
-                newEvent.img = null
+                if (imgForm.length === 0) {
+                    newEvent.img = null
+                }
             }
 
 
-            console.log('newEvent', newEvent)
             const newEventId = await eventController.updateEvent(eventId, newEvent);
             if (newEventId.ok) {
                 DispatchMessageService({ action: 'show', type: "success", msj: 'Se actualizo el evento correctamente' })

@@ -45,13 +45,17 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
         }
         data.dateStart = data.dateStart.second(0)
         data.dateEnd = data.dateEnd.second(0)
-        console.log(data)
         onSetValuesForm(data)
     }
     useEffect(() => {
         if (isEditFormEvent && event) {
-            if (event.img) {
+            if (event.img?.url) {
                 setcurrenImage([{
+                    url: event?.img?.url ?? '',
+                    name: event?.img?.name ?? '',
+                    uid: '-1'
+                }])
+                setImage([{
                     url: event?.img?.url ?? '',
                     name: event?.img?.name ?? '',
                     uid: '-1'
