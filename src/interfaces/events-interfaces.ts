@@ -57,8 +57,7 @@ export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
     assistants: string[];
     place: string;
     desciption: string;
-    dateStart: Dayjs
-    dateEnd: Dayjs;
+    dateRange: Dayjs[]
     imgForm: UploadFile<any>[]
 }
 

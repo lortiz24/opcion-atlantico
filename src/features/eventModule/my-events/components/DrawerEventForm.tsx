@@ -19,15 +19,14 @@ const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) 
     const dispatch = useAppDispatch()
 
 
-    const onCreateEvent = async ({ imgForm, ...formEvent }: IFormEvent) => {
+    const onCreateEvent = async ({ dateRange, imgForm, ...formEvent }: IFormEvent) => {
         if (!uid) return DispatchMessageService({ action: 'show', msj: 'No puede crear eventos si no esta autenticado' })
         const newEvent: Omit<IEvent, 'id'> = {
             ...formEvent,
-            dateStart: Timestamp.fromDate(formEvent.dateStart.toDate()),
-            dateEnd: Timestamp.fromDate(formEvent.dateEnd.toDate()),
+            dateStart: Timestamp.fromDate(dateRange[0].toDate()),
+            dateEnd: Timestamp.fromDate(dateRange[1].toDate()),
             anfitrion: uid
         }
-        
         if (isEditFormEvent) return dispatch(updateEventAsync(eventId, newEvent, imgForm))
         dispatch(createEventAsync(newEvent, imgForm))
     }

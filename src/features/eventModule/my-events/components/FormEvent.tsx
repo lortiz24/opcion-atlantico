@@ -14,6 +14,7 @@ import LoadingComponent from '../../../../components/loading/LoadingComponent'
 import { DateAdapter } from '../../../../services/date-service/Daily'
 import { getEventStatus } from '../../../../helpers/event-helpers'
 import { Timestamp } from 'firebase/firestore'
+import locale from 'antd/es/date-picker/locale/es_ES';
 
 
 interface IEventFormProps {
@@ -47,12 +48,9 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
         if (isEditFormEvent) {
             data.img = event?.img
         }
+        data.dateRange[0] = data.dateRange[0].second(0)
+        data.dateRange[1] = data.dateRange[1].second(0)
 
-        data.dateStart = data.dateStart.second(0)
-        data.dateEnd = data.dateEnd.second(0)
-
-
-        return console.log(data)
         onSetValuesForm(data)
     }
     useEffect(() => {
@@ -71,11 +69,11 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
             }
             const dateStart = new DateAdapter(event.dateStart.toDate())
             const dateEnd = new DateAdapter(event.dateEnd.toDate())
+            setTypeInvitation(event?.typeAttendance)
             form.setFieldValue('title', event.title)
             form.setFieldValue('place', event.place)
             form.setFieldValue('desciption', event.desciption)
-            form.setFieldValue('dateStart', dateStart.toDayjs())
-            form.setFieldValue('dateEnd', dateEnd.toDayjs())
+            form.setFieldValue('dateRange', [dateStart.toDayjs(), dateEnd.toDayjs()])
             form.setFieldValue('title', event?.title)
             form.setFieldValue('title', event?.title)
             if (event.moderators.length > 0) setHaveChildrens(true)
@@ -102,7 +100,8 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                 <Col span={24}>
 
                                     <Form.Item label='Lugar del evento' name={'place'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                        <Input />
+                                        <Input
+                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'} />
                                     </Form.Item>
                                 </Col>
 
@@ -112,18 +111,18 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                     </Form.Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Space wrap>
-                                        <Form.Item label='Fecha de inicio' name={'dateStart'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                            <DatePicker showTime format={'YYYY-MM-DD h:mm A'} style={{ width: '100%' }} />
-                                        </Form.Item>
-                                        <Form.Item label='Fecha de finalizacion' name={'dateEnd'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                            <DatePicker showTime format={'YYYY-MM-DD h:mm A'} style={{ width: '100%' }} />
-                                        </Form.Item>
-                                    </Space>
+                                    <Form.Item label='Rango de fecha' name={'dateRange'} rules={[{ required: true, message: 'Es requerido' }]}>
+                                        <DatePicker.RangePicker
+                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            showTime={{ format: 'HH:mm A' }}
+                                            format='YYYY-MM-DD h:mm A'
+                                            style={{ width: '100%' }}
+                                            locale={locale} />
+                                    </Form.Item>
                                 </Col>
                                 <Col span={24}>
                                     <Form.Item label='Tipo de asistencia' name={'typeAttendance'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                        <Select onChange={onChangeInvitation} options={
+                                        <Select disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'} onChange={onChangeInvitation} options={
                                             [{
                                                 label: 'Por invitacion',
                                                 value: 'invitation'

@@ -42,9 +42,9 @@ const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetT
             label={label}
             name={name}
             rules={rules}
-            hidden={disabled}
         >
             <Transfer
+                disabled={disabled}
                 rowKey={selectedRowKey}
                 listStyle={{ width: 500 }}
                 filterOption={filterOption}
