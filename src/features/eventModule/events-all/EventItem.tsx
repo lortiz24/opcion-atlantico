@@ -25,6 +25,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     const [iconResult, seticonResult] = useState('ClockCircleOutlined')
     const [actionsList, setActionsList] = useState<JSX.Element[]>([])
     const { uid } = useAppSelector(selector => selector.auth)
+    const { isCheckinManualOpen, isGenerateQrOpen } = useAppSelector(selector => selector.showEvents)
     const [checkUsersEvent, setcheckUsersEvent] = useState<'checking' | 'check' | 'not-check'>('checking')
 
     const userAlreadyCheck = async () => {
@@ -59,24 +60,26 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
 
     useEffect(() => {
         const actionsList = []
-        actionsList.push(<Tooltip placement="topLeft" title={'Generar QR'} >
-            <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => dispatch(onGenerateQr({ eventId: eventItem.id, typeView }))} />
-        </Tooltip>)
+        actionsList.push(
+            // <Tooltip placement="topLeft" title={'Generar QR'} >
+                <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => dispatch(onGenerateQr({ eventId: eventItem.id, typeView }))} />
+            // </Tooltip>
+        )
 
         if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
             actionsList.push(
-                <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
-                    <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
-                        dispatch(onChekingOpen({ eventId: eventItem.id, typeView }))
-                    }} />
-                </Tooltip>
+                // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
+                <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
+                    dispatch(onChekingOpen({ eventId: eventItem.id, typeView }))
+                }} />
+                // </Tooltip>
             )
         }
         if (typeView === 'gestion') {
             actionsList.push(
-                <Tooltip placement="topLeft" title={'Editar evento'} >
-                    <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={() => dispatch(openEditionModeEvent({ eventId: eventItem.id }))} />
-                </Tooltip>
+                // <Tooltip placement="topLeft" title={'Editar evento'} >
+                <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={() => dispatch(openEditionModeEvent({ eventId: eventItem.id }))} />
+                // </Tooltip>
             )
             actionsList.push(
                 <Popconfirm
@@ -87,9 +90,9 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                     okText="Si"
                     cancelText="No"
                 >
-                    <Tooltip placement="topLeft" title={'Eliminar evento'} >
+                    {/* <Tooltip placement="topLeft" title={'Eliminar evento'} > */}
                         <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} />
-                    </Tooltip>
+                    {/* </Tooltip> */}
                 </Popconfirm>
             )
         }

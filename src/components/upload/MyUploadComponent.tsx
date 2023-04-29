@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Form, Modal, Upload } from 'antd';
+import { Form, Modal, Upload, message } from 'antd';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { getBase64 } from './utils/upload.utils';
@@ -57,6 +57,7 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle, cur
     return (
         <Form.Item label={label} name={name} >
             <Upload
+                accept='image/*'
                 beforeUpload={(file) => {
                     onSetFile([...filesToUpdate, file])
                     setFilesToUpdate([...filesToUpdate, file])
