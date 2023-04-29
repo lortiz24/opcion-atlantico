@@ -15,6 +15,8 @@ import useGetEventById from '../../../../hooks/useGetEventById'
 import LoadingComponent from '../../../../components/loading/LoadingComponent'
 import { DateAdapter } from '../../../../services/date-service/Daily'
 import dayjs from 'dayjs'
+import { getEventStatus } from '../../../../helpers/event-helpers'
+import { Timestamp } from 'firebase/firestore'
 
 
 interface IEventFormProps {
@@ -116,6 +118,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                 </Col>
                                 <Col span={24}>
                                     <MyTransferComponent
+                                        disabled={getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
                                         targetKeys={event?.assistants}
                                         data={users}
                                         selectedRowKey={(recorder => recorder.id)} propertyRender={(item) => item.displayName}

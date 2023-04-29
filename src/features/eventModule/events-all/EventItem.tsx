@@ -66,7 +66,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
         if ((['manual', 'hybrid'].includes(eventItem.typeAttendance)) && uid === eventItem.anfitrion) {
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
-                    <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
+                    <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
                         dispatch(onChekingOpen({ eventId: eventItem.id, typeView }))
                     }} />
                 </Tooltip>

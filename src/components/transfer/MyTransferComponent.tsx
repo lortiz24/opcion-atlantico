@@ -19,7 +19,7 @@ export const filterOption = (inputValue: string, option: any) => {
     return option.displayName.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
 }
 
-const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetTargetKey, selectedRowKey, propertyRender, label, name, locale, rules }: IMyTransferComponentProps<T>) => {
+const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetTargetKey, selectedRowKey, propertyRender, label, name, locale, rules, disabled }: IMyTransferComponentProps<T>) => {
     const [attendeesKeyTarget, setAttendeesKeyTarget] = useState<string[]>([]);
     const [selectedAttendesKeys, setSelectedAttendeesKey] = useState<string[]>([]);
 
@@ -38,7 +38,7 @@ const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetT
     }, [])
 
     return (
-        <Form.Item label={label} name={name} rules={rules}>
+        <Form.Item label={label} name={name} rules={rules} hidden={disabled}>
             <Transfer
                 rowKey={selectedRowKey}
                 listStyle={{ width: 500 }}
