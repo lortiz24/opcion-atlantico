@@ -12,7 +12,7 @@ export interface IEvent {
     dateEnd: Timestamp
     assistants: string[] //array de ids de user
     moderators: string[] //array de ids de user
-    typeAttendance: 'manual' | 'automatic' | 'hybrid'
+    typeAttendance: 'invitation' | 'free' | 'hybrid'
     typeEvent: 'face-to-face' | 'virtual' | 'hybrid'
     urlMeet?: string
     img?: IImageEvent | undefined | null;

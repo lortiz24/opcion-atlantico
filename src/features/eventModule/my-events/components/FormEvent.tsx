@@ -6,15 +6,12 @@ import { useForm } from 'antd/es/form/Form'
 import { useAppSelector } from '../../../../store/store'
 import MyTransferComponent from '../../../../components/transfer/MyTransferComponent'
 import useGetUsers from '../../../../hooks/useGetUsers'
-import { IUserInfo } from '../../../../interfaces/user-interfaces'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import MyUploadComponent from '../../../../components/upload/MyUploadComponent'
 import TextArea from 'antd/es/input/TextArea'
-import useGetEvents from '../../../../hooks/useGetEvents'
 import useGetEventById from '../../../../hooks/useGetEventById'
 import LoadingComponent from '../../../../components/loading/LoadingComponent'
 import { DateAdapter } from '../../../../services/date-service/Daily'
-import dayjs from 'dayjs'
 import { getEventStatus } from '../../../../helpers/event-helpers'
 import { Timestamp } from 'firebase/firestore'
 
@@ -35,18 +32,27 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
     const [haveChildrens, setHaveChildrens] = useState(false)
     const [image, setImage] = useState<UploadFile[]>([])
     const [currenImage, setcurrenImage] = useState<UploadFile[]>([])
+    const [typeInvitation, setTypeInvitation] = useState('')
+
+    const onChangeInvitation = (typeInvitation: string) => {
+        setTypeInvitation(typeInvitation)
+    }
+
     const onChange = (e: CheckboxChangeEvent) => {
         setHaveChildrens(e.target.checked)
     }
-
 
     const onSetDataForm = (data: IFormEvent) => {
         data.imgForm = image
         if (isEditFormEvent) {
             data.img = event?.img
         }
+
         data.dateStart = data.dateStart.second(0)
         data.dateEnd = data.dateEnd.second(0)
+
+
+        return console.log(data)
         onSetValuesForm(data)
     }
     useEffect(() => {
@@ -81,7 +87,6 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
     }, [eventId, event])
 
     if (isLoadingEvent) return <LoadingComponent isLoading={isLoadingEvent} />
-
     return (
         <>
             <Fragment >
@@ -117,17 +122,39 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                     </Space>
                                 </Col>
                                 <Col span={24}>
-                                    <MyTransferComponent
-                                        disabled={getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
-                                        targetKeys={event?.assistants}
-                                        data={users}
-                                        selectedRowKey={(recorder => recorder.id)} propertyRender={(item) => item.displayName}
-                                        name={'assistants'}
-                                        label='Asistentes'
-                                        locale={{
-                                            itemUnit: 'Participante', itemsUnit: 'Participantes', notFoundContent: 'La lista está vacía', searchPlaceholder: 'Buscar persona'
-                                        }}
-                                    />
+                                    <Form.Item label='Tipo de asistencia' name={'typeAttendance'} rules={[{ required: true, message: 'Es requerido' }]}>
+                                        <Select onChange={onChangeInvitation} options={
+                                            [{
+                                                label: 'Por invitacion',
+                                                value: 'invitation'
+                                            },
+                                            {
+                                                label: 'Libre',
+                                                value: 'free'
+                                            },
+                                            {
+                                                label: 'Hibrido',
+                                                value: 'hybrid'
+                                            }
+                                            ]
+                                        }
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={24}>
+                                    {(typeInvitation === 'invitation' || typeInvitation === 'hybrid') &&
+                                        <MyTransferComponent
+                                            rules={[{ required: true, message: '"Minimo un participante' }]}
+                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            targetKeys={event?.assistants}
+                                            data={users}
+                                            selectedRowKey={(recorder => recorder.id)} propertyRender={(item) => item.displayName}
+                                            name={'assistants'}
+                                            label='Asistentes'
+                                            locale={{
+                                                itemUnit: 'Participante', itemsUnit: 'Participantes', notFoundContent: 'La lista está vacía', searchPlaceholder: 'Buscar persona'
+                                            }}
+                                        />}
                                 </Col>
                                 <Form.Item label='Agregar moderadores' >
                                     <Checkbox onChange={onChange} checked={haveChildrens} />
@@ -144,26 +171,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                         }}
                                     />
                                 </Col>}
-                                <Col span={24}>
-                                    <Form.Item label='Tipo de asistencia' name={'typeAttendance'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                        <Select options={
-                                            [{
-                                                label: 'Manual',
-                                                value: 'manual'
-                                            },
-                                            {
-                                                label: 'Automatico',
-                                                value: 'automatic'
-                                            },
-                                            {
-                                                label: 'Hibrido',
-                                                value: 'hybrid'
-                                            }
-                                            ]
-                                        }
-                                        />
-                                    </Form.Item>
-                                </Col>
+
                                 <Col span={24}>
                                     <Form.Item label='Tipo de evento' name={'typeEvent'} rules={[{ required: true, message: 'Es requerido' }]}>
                                         <Select options={

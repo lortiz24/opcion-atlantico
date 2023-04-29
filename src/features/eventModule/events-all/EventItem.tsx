@@ -63,7 +63,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
             <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => dispatch(onGenerateQr({ eventId: eventItem.id, typeView }))} />
         </Tooltip>)
 
-        if ((['manual', 'hybrid'].includes(eventItem.typeAttendance)) && uid === eventItem.anfitrion) {
+        if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
                     <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {

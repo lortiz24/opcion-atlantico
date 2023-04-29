@@ -9,6 +9,7 @@ const useGetEventById = (eventId: string) => {
 
     const getDate = async () => {
         let event: IEvent | undefined
+        if (!eventId) return setLoading(false)
         event = await eventController.getEventById(eventId)
         if (event) setEvent(event)
         setLoading(false)

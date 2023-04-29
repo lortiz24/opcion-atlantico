@@ -38,7 +38,12 @@ const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetT
     }, [])
 
     return (
-        <Form.Item label={label} name={name} rules={rules} hidden={disabled}>
+        <Form.Item
+            label={label}
+            name={name}
+            rules={rules}
+            hidden={disabled}
+        >
             <Transfer
                 rowKey={selectedRowKey}
                 listStyle={{ width: 500 }}
