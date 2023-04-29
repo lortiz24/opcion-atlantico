@@ -26,7 +26,6 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     const [iconResult, seticonResult] = useState('ClockCircleOutlined')
     const [actionsList, setActionsList] = useState<JSX.Element[]>([])
     const { uid } = useAppSelector(selector => selector.auth)
-    const { isCheckinManualOpen, isGenerateQrOpen } = useAppSelector(selector => selector.showEvents)
     const [checkUsersEvent, setcheckUsersEvent] = useState<'checking' | 'check' | 'not-check'>('checking')
 
     const userAlreadyCheck = async () => {
@@ -63,7 +62,10 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
         const actionsList = []
         actionsList.push(
             // <Tooltip placement="topLeft" title={'Generar QR'} >
-            <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => dispatch(onGenerateQr({ eventId: eventItem.id, typeView }))} />
+            <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
+                const { dateStart, dateEnd, ...event } = eventItem
+                dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+            }} />
             // </Tooltip>
         )
 
@@ -71,7 +73,8 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
             actionsList.push(
                 // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
                 <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
-                    dispatch(onChekingOpen({ eventId: eventItem.id, typeView }))
+                    const { dateStart, dateEnd, ...event } = eventItem
+                    dispatch(onChekingOpen({ eventId: eventItem.id, typeView, event }))
                 }} />
                 // </Tooltip>
             )

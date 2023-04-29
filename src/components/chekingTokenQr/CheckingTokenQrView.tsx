@@ -19,7 +19,7 @@ const CheckingTokenQrView = () => {
     dispatch(logout({}))
     return <Navigate to={'/auth/login'} />
   }
-  const handledError = (status: '500' | '403' | 'success' | 'warning' | '404') => {
+  const handledError = (status: '500' | '403' | 'success' | 'warning' | '404' | 'info') => {
     switch (status) {
       case '500':
         setStatus('500')
@@ -42,6 +42,10 @@ const CheckingTokenQrView = () => {
         setStatus('404')
         setText('El evento no existe')
         break;
+      case 'info':
+        setStatus('info')
+        setText('No estas invitado a este evento')
+        break;
       default:
         break;
     }
@@ -50,7 +54,7 @@ const CheckingTokenQrView = () => {
   const chekingQr = async () => {
     if (status === 'success') return
 
-    const eventExist = await eventController.eventExist(eventId)
+    const eventExist = await eventController.getEventById(eventId)
     const isAlreadyCheck = await eventController.alreadyCheck(uid, eventId)
     if (isAlreadyCheck === undefined || eventExist === undefined) {
       handledError('500')
@@ -61,6 +65,11 @@ const CheckingTokenQrView = () => {
     if (isAlreadyCheck) {
       handledError('warning')
       return
+    }
+    if (eventExist.typeAttendance === 'invitation') {
+      if (!eventExist.assistants.includes(uid)) {
+        return handledError('info')
+      }
     }
     const validToken = await eventController.checkingToken(token, uid, eventId)
     if (validToken === undefined) {

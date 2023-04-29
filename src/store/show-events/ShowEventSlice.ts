@@ -4,6 +4,7 @@ import { IEvent } from '../../interfaces/events-interfaces';
 type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
 interface IShowEvents {
+    event: Omit<IEvent, 'dateStart' | 'dateEnd'> | undefined
     eventId: string,
     isGenerateQrOpen: boolean,
     isCheckinManualOpen: boolean
@@ -15,13 +16,15 @@ const initialState: IShowEvents = {
     isGenerateQrOpen: false,
     isCheckinManualOpen: false,
     eventId: '',
-    typeView: 'initial'
+    typeView: 'initial',
+    event: undefined
 };
 
 interface IOnSetAction {
     payload: {
         eventId: string
         typeView: 'gestion' | 'event-all' | 'initial'
+        event: Omit<IEvent, 'dateStart' | 'dateEnd'> | undefined
     }
 }
 
@@ -34,6 +37,7 @@ export const showEventSlice = createSlice({
             status.isCheckinManualOpen = true
             status.eventId = action.payload.eventId
             status.typeView = action.payload.typeView
+            status.event = action.payload.event
         },
         onCancelCheking: (status) => {
             status.isCheckinManualOpen = false

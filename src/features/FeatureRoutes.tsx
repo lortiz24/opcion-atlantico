@@ -7,6 +7,7 @@ import TitleModule from '../components/title-modules/TitleModule';
 import MyEventView from './eventModule/my-events/MyEventView';
 import EventView from './eventModule/events-all/EventView';
 import UsersView from './users/UsersView';
+import PageInDeveloper from '../components/results/PageInDeveloper';
 
 export const FeatureRoutes = () => {
 	return (
@@ -19,7 +20,7 @@ export const FeatureRoutes = () => {
 
 					<Route path='/events' element={<TitleModule title='Todos los eventos'><EventView /></TitleModule>} />
 					<Route path="/my-events-management" element={<TitleModule title='Gestion de mis eventos'><MyEventView /></TitleModule>} />
-					<Route path="/users" element={<TitleModule title='Gestion de usuarios'><UsersView /></TitleModule>} />
+					<Route path="/users" element={<TitleModule title='Gestion de usuarios'><PageInDeveloper /></TitleModule>} />
 
 					<Route path='/configuration/*' element={<ConfigurationRouter />} />
 

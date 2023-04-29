@@ -7,6 +7,7 @@ import { CheckOutlined, DeleteOutlined } from '@ant-design/icons'
 import useListeningUsersCheckedByEvent from '../../../../hooks/useListeningUsersCheckedByEvent'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { onCancelCheking } from '../../../../store/show-events/ShowEventSlice'
+import { userInfoController } from '../../../../controllers/userInfo/user-info.controller'
 
 interface ICheckingProps extends ModalProps {
     isChecking: boolean
@@ -37,18 +38,25 @@ const columns: ColumnsType<DataType> = [
 
 
 const Checking = () => {
-    const { eventId, isCheckinManualOpen } = useAppSelector(selector => selector.showEvents)
+    const { eventId, isCheckinManualOpen, event } = useAppSelector(selector => selector.showEvents)
     const [confirmados, setconfirmados] = useState<string[]>([])
     const [usersAsistentesInfo, setusersAsistentesInfo] = useState<IUserInfo[]>([])
     const { userInfoCheck, loading } = useListeningUsersCheckedByEvent({ eventId: eventId ?? '' })
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        eventController.getUsersInfoAttendanceByEventId(eventId ?? '')
-            .then(item => {
-                setusersAsistentesInfo(item as IUserInfo[])
-            })
-
+        if (event?.typeAttendance === 'hybrid' || event?.typeAttendance === 'free') {
+            userInfoController.getUsersInfos()
+                .then(users => {
+                    setusersAsistentesInfo(users as IUserInfo[])
+                })
+        }
+        else {
+            eventController.getUsersInfoAttendanceByEventId(eventId ?? '')
+                .then(item => {
+                    setusersAsistentesInfo(item as IUserInfo[])
+                })
+        }
     }, [])
     const onDeleteCheck = async (userId: string) => {
         await eventController.deleteCheck(userId, eventId ?? '')
