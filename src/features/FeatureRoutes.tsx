@@ -7,7 +7,7 @@ import MyEventView from './eventModule/my-events/MyEventView';
 import EventView from './eventModule/events-all/EventView';
 import UsersView from './users/UsersView';
 import PageInDeveloper from '../components/results/PageInDeveloper';
-import ConfigurationSystemRouter from './configuration-system/ConfigurationRouter';
+import ConfigurationSystemRouter from './configuration-system/ConfigurationSystemRouter';
 import ConfigurationRoute from './configuration/ConfigurationRoute';
 
 export const FeatureRoutes = () => {

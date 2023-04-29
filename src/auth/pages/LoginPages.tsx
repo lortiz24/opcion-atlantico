@@ -59,13 +59,13 @@ const LoginPages = () => {
 										rules={[
 											{
 												required: true,
-												message: 'Por favor ingresa tu nombre de usuario!',
+												message: 'Por favor ingresa tu correo institucional!',
 											},
 										]}
 									>
 										<Input
 											prefix={<UserOutlined className='site-form-item-icon' />}
-											placeholder='Nombre de usuario'
+											placeholder='Correo institucional'
 										/>
 									</Form.Item>
 									<Form.Item
