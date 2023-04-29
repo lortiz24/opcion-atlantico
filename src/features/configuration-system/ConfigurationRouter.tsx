@@ -5,7 +5,7 @@ import TitleModule from '../../components/title-modules/TitleModule'
 import ResourceView from './resources/ResourceView'
 import PageInDeveloper from '../../components/results/PageInDeveloper'
 
-const ConfigurationRouter = () => {
+const ConfigurationSystemRouter = () => {
     return (
         <Routes>
             <Route path="/modules" element={<TitleModule title='Configuracion de modulos'><ModulesView /></TitleModule>} />
@@ -14,4 +14,4 @@ const ConfigurationRouter = () => {
     )
 }
 
-export default ConfigurationRouter
+export default ConfigurationSystemRouter
