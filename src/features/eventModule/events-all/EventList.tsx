@@ -1,6 +1,5 @@
 import React from 'react'
-import { Dropdown, List, MenuProps, Pagination } from 'antd';
-import useGetEvents from '../../../hooks/useGetEvents';
+import { List, Pagination } from 'antd';
 import EventItem from './EventItem';
 import { IEvent } from '../../../interfaces/events-interfaces';
 

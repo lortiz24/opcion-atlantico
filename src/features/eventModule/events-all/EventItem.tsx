@@ -12,6 +12,7 @@ import { deleteEventAsync } from '../../../store/form-events/event-thunk';
 import { DateAdapter } from '../../../services/date-service/Daily';
 import { eventController } from '../../../controllers/events/event.controller';
 import { onChekingOpen, onGenerateQr } from '../../../store/show-events/ShowEventSlice';
+import { getEventStatus } from '../../../helpers/event-helpers';
 
 interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
     eventItem: IEvent
@@ -36,27 +37,23 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     }
     const dispatch = useAppDispatch()
     useEffect(() => {
-        const dateStart = new DateAdapter(eventItem.dateStart.toDate())
-        const dateEnd = new DateAdapter(eventItem.dateEnd.toDate())
-
-        if (dateStart.isBeforeNow() && dateEnd.isBeforeNow()) {
+        const status = getEventStatus(eventItem.dateStart, eventItem.dateEnd)
+        if (status === 'finished') {
             setMessageByState('Finalizado')
             setstatusResult('error')
             seticonResult('CheckCircleOutlined')
             return
         }
-        if (dateStart.isSameOrBeforeNow() && dateEnd.isAfterNow()) {
+        if (status === 'in-progress') {
             setMessageByState('En curso')
             setstatusResult('success')
             seticonResult('LoadingOutlined')
             return
         }
 
-        if (dateStart.isAfterNow() && dateEnd.isAfterNow()) {
-            setMessageByState('Por empezar')
-            setstatusResult('info')
-            seticonResult('ClockCircleOutlined')
-        }
+        setMessageByState('Por empezar')
+        setstatusResult('info')
+        seticonResult('ClockCircleOutlined')
 
     }, [eventItem.dateStart, estado])
 

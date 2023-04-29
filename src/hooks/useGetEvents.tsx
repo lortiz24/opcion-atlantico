@@ -8,7 +8,6 @@ const useGetEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEvents, s
     const [loading, setLoading] = useState(true);
 
     const getDate = async () => {
-        setLoading(true)
         let events: IEvent[] | undefined = []
         if (Array.isArray(condition) || (!Array.isArray(condition) && !condition)) {
             events = await eventController.getEvents({ moderators: selectedForeing?.moderators, assistants: selectedForeing?.assistants }, condition)
@@ -21,7 +20,7 @@ const useGetEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEvents, s
     }
     useEffect(() => {
         getDate()
-    }, [condition])
+    }, [])
 
 
     return {
