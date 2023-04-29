@@ -1,61 +1,30 @@
-import React, { useState } from 'react'
+import React from 'react'
 import GenerateQr from './components/GenerateQr';
-import EventList from './EventList';
 import Checking from './components/Checking';
 import { Tabs } from 'antd';
-import useGetEvents from '../../../hooks/useGetEvents';
-import { ICoditionsGetEvents } from '../../../interfaces/events-interfaces';
 import { useAppSelector } from '../../../store/store';
+import EventAll from './components/EventAll';
+import EventParticipants from './components/EventParticipants';
 
 const EventView = () => {
-    const [openGenerateQR, setOpenGenerateQR] = useState(false)
-    const [eventId, setEventId] = useState('')
-    const [isChecking, setIsChecking] = useState(false)
-    const [conditions, setConditions] = useState<ICoditionsGetEvents[]>([])
-    const { events, loading } = useGetEvents(conditions, { moderators: true, assistants: false })
-    const [keyActive, setkeyActive] = useState('1')
-    const { uid } = useAppSelector(selector => selector.auth)
+    const { isCheckinManualOpen, isGenerateQrOpen } = useAppSelector(selector => selector.showEvents)
 
-    const onGenerateQR = (eventId: string) => {
-        setOpenGenerateQR(true)
-        setEventId(eventId)
-    }
-    const onCancelGenerateQR = () => {
-        setOpenGenerateQR(false)
-        setEventId('')
-    }
-
-    const onChangeTab = (e: string) => {
-        setkeyActive(e)
-
-        if (e === '1') {
-            setConditions([])
-        }
-        if (e === '2') {
-            setConditions(current => [...current, { nameProperty: 'assistants', operation: 'array-contains', value: uid ?? '' }])
-        }
-    }
-
-    const onCheking = (eventId: string) => {
-        setIsChecking(true)
-        setEventId(eventId)
-    }
     return (
         <>
-            {isChecking && <Checking isChecking={isChecking} onCancel={() => setIsChecking(false)} onOk={() => setIsChecking(false)} eventId={eventId} />}
-            {openGenerateQR && <GenerateQr open={openGenerateQR} eventAttendanceId={eventId} onCancel={onCancelGenerateQR} onOk={onCancelGenerateQR} />}
+            {isGenerateQrOpen && <GenerateQr />}
+            {isCheckinManualOpen && <Checking />}
 
 
-            <Tabs onChange={onChangeTab} defaultActiveKey={keyActive} items={[
+            <Tabs items={[
                 {
                     key: '1',
                     label: 'Todos los eventos',
-                    children: <EventList onGenerateQR={onGenerateQR} onChecking={onCheking} eventList={events} isLoading={loading} />
+                    children: <EventAll />
                 },
                 {
                     key: '2',
                     label: 'Mis eventos',
-                    children: <EventList onGenerateQR={onGenerateQR} onChecking={onCheking} eventList={events} isLoading={loading} />
+                    children: <EventParticipants />
                 },
             ]}>
 

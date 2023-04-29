@@ -6,17 +6,13 @@ import { IEvent } from '../../../interfaces/events-interfaces';
 
 
 export interface IEventListProps {
-    onReadQr?: () => void;
-    onGenerateQR?: (eventId: string) => void;
-    onSelected?: (item: IEvent) => void
     eventList: IEvent[]
     isLoading?: boolean
-    onChecking?: (eventId: string) => void
-    editable?: boolean
+    typeView: 'gestion' | 'event-all' | 'initial'
 }
 
 
-const EventList = ({ onReadQr, onGenerateQR, onSelected, eventList, isLoading, onChecking, editable }: IEventListProps) => {
+const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
     // TODO: realziar paginacions
     return (
         <>
@@ -41,7 +37,7 @@ const EventList = ({ onReadQr, onGenerateQR, onSelected, eventList, isLoading, o
                 loading={isLoading}
                 dataSource={eventList}
                 renderItem={(eventItem) => (
-                    <EventItem key={eventItem.title} eventItem={eventItem} onGenerateQR={onGenerateQR} onReadQr={onReadQr} onSelected={onSelected} onChecking={onChecking} editable={editable} />
+                    <EventItem key={eventItem.title} eventItem={eventItem} typeView={typeView} />
                 )}
             />
         </>

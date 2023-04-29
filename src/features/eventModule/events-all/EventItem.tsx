@@ -11,14 +11,13 @@ import { openEditionModeEvent } from '../../../store/form-events/formEventSlice'
 import { deleteEventAsync } from '../../../store/form-events/event-thunk';
 import { DateAdapter } from '../../../services/date-service/Daily';
 import { eventController } from '../../../controllers/events/event.controller';
+import { onChekingOpen, onGenerateQr } from '../../../store/show-events/ShowEventSlice';
 
 interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
     eventItem: IEvent
 }
 
-
-
-const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, editable }: IEventItemProps) => {
+const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     const [statusResult, setstatusResult] = useState<ResultStatusType>('info')
     const [messageByState, setMessageByState] = useState('')
     const [estado, setestado] = useState(true)
@@ -63,28 +62,20 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
 
     useEffect(() => {
         const actionsList = []
-        if (onGenerateQR) {
-            actionsList.push(<Tooltip placement="topLeft" title={'Generar QR'} >
-                <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => onGenerateQR(eventItem.id)} />
-            </Tooltip>)
-        }
-        if (onReadQr) {
-            actionsList.push(
-                <Tooltip placement="topLeft" title={'Leer QR'} >
-                    <Button type='text' icon={<IconsAntDesing.ScanOutlined />} onClick={() => onReadQr()} />
-                </Tooltip>
-            )
-        }
-        if (onChecking && (['manual', 'hybrid'].includes(eventItem.typeAttendance)) && uid === eventItem.anfitrion) {
+        actionsList.push(<Tooltip placement="topLeft" title={'Generar QR'} >
+            <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => dispatch(onGenerateQr({ eventId: eventItem.id, typeView }))} />
+        </Tooltip>)
+
+        if ((['manual', 'hybrid'].includes(eventItem.typeAttendance)) && uid === eventItem.anfitrion) {
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
                     <Button type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
-                        onChecking(eventItem.id)
+                        dispatch(onChekingOpen({ eventId: eventItem.id, typeView }))
                     }} />
                 </Tooltip>
             )
         }
-        if (editable) {
+        if (typeView === 'gestion') {
             actionsList.push(
                 <Tooltip placement="topLeft" title={'Editar evento'} >
                     <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={() => dispatch(openEditionModeEvent({ eventId: eventItem.id }))} />
@@ -105,7 +96,7 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
                 </Popconfirm>
             )
         }
-        
+
         setActionsList(actionsList)
     }, [])
 
@@ -117,7 +108,6 @@ const EventItem = ({ eventItem, onGenerateQR, onReadQr, onSelected, onChecking, 
         <List.Item
         >
             <Card
-
                 hoverable
                 style={{
                     cursor: 'default',

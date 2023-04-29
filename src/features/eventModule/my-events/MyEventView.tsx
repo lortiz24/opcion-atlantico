@@ -6,14 +6,22 @@ import { openDrawerFormEvent } from '../../../store/form-events/formEventSlice'
 import DrawerEventForm from './components/DrawerEventForm'
 import EventList from '../events-all/EventList'
 import useListeningEvents from '../../../hooks/useListeningEvents'
+import GenerateQr from '../events-all/components/GenerateQr'
+import Checking from '../events-all/components/Checking'
 
 const MyEventView = () => {
     const { isDrawerEventOpen } = useAppSelector(selector => selector.formEvent)
     const { uid } = useAppSelector(selector => selector.auth)
+    const { isGenerateQrOpen, isCheckinManualOpen } = useAppSelector(selector => selector.showEvents)
     const { eventsListening, loading } = useListeningEvents([{ value: uid ?? '', operation: '==', nameProperty: 'anfitrion' }], { assistants: true, moderators: true })
     const dispatch = useAppDispatch()
+
+
     return (
         <Row>
+            {isGenerateQrOpen && <GenerateQr />}
+            {isCheckinManualOpen && <Checking />}
+
             <Col span={24}>
                 {
                     isDrawerEventOpen && (
@@ -34,7 +42,7 @@ const MyEventView = () => {
                 </Space>
             </Col>
             <Col span={24}>
-                <EventList onSelected={console.log} eventList={eventsListening} isLoading={loading} editable />
+                <EventList eventList={eventsListening} isLoading={loading}  typeView='gestion' />
             </Col>
         </Row>
     )

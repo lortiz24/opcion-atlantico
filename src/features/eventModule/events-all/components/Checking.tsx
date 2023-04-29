@@ -1,15 +1,15 @@
 import { Button, Modal, ModalProps, Popconfirm, Space, Table, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { eventController } from '../../../../controllers/events/event.controller'
-import useGetEventById from '../../../../hooks/useGetEventById'
 import { IUserInfo } from '../../../../interfaces/user-interfaces'
 import { ColumnsType } from 'antd/es/table'
 import { CheckOutlined, DeleteOutlined } from '@ant-design/icons'
 import useListeningUsersCheckedByEvent from '../../../../hooks/useListeningUsersCheckedByEvent'
+import { useAppDispatch, useAppSelector } from '../../../../store/store'
+import { onCancelCheking } from '../../../../store/show-events/ShowEventSlice'
 
 interface ICheckingProps extends ModalProps {
     isChecking: boolean
-    eventId: string
 }
 
 interface DataType {
@@ -36,25 +36,26 @@ const columns: ColumnsType<DataType> = [
 ];
 
 
-const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
-    const { event } = useGetEventById(eventId)
+const Checking = () => {
+    const { eventId, isCheckinManualOpen } = useAppSelector(selector => selector.showEvents)
     const [confirmados, setconfirmados] = useState<string[]>([])
     const [usersAsistentesInfo, setusersAsistentesInfo] = useState<IUserInfo[]>([])
-    const { userInfoCheck, loading } = useListeningUsersCheckedByEvent({ eventId })
+    const { userInfoCheck, loading } = useListeningUsersCheckedByEvent({ eventId: eventId ?? '' })
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        eventController.getUsersInfoAttendanceByEventId(eventId)
+        eventController.getUsersInfoAttendanceByEventId(eventId ?? '')
             .then(item => {
                 setusersAsistentesInfo(item as IUserInfo[])
             })
 
     }, [])
     const onDeleteCheck = async (userId: string) => {
-        await eventController.deleteCheck(userId, eventId)
+        await eventController.deleteCheck(userId, eventId ?? '')
     }
 
     const onChek = async (userId: string) => {
-        await eventController.createCheck(userId, eventId)
+        await eventController.createCheck(userId, eventId ?? '')
     }
 
 
@@ -68,10 +69,10 @@ const Checking = ({ isChecking, onCancel, onOk, eventId }: ICheckingProps) => {
 
     return (
         <Modal
-            open={isChecking}
+            open={isCheckinManualOpen}
             destroyOnClose
-            onCancel={onCancel}
-            onOk={onOk}>
+            onCancel={() => dispatch(onCancelCheking())}
+            onOk={() => dispatch(onCancelCheking())}>
 
             <Table
                 loading={loading}
