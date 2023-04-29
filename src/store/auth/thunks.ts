@@ -12,11 +12,11 @@ export const checkingAuthentication = () => {
     }
 }
 
-export const startCreatingUserWithEmailPassword = ({ email, password, displayName }: IStartCreatingUserWithEmailPasswordParams) => {
+export const startCreatingUserWithEmailPassword = ({ email, password, displayName, promocion }: IStartCreatingUserWithEmailPasswordParams) => {
     return async (dispatch: AppDispatch) => {
 
         dispatch(checkingCredentials());
-        const { errorMessage, userCredentials } = await authController.registerUserWithEmailPassword({ email, password, displayName });
+        const { errorMessage, userCredentials } = await authController.registerUserWithEmailPassword({ email, password, displayName, promocion });
         if (!userCredentials || !userCredentials.uid) return dispatch(logout(errorMessage));
 
         const userInfo = await userInfoController.createUserInfo(userCredentials.uid, {
@@ -25,6 +25,7 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
             id: userCredentials.uid,
             photoURL: userCredentials.photoURL ?? '',
             rols: ['user'],
+            promocion
         })
 
         dispatch(login({ ...userCredentials, userInfo: userInfo }))

@@ -135,7 +135,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                 <MyGradiantBackground colorLeft='#FAF9F7' colorRight='#E9BDCF' />
                 <Badge.Ribbon
                     /* todo: Alguien corriga esta empanadas aaaaaa */
-                    style={{ display: checkUsersEvent === 'checking' ? 'none' : 'block' }}
+                    style={{ display: (checkUsersEvent === 'checking' || (eventItem.typeAttendance === 'invitation' && !eventItem.assistants.includes(uid ?? ''))) ? 'none' : 'block' }}
                     text={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'Asistencia' : 'Sin asistir'}
                     color={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'green' : 'red'}
                 >

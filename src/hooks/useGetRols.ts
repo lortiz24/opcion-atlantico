@@ -14,6 +14,10 @@ const rolsList: IRol[] = [
         id: '6e4gf56er41gf5615g',
         value: 'invited'
     },
+    {
+        id: '6e4gf56er41gf5615g',
+        value: 'super-admin'
+    },
 ]
 
 const useGetRols = () => {

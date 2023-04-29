@@ -1,22 +1,21 @@
 import React, { useMemo } from 'react';
-import { Form, Input, Button, Card, Row, Col, Layout } from 'antd';
+import { Form, Input, Button, Card, Row, Col, Layout, Select } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './css/Login-css.css';
 import opcion_logo from '../../assets/Logo Opcion Atlantico 2022.svg';
 import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { startCreatingUserWithEmailPassword, startLoginWithEmailPassword } from '../../store/auth';
-import LoadingComponent from '../../components/loading/LoadingComponent';
 import { useNavigate } from 'react-router-dom';
 import { LayoutCss } from '../../layouts/MainLayout.style';
+import useGetValueParametro from '../../hooks/useGetValueParametro';
 
 const RegisterPage = () => {
   const dispatch = useAppDispatch();
   const { status } = useAppSelector(selector => selector.auth);
-  const navigate = useNavigate();
-
+  const { isLoading, parametre } = useGetValueParametro({ parameter: 'promociones' })
   const isAuthenticating = useMemo(() => status === 'checking', [status]);
-
+  const navigate = useNavigate()
   return (
     <Layout className='login-page-container' style={LayoutCss}>
       <div className='container-left'>
@@ -50,7 +49,8 @@ const RegisterPage = () => {
                       startCreatingUserWithEmailPassword({
                         email: values.email,
                         password: values.password,
-                        displayName: values.displayName
+                        displayName: values.displayName,
+                        promocion: values.promocion
                       })
                     )
                   }
@@ -68,6 +68,20 @@ const RegisterPage = () => {
                     <Input
                       prefix={<UserOutlined className='site-form-item-icon' />}
                       placeholder='Nombre de usuario'
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name='promocion'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Por favor escoge tu promocion!',
+                      }
+                    ]}
+                  >
+                    <Select
+                      placeholder='Promocion'
+                      options={parametre?.map(item => ({ label: `Promocion ${item.value}`, value: item.value }))}
                     />
                   </Form.Item>
                   <Form.Item
@@ -140,6 +154,15 @@ const RegisterPage = () => {
                           className='login-form-button'
                         >
                           Registrarse
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          type='dashed'
+                          className='login-form-button'
+                          onClick={() => navigate('/auth/login')}
+                        >
+                          Ya tengo una cuenta
                         </Button>
                       </Col>
                     </Row>
