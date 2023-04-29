@@ -5,6 +5,7 @@ import { Tabs } from 'antd';
 import { useAppSelector } from '../../../store/store';
 import EventAll from './components/EventAll';
 import EventParticipants from './components/EventParticipants';
+import EventModerator from './components/EventModerator';
 
 const EventView = () => {
     const { isCheckinManualOpen, isGenerateQrOpen } = useAppSelector(selector => selector.showEvents)
@@ -23,8 +24,13 @@ const EventView = () => {
                 },
                 {
                     key: '2',
-                    label: 'Mis eventos',
+                    label: 'Soy invitado',
                     children: <EventParticipants />
+                },
+                {
+                    key: '3',
+                    label: 'Soy moderador',
+                    children: <EventModerator />
                 },
             ]}>
 

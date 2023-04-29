@@ -25,7 +25,8 @@ const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) 
             ...formEvent,
             dateStart: Timestamp.fromDate(dateRange[0].toDate()),
             dateEnd: Timestamp.fromDate(dateRange[1].toDate()),
-            anfitrion: uid
+            anfitrion: uid,
+            moderators: formEvent.moderators.includes(uid ?? '') ? formEvent.moderators : [...formEvent.moderators, uid]
         }
         if (isEditFormEvent) return dispatch(updateEventAsync(eventId, newEvent, imgForm))
         dispatch(createEventAsync(newEvent, imgForm))
