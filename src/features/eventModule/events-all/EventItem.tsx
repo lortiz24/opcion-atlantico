@@ -13,6 +13,7 @@ import { DateAdapter } from '../../../services/date-service/Daily';
 import { eventController } from '../../../controllers/events/event.controller';
 import { onChekingOpen, onGenerateQr } from '../../../store/show-events/ShowEventSlice';
 import { getEventStatus } from '../../../helpers/event-helpers';
+import { TransformationTypeEvent, TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
 
 interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
     eventItem: IEvent
@@ -62,7 +63,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
         const actionsList = []
         actionsList.push(
             // <Tooltip placement="topLeft" title={'Generar QR'} >
-                <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => dispatch(onGenerateQr({ eventId: eventItem.id, typeView }))} />
+            <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => dispatch(onGenerateQr({ eventId: eventItem.id, typeView }))} />
             // </Tooltip>
         )
 
@@ -91,7 +92,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                     cancelText="No"
                 >
                     {/* <Tooltip placement="topLeft" title={'Eliminar evento'} > */}
-                        <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} />
+                    <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} />
                     {/* </Tooltip> */}
                 </Popconfirm>
             )
@@ -192,17 +193,27 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                                     <Typography.Text code>{timestampToString(eventItem.dateStart, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
                                 </Space>
 
-
                                 <Space wrap>
                                     <Typography.Text strong>Fecha fin: </Typography.Text>
                                     <Typography.Text code>{timestampToString(eventItem.dateEnd, 'DD-MM-YYYY hh:mm A')}</Typography.Text>
                                 </Space>
 
-
                                 <Space wrap>
                                     <Typography.Text strong>Lugar: </Typography.Text>
                                     <Typography.Text code style={{ textTransform: 'uppercase' }}>
                                         {eventItem.place}
+                                    </Typography.Text>
+                                </Space>
+                                <Space wrap>
+                                    <Typography.Text strong>Tipo de evento: </Typography.Text>
+                                    <Typography.Text code style={{ textTransform: 'uppercase' }}>
+                                        {TransformationTypeEvent[eventItem.typeEvent]}
+                                    </Typography.Text>
+                                </Space>
+                                <Space wrap>
+                                    <Typography.Text strong>Tipo de invitacion: </Typography.Text>
+                                    <Typography.Text code style={{ textTransform: 'uppercase' }}>
+                                        {TransformationTypeInvitationEvent[eventItem.typeAttendance]}
                                     </Typography.Text>
                                 </Space>
                             </Col>
