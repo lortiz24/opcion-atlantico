@@ -14,7 +14,6 @@ const MyProfileView = () => {
 			...values,
 			id: uid ? uid : '',
 		};
-
 		dispatch(startUpdateUserProfile(uid ? uid : '', newUserInfo));
 	};
 

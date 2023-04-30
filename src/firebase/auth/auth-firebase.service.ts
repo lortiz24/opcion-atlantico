@@ -38,7 +38,10 @@ export class AuthFirebaseService {
         return await this.firebaseAuth.signOut();
     }
 
-    async updateProfileUser(user: Pick<IUser, 'displayName' | 'photoURL'>) {
+    async updateProfileUser(user: {
+        displayName?: string | null;
+        photoURL?: string | null;
+    }) {
         const userToUpdate = FirebaseAuth.currentUser
         if (!userToUpdate) return null
         await this.firebaseAuthService.updateProfile(userToUpdate, user);

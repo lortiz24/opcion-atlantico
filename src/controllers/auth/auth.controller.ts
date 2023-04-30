@@ -15,6 +15,13 @@ export class AuthController {
         const userCredentials = await this.authService.loginWithEmailPassword(loginUserCredentials)
         return userCredentials
     }
+    async updateProfileUser({ displayName, photoURL }: {
+        displayName?: string | null;
+        photoURL?: string | null;
+    }) {
+        const userCredentials = await this.authService.updateProfileUser({ displayName, photoURL })
+        return userCredentials
+    }
     async logout() {
         await this.authService.logoutSession()
     }

@@ -13,6 +13,7 @@ import {
 import { userInfoController } from '../../controllers/userInfo/user-info.controller';
 import { authController } from '../../controllers/auth/auth.controller';
 import { IUserInfo } from '../../interfaces/user-interfaces';
+import { DispatchMessageService } from '../../components/message-response/DispatchMessageService';
 
 export const checkingAuthentication = () => {
 	return async (dispatch: AppDispatch) => {
@@ -86,10 +87,16 @@ export const startLoginWithEmailPassword = ({
 };
 export const startUpdateUserProfile = (userId: string, userInfo: IUserInfo) => {
 	return async (dispatch: AppDispatch) => {
-		dispatch(actionUpdate());
-		await userInfoController.updateUserInfo(userId, userInfo);
+		try {
+			dispatch(actionUpdate());
+			await userInfoController.updateUserInfo(userId, userInfo);
+			await authController.updateProfileUser({ displayName: userInfo.displayName, photoURL: userInfo.photoURL })
+			dispatch(updateUserInfo({ userInfo }));
+			DispatchMessageService({ action: 'show', type: 'success', msj: 'Se ha actualizado la información de perfil con exito' })
+		} catch (error) {
+			DispatchMessageService({ action: 'show', type: 'error', msj: 'No se pudo actualizar la informacion, intentelo de nuevo' })
+		}
 
-		dispatch(updateUserInfo({ userInfo }));
 	};
 };
 

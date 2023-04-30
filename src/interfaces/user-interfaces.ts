@@ -7,7 +7,7 @@ export interface IUserInfo extends Omit<IUser, 'password'> {
 	rols: TRoles[];
 	dateBirth: Timestamp | null;
 	dateUpdated: Timestamp | null;
-	dateCreated: Timestamp | null; 
+	dateCreated: Timestamp | null;
 	address: string | null;
 	city: string | null;
 	promocion: string | null;
@@ -21,4 +21,4 @@ export interface IUser {
 	password?: string | null;
 }
 
-export interface IUserInfoForm extends Omit<IUserInfo, 'id'> {}
+export interface IUserInfoForm extends Omit<IUserInfo, 'id'> { }
