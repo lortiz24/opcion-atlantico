@@ -85,7 +85,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
     }, [eventId, event])
 
     if (isLoadingEvent) return <LoadingComponent isLoading={isLoadingEvent} />
-    // todo: ponerel iconos 
+    // todo: ponerel iconos y bucar name repetido
     return (
         <>
             <Fragment >
@@ -113,6 +113,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                 </Col>
                                 <Col span={24}>
                                     <Form.Item label='Rango de fecha' name={'dateRange'} rules={[{ required: true, message: 'Es requerido' }]}>
+                                        {/*  todo: Realizar fecha para celular, en celular ahora mismo se ven feas y no se puede escoger */}
                                         <DatePicker.RangePicker
                                             disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
                                             showTime={{ format: 'HH:mm A' }}

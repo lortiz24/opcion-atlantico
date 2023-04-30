@@ -60,25 +60,47 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
 
     useEffect(() => {
         const actionsList = []
-        actionsList.push(
-            // <Tooltip placement="topLeft" title={'Generar QR'} >
-            <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
-                const { dateStart, dateEnd, ...event } = eventItem
-                dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
-            }} />
-            // </Tooltip>
-        )
-
-        if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
+        if (getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'in-progress') {
             actionsList.push(
-                // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
-                <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
+                // <Tooltip placement="topLeft" title={'Generar QR'} >
+                <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
                     const { dateStart, dateEnd, ...event } = eventItem
-                    dispatch(onChekingOpen({ eventId: eventItem.id, typeView, event }))
+                    dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                }} />
+                // </Tooltip>
+            )
+            if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
+                actionsList.push(
+                    // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
+                    <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
+                        const { dateStart, dateEnd, ...event } = eventItem
+                        dispatch(onChekingOpen({ eventId: eventItem.id, typeView, event }))
+                    }} />
+                    // </Tooltip>
+                )
+            }
+        } else {
+            //todo: realizar ver asistentes y descargar asistentes
+            if (!(uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? ''))) return
+            actionsList.push(
+                // <Tooltip placement="topLeft" title={'Generar QR'} >
+                <Button type='text' icon={<IconsAntDesing.FileExcelOutlined />} onClick={() => {
+                    const { dateStart, dateEnd, ...event } = eventItem
+                    dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                }} />
+                // </Tooltip>
+            )
+
+            actionsList.push(
+                // <Tooltip placement="topLeft" title={'Generar QR'} >
+                <Button type='text' icon={<IconsAntDesing.EyeFilled />} onClick={() => {
+                    const { dateStart, dateEnd, ...event } = eventItem
+                    dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
                 }} />
                 // </Tooltip>
             )
         }
+        //Si estas en la vida de gestion de eventos
         if (typeView === 'gestion') {
             actionsList.push(
                 // <Tooltip placement="topLeft" title={'Editar evento'} >
