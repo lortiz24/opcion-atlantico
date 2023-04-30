@@ -4,14 +4,19 @@ import { IMenu } from '../../interfaces/modules-interface';
 import { useAppSelector } from '../../store/store';
 import { useNavigate } from 'react-router-dom';
 import * as IconsAntDesing from '@ant-design/icons';
+import useGetMonitorSize from '../../hooks/useGetMonitorSize';
 
 
+interface IMenuComponentProps {
+	setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const MenuComponent = () => {
+const MenuComponent = ({ setCollapsed }: IMenuComponentProps) => {
 	const [menuList, setMenuList] = useState<IMenu[]>([]);
 	const [openKeys, setOpenKeys] = useState<string[]>([]);
 	const { modules } = useAppSelector(selector => selector.menu);
 	const navigate = useNavigate();
+	const { isMobile } = useGetMonitorSize()
 
 	const handleOpenChange = (keys: string[]) => {
 		setOpenKeys([keys.pop() || '']);
@@ -50,11 +55,19 @@ const MenuComponent = () => {
 						return {
 							key: subKey,
 							label: children.label,
-							onClick: () => navigate(`${module.path}/${children.path}`),
+							onClick: () => {
+								if (isMobile)
+									setCollapsed(true)
+								navigate(`${module.path}/${children.path}`)
+							},
 						};
 					})
 				} else {
-					newModule.onClick = () => navigate(module.path);
+					newModule.onClick = () => {
+						if (isMobile)
+							setCollapsed(true)
+						navigate(module.path)
+					};
 				}
 				return newModule;
 			})}

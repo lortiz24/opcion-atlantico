@@ -12,8 +12,11 @@ import MenuComponent from '../components/menu/MenuComponent';
 import MenuHeaderComponent from '../components/menu/MenuHeaderComponent';
 import useGetMonitorSize from '../hooks/useGetMonitorSize';
 import useIsCollapseMenu from '../components/menu/hooks/useIsCollapseMenu';
+import * as IconsAntDesing from '@ant-design/icons';
 
 const { Header, Content, Sider } = Layout;
+
+
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { statusConection } = useGetStatusConection();
@@ -22,6 +25,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const dispatch = useAppDispatch();
 	const [scrollPosition, setScrollPosition] = useState(0);
 	const { isCollapsed, setCollapsed, siderRef, collapseButtonRef } = useIsCollapseMenu()
+	const { isMobile } = useGetMonitorSize()
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
@@ -42,6 +46,42 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		};
 	}, []);
 
+
+	const styleSidebarMobile = {
+		position: 'fixed', zIndex: 1000, width: 300, height: '100%', background: colorBgContainer, display: isCollapsed ? 'none' : 'block'
+	}
+
+	const styleSidebarDesktop = {
+		background: colorBgContainer
+	}
+
+	const getMarginLeft = () => {
+		if (isMobile) {
+			if (isCollapsed)
+				return 80
+			return 0
+		}
+	}
+
+	const getTriggers = () => {
+		if (isMobile) {
+			if (isCollapsed) {
+				return (
+					<IconsAntDesing.MenuUnfoldOutlined
+						style={{ fontSize: '24px' }}
+					/>
+				)
+			} else {
+				return (
+					<IconsAntDesing.MenuFoldOutlined
+						style={{ fontSize: '24px' }}
+					/>
+				)
+			}
+		}
+		return null
+	}
+
 	return (
 		<>
 			{isLoading ? (
@@ -51,21 +91,21 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 					<InternetConnectionAlert />
 					<Layout>
 						<Sider
-							ref={siderRef}
-							style={{ background: colorBgContainer }}
+							style={isMobile ? styleSidebarMobile : styleSidebarDesktop}
 							width={300}
-							trigger={null}
+							trigger={getTriggers()}
 							collapsible
+							onCollapse={(value) => setCollapsed(value)}
 							collapsed={isCollapsed}
 						>
-							<MenuComponent />
+							<MenuComponent setCollapsed={setCollapsed} />
 						</Sider>
-						<Layout>
+						<Layout >
 							<Header
 								className={`header`}
-								style={{ background: '#a40c4c', color: '#FFFFFF', height: '60px' }}
+								style={{ background: '#a40c4c', color: '#FFFFFF', height: '60px',  }}
 							>
-								<MenuHeaderComponent collapsed={isCollapsed} collapseButtonRef={collapseButtonRef} />
+								<MenuHeaderComponent collapsed={isCollapsed} setCollapsed={setCollapsed} />
 							</Header>
 							<Content
 								style={{

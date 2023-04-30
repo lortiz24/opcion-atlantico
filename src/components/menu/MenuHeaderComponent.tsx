@@ -8,14 +8,14 @@ import useGetMonitorSize from '../../hooks/useGetMonitorSize';
 
 interface IMenuHeaderComponentProps {
     collapsed: boolean;
-    collapseButtonRef: React.RefObject<HTMLDivElement>
+    setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const MenuHeaderComponent = ({ collapsed, collapseButtonRef }: IMenuHeaderComponentProps) => {
+const MenuHeaderComponent = ({ collapsed, setCollapsed }: IMenuHeaderComponentProps) => {
     const { photoURL, displayName } = useAppSelector(selector => selector.auth)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const { isMobile } = useGetMonitorSize()
+    const { isMobile, isTable } = useGetMonitorSize()
     const onLogout = () => {
         dispatch(startLogout());
     }
@@ -23,21 +23,20 @@ const MenuHeaderComponent = ({ collapsed, collapseButtonRef }: IMenuHeaderCompon
 
         <Row justify={'space-between'} style={{ width: '100%' }}>
             <Col >
-                <div ref={collapseButtonRef} style={{ cursor: 'pointer' }}>
-                    {collapsed ? (
-                        <IconsAntDesing.MenuUnfoldOutlined
-                            style={{ fontSize: '24px' }}
-                        />
-                    ) : (
-                        <IconsAntDesing.MenuFoldOutlined
-                            style={{ fontSize: '24px' }}
-                        />
-                    )}
-                </div>
+                {collapsed ? (
+                    <IconsAntDesing.MenuUnfoldOutlined
+                        onClick={() => setCollapsed(false)}
+                        style={{ fontSize: '24px' }}
+                    />
+                ) : (
+                    <IconsAntDesing.MenuFoldOutlined
+                        onClick={() => setCollapsed(true)}
+                        style={{ fontSize: '24px' }}
+                    />
+                )}
             </Col>
             <Col>
-
-                {((isMobile && collapsed) || !isMobile) && <Dropdown
+                {((isTable && collapsed) || !isMobile) && <Dropdown
                     children={
                         <Space >
                             <Avatar src={photoURL ? photoURL : 'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/avatar-defecto.webp?alt=media&token=dc44ebc7-da97-4d93-8a03-c8f62103054e'} />{!isMobile ? <Typography.Text style={{ color: '#FFFFFF' }}>{displayName}</Typography.Text> : null}

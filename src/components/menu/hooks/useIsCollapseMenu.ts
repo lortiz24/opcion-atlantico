@@ -12,19 +12,11 @@ const useIsCollapseMenu = () => {
     }, [isMobile])
     useEffect(() => {
         const handleDocumentClick = (event: any) => {
-            if (isMobile) {
-                if (
-                    siderRef.current &&
-                    !siderRef.current.contains(event.target) &&
-                    collapseButtonRef.current &&
-                    !collapseButtonRef.current.contains(event.target)
-                ) {
-                    setCollapsed(true);
-                }
-            } else {
-                if (siderRef.current && !siderRef.current.contains(event.target)) {
-                    setCollapsed(current=>!current);
-                }
+            if (!siderRef.current?.contains(event.target) && !collapseButtonRef.current?.contains(event.target as Node) && isMobile) {
+                return setCollapsed(true);
+            }
+            if ((siderRef.current && !siderRef.current.contains(event.target) && (collapseButtonRef.current?.contains(event.target as Node)))) {
+                return setCollapsed(current => !current);
             }
         };
 
@@ -33,7 +25,7 @@ const useIsCollapseMenu = () => {
         return () => {
             document.removeEventListener('click', handleDocumentClick);
         };
-    }, [siderRef, collapseButtonRef]);
+    }, []);
 
 
     return {
