@@ -79,7 +79,9 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                     // </Tooltip>
                 )
             }
-        } else {
+        }
+
+        if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
             //todo: realizar ver asistentes y descargar asistentes
             if (!(uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? ''))) return
             actionsList.push(
