@@ -189,6 +189,7 @@ export class EventFirebaseService {
             return { ok: false }
         }
     }
+    //todo: eliminar las subcolecciones de events
     async delete(eventId: string) {
         try {
             const eventRef = doc(this.eventsCollection, eventId);
