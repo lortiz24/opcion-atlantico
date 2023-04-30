@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Form, Input, Button, Card, Row, Col, Layout } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './css/Login-css.css';
-import opcion_logo from '../../assets/Logo Opcion Atlantico 2022.svg';
+import opcion_logo from '../../assets/Logo-Opcion-Atlantico-2022.svg';
 import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { startLoginWithEmailPassword } from '../../store/auth';

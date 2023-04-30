@@ -3,7 +3,6 @@ import { IUserInfo } from '../../interfaces/user-interfaces';
 
 type StatusAuth = 'checking' | 'authenticated' | 'not-authenticated';
 
-
 interface AuthState {
 	status: StatusAuth;
 	uid: string | null;
@@ -11,11 +10,11 @@ interface AuthState {
 	displayName: string | null;
 	photoURL: string | null;
 	errorMessage?: any;
-	userInfo?: IUserInfo
+	userInfo?: IUserInfo;
+	isUpdateProfile: boolean;
 }
 
-interface Payload extends Partial<Omit<AuthState, 'status'>> {
-}
+interface Payload extends Partial<Omit<AuthState, 'status'>> {}
 
 const initialState: AuthState = {
 	status: 'checking', // 'checking', 'not-authenticated', 'authenticated'
@@ -24,7 +23,7 @@ const initialState: AuthState = {
 	displayName: null,
 	photoURL: null,
 	errorMessage: null,
-
+	isUpdateProfile: false,
 };
 export const authSlice = createSlice({
 	name: 'auth',
@@ -47,6 +46,14 @@ export const authSlice = createSlice({
 			state.photoURL = null;
 			state.errorMessage = payload?.errorMessage;
 		},
+		actionUpdate: (state) => {
+			state.isUpdateProfile = true;
+		},
+
+		updateUserInfo: (state, { payload }) => {
+			state.isUpdateProfile = false;
+			state.userInfo = payload.userInfo;
+		},
 		checkingCredentials: state => {
 			state.status = 'checking';
 		},
@@ -54,4 +61,10 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { login, logout, checkingCredentials } = authSlice.actions;
+export const {
+	login,
+	logout,
+	checkingCredentials,
+	updateUserInfo,
+	actionUpdate,
+} = authSlice.actions;

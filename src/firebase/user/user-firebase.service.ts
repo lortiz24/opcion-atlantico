@@ -51,6 +51,7 @@ export class UserServiceFirebase {
             await updateDoc(userInfoRef, newUserInfo);
             return { ok: true }
         } catch (error) {
+            console.log(error)
             return { ok: false }
         }
     }

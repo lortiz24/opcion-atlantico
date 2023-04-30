@@ -17,14 +17,14 @@ export const useCheckAuth = () => {
             if (!user) return dispatch(logout({}));
             const userInfo = await userInfoController.getOneUserInfo(user?.uid ?? '')
             if (!userInfo || !userInfo.rols) {
-                // return dispatch(logout({ errorMessage: 'Su usuario no tiene configurado correctamente su informacion, consulte con el administrador o intentelo de nuevo' }));
-                 userInfoController.createUserInfo(user?.uid ?? '', {
+                return dispatch(logout({ errorMessage: 'Su usuario no tiene configurado correctamente su informacion, consulte con el administrador o intentelo de nuevo' }));
+                 /* userInfoController.createUserInfo(user?.uid ?? '', {
                      displayName: user.displayName ?? '',
                      email: user.email ?? '',
                      id: user.uid,
                      photoURL: user.photoURL,
                      rols: ['user']
-                 })
+                 }) */
             }
             const { uid, email, displayName, photoURL } = user;
             dispatch(login({ uid, email, displayName, photoURL, userInfo }));

@@ -85,6 +85,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
     }, [eventId, event])
 
     if (isLoadingEvent) return <LoadingComponent isLoading={isLoadingEvent} />
+    // todo: ponerel iconos 
     return (
         <>
             <Fragment >

@@ -24,7 +24,8 @@ export class UserInfoController {
     }
 
     async updateUserInfo(userId: string, newUserInfo: IUserInfo): Promise<{ ok: boolean }> {
-        const usersInfo = this.userInfoService.updateUserInfo(userId, newUserInfo)
+        const usersInfo = await this.userInfoService.updateUserInfo(userId, newUserInfo)
+        console.log('usersInfo',usersInfo)
         return usersInfo
     }
 
