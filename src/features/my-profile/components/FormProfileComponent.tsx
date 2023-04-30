@@ -17,13 +17,12 @@ interface IFormProfileComponentProps {
 
 const FormProfileComponent = ({ onSubmitForm }: IFormProfileComponentProps) => {
 	const [form] = useForm<IUserInfoForm>();
-	const { email, userInfo, isUpdateProfile } = useAppSelector(sel => sel.auth);
+	const { email, userInfo, isUpdateProfile, displayName } = useAppSelector(sel => sel.auth);
 	const onSetData = (values: IUserInfoForm) => {
-		Object.keys(values).map(key => {
+		Object.keys(values).forEach(key => {
 			//@ts-ignore
 			if (values[key] === undefined) values[key] = null;
 		});
-		console.log(values);
 		onSubmitForm(values);
 	};
 
@@ -31,16 +30,12 @@ const FormProfileComponent = ({ onSubmitForm }: IFormProfileComponentProps) => {
 		form.setFieldsValue({
 			email: email ? email : '',
 			rols: userInfo?.rols,
-			displayName: userInfo?.displayName,
+			displayName: displayName ?? undefined,
 			promocion: userInfo?.promocion,
+			gender: userInfo?.gender,
+			city: userInfo?.city,
+			address: userInfo?.address
 		});
-		form.setFieldValue('email', email);
-		form.setFieldValue('rols', userInfo?.rols);
-		form.setFieldValue('displayName', userInfo?.displayName);
-		form.setFieldValue('promocion', userInfo?.promocion);
-		form.setFieldValue('gender', userInfo?.gender);
-		form.setFieldValue('city', userInfo?.city);
-		form.setFieldValue('gender', userInfo?.gender);
 	}, []);
 
 	return (

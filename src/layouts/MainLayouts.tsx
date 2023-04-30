@@ -11,21 +11,20 @@ import { setStatusConection } from '../store/status-conection/statusConectionSli
 import MenuComponent from '../components/menu/MenuComponent';
 import MenuHeaderComponent from '../components/menu/MenuHeaderComponent';
 import useGetMonitorSize from '../hooks/useGetMonitorSize';
+import useIsCollapseMenu from '../components/menu/hooks/useIsCollapseMenu';
 
 const { Header, Content, Sider } = Layout;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { statusConection } = useGetStatusConection();
 	const { isLoading } = useAppSelector(selector => selector.menu);
-    const { userInfo } = useAppSelector(selec => selec.auth)
-	const [collapsed, setCollapsed] = useState(false);
+	const { userInfo } = useAppSelector(selec => selec.auth)
 	const dispatch = useAppDispatch();
-	const { isMobile } = useGetMonitorSize()
 	const [scrollPosition, setScrollPosition] = useState(0);
+	const { isCollapsed, setCollapsed, siderRef, collapseButtonRef } = useIsCollapseMenu()
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
-
 
 	useEffect(() => {
 		dispatch(setStatusConection({ statusConection }));
@@ -43,10 +42,6 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (isMobile) setCollapsed(true)
-	}, [isMobile])
-
 	return (
 		<>
 			{isLoading ? (
@@ -56,12 +51,12 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 					<InternetConnectionAlert />
 					<Layout>
 						<Sider
+							ref={siderRef}
 							style={{ background: colorBgContainer }}
 							width={300}
 							trigger={null}
 							collapsible
-							onCollapse={() => setCollapsed(!collapsed)}
-							collapsed={collapsed}
+							collapsed={isCollapsed}
 						>
 							<MenuComponent />
 						</Sider>
@@ -70,7 +65,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 								className={`header`}
 								style={{ background: '#a40c4c', color: '#FFFFFF', height: '60px' }}
 							>
-								<MenuHeaderComponent collapsed={collapsed} setCollapsed={setCollapsed} />
+								<MenuHeaderComponent collapsed={isCollapsed} collapseButtonRef={collapseButtonRef} />
 							</Header>
 							<Content
 								style={{
