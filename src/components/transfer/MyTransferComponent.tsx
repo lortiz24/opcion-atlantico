@@ -36,7 +36,7 @@ const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetT
     useEffect(() => {
         if (targetKeys) setAttendeesKeyTarget(targetKeys)
     }, [])
-
+    //todo: poner la regla bien ya que si vien target key del editar y no lo tocas te salta la regla
     return (
         <Form.Item
             label={label}

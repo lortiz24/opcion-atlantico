@@ -47,7 +47,7 @@ export interface IEventsRender {
 export interface IQrCode {
     id: string
     token: string;
-    eventId:string
+    eventId: string
 }
 
 export type FacingMode = 'user' | 'environment'
@@ -57,7 +57,10 @@ export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
     assistants: string[];
     place: string;
     desciption: string;
-    dateRange: Dayjs[]
+    dateStart: Dayjs
+    timeStart: Dayjs
+    dateEnd: Dayjs
+    timeEnd: Dayjs
     imgForm: UploadFile<any>[]
 }
 
@@ -67,7 +70,7 @@ export interface IWhereQuerys {
     operation: WhereFilterOp
 }
 
-export interface IAttendanceByEvent{
-    id:string;
-    userId:string
+export interface IAttendanceByEvent {
+    id: string;
+    userId: string
 }

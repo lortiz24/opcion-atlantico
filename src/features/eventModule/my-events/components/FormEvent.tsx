@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { IEvent, IFormEvent } from '../../../../interfaces/events-interfaces'
-import { Button, Col, DatePicker, Form, Input, Row, Space, Checkbox, Select, UploadFile } from 'antd'
+import { Button, Col, DatePicker, Form, Input, Row, Space, Checkbox, Select, UploadFile, TimePicker } from 'antd'
 import * as IconsAntDesing from '@ant-design/icons'
 import { useForm } from 'antd/es/form/Form'
 import { useAppSelector } from '../../../../store/store'
@@ -15,8 +15,6 @@ import { DateAdapter } from '../../../../services/date-service/Daily'
 import { getEventStatus } from '../../../../helpers/event-helpers'
 import { Timestamp } from 'firebase/firestore'
 import locale from 'antd/es/date-picker/locale/es_ES';
-import dayjs from 'dayjs'
-
 
 interface IEventFormProps {
     event?: IEvent
@@ -48,9 +46,9 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
         if (isEditFormEvent) {
             data.img = event?.img
         }
-        data.dateRange[0] = data.dateRange[0].second(0)
-        data.dateRange[1] = data.dateRange[1].second(0)
-        return console.log(data)
+        data.timeStart = data.timeStart.second(0)
+        data.timeEnd = data.timeEnd.second(0)
+
         onSetValuesForm(data)
     }
     useEffect(() => {
@@ -74,7 +72,10 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                 title: event.title,
                 place: event.place,
                 desciption: event.desciption,
-                dateRange: [dateStart.toDayjs(), dateEnd.toDayjs()],
+                dateStart: dateStart.toDayjs(),
+                timeStart: dateStart.toDayjs(),
+                dateEnd: dateEnd.toDayjs(),
+                timeEnd: dateEnd.toDayjs(),
                 typeAttendance: event.typeAttendance,
                 typeEvent: event.typeEvent,
                 assistants: event.assistants
@@ -92,7 +93,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                 <Row justify='center' wrap gutter={[8, 8]}>
                     <Col span={16}>
                         <Form form={form} onFinish={onSetDataForm} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-                            <Row>
+                            <Row gutter={[8, 8]}>
                                 <Col span={24}>
                                     <Form.Item label='Nombre del evento' name={'title'} rules={[{ required: true, message: 'Es requerido' }]}>
                                         <Input prefix={<IconsAntDesing.FormOutlined />} />
@@ -113,16 +114,73 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={24}>
+                                {/* <Col span={24}>
                                     <Form.Item label='Rango de fecha' name={'dateRange'} rules={[{ required: true, message: 'Es requerido' }]}>
                                         <DatePicker.RangePicker
                                             inputReadOnly
-                                            size='large'
                                             disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
                                             showTime={{ format: 'HH:mm A', defaultValue: [new DateAdapter().setHour(0).setMinute(0).setSeconds(0).toDayjs(), new DateAdapter().setHour(0).setMinute(0).setSeconds(0).toDayjs()] }}
                                             format='YYYY-MM-DD h:mm A'
                                             style={{ width: '100%' }}
                                             locale={locale} />
+                                    </Form.Item>
+                                </Col> */}
+
+                                <Col span={12}>
+                                    <Form.Item
+                                        label='Fecha inicio' name={'dateStart'} rules={[{ required: true, message: 'Es requerido' }]}
+                                    >
+                                        <DatePicker
+                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            style={{ width: '100%' }}
+                                            picker='date'
+                                            inputReadOnly
+                                            format='DD MMMM YYYY'
+                                            popupStyle={{ position: 'fixed' }}
+                                            locale={locale}
+                                        />
+
+                                    </Form.Item>
+
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item label='Hora de inicio' name={'timeStart'}>
+                                        <TimePicker
+                                            inputReadOnly
+                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            style={{ width: '100%' }}
+                                            format={'h:mm A'}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item
+                                        label='Fecha fin' name={'dateEnd'} rules={[{ required: true, message: 'Es requerido' }]}
+                                    >
+                                        <DatePicker
+                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            style={{ width: '100%' }}
+                                            picker='date'
+                                            inputReadOnly
+                                            format='DD MMMM YYYY'
+                                            popupStyle={{ position: 'fixed' }}
+                                            locale={locale}
+                                        />
+
+                                    </Form.Item>
+
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item label='Hora
+                                     fin' name={'timeEnd'}>
+                                        <TimePicker
+                                            inputReadOnly
+                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            placeholder='Seleccione la hora fin'
+                                            style={{ width: '100%' }}
+                                            format={'h:mm A'}
+                                            locale={locale}
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col span={24}>
