@@ -1,6 +1,6 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
 import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, collection, CollectionReference, setDoc, } from "firebase/firestore";
-import { IAttendanceByEvent, ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { IAttendanceByEvent, IWhereQuerys, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { UserServiceFirebase } from "../user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 import { ErrorFirebaseService } from "../error/error-firebase-service";
@@ -45,7 +45,7 @@ export class EventFirebaseService {
         private readonly eventLogger = new ErrorFirebaseService()
     ) { }
 
-    async getAll(selectedForeinge: ISelectedForeign, conditions?: ICoditionsGetEvents[]) {
+    async getAll(selectedForeinge: ISelectedForeign, conditions?: IWhereQuerys[]) {
         try {
             const queryList: QueryFieldFilterConstraint[] = [];
             conditions?.map((condition) => {
@@ -200,7 +200,7 @@ export class EventFirebaseService {
             return { ok: false }
         }
     }
-    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[], selectedForeing?: ISelectedForeign) {
+    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: IWhereQuerys[], selectedForeing?: ISelectedForeign) {
         const queryList: QueryFieldFilterConstraint[] = [];
         conditions?.map((condition) => {
             queryList.push(where("anfitrion", condition.operation, condition.value));

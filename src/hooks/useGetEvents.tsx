@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { ICoditionsGetEvents, IEvent, ISelectedForeign } from '../interfaces/events-interfaces';
+import { IWhereQuerys, IEvent, ISelectedForeign } from '../interfaces/events-interfaces';
 import { eventController } from '../controllers/events/event.controller';
 
 
-const useGetEvents = (condition?: ICoditionsGetEvents[] | ICoditionsGetEvents, selectedForeing?: ISelectedForeign) => {
+const useGetEvents = (condition?: IWhereQuerys[] | IWhereQuerys, selectedForeing?: ISelectedForeign) => {
     const [events, setEvents] = useState<IEvent[]>([]);
     const [loading, setLoading] = useState(true);
 

@@ -6,13 +6,15 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 
-
-
 export class DateAdapter {
     private fecha: dayjs.Dayjs
 
-    constructor(fecha: string | Date) {
-        this.fecha = dayjs(fecha)
+    constructor(fecha?: string | Date) {
+        if (fecha) {
+            this.fecha = dayjs(fecha)
+        } else {
+            this.fecha = dayjs().hour(0).minute(0).second(0)
+        }
     }
 
     format(formato: TFormat): string {
@@ -44,13 +46,23 @@ export class DateAdapter {
 
     isBeforeNow() {
         return this.fecha.isBefore(dayjs())
-
     }
     isSameOrBeforeNow() {
         return this.fecha.isSameOrBefore(dayjs())
-
     }
 
+    setHour(hour: number) {
+        this.fecha.hour(hour)
+        return this
+    }
+    setMinute(minute: number) {
+        this.fecha.minute(minute)
+        return this
+    }
+    setSeconds(seconds: number) {
+        this.fecha.hour(seconds)
+        return this
+    }
     // toDate() {
     //     return new Date(this.toDayjs(this.fecha))
     // }

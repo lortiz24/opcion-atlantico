@@ -61,8 +61,7 @@ export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
     imgForm: UploadFile<any>[]
 }
 
-//todo: cambiar name a algo mas generico
-export interface ICoditionsGetEvents {
+export interface IWhereQuerys {
     nameProperty: string
     value: string,
     operation: WhereFilterOp

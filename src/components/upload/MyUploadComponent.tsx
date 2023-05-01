@@ -55,29 +55,32 @@ const MyUploadComponent = ({ onSetFile, maxFiles, label, name, previewTitle, cur
 
 
     return (
-        <Form.Item label={label} name={name} >
-            <Upload
-                accept='image/*'
-                beforeUpload={(file) => {
-                    onSetFile([...filesToUpdate, file])
-                    setFilesToUpdate([...filesToUpdate, file])
-                    setFileList([...fileList, file])
-                    return false;
-                }}
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-            >
-                {fileList.length >= (maxFiles ?? 1) ? null : (<div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                </div>)}
-            </Upload>
+        <>
+            <Form.Item label={label} name={name} >
+                <Upload
+                    accept='image/*'
+                    beforeUpload={(file) => {
+                        onSetFile([...filesToUpdate, file])
+                        setFilesToUpdate([...filesToUpdate, file])
+                        setFileList([...fileList, file])
+                        return false;
+                    }}
+                    listType="picture-card"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                >
+                    {fileList.length >= (maxFiles ?? 1) ? null : (<div>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>)}
+                </Upload>
+
+            </Form.Item>
             <Modal open={previewOpen} footer={null} title={previewTitle} onCancel={handleCancel}>
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
-        </Form.Item>
+        </>
     );
 };
 

@@ -1,5 +1,5 @@
 import { EventFirebaseService } from "../../firebase/eventos/event-firebase.service";
-import { ICoditionsGetEvents, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { IWhereQuerys, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 
 export class EventController {
@@ -7,7 +7,7 @@ export class EventController {
         private readonly eventService = new EventFirebaseService()
     ) { }
 
-    async getEvents({ assistants, moderators }: ISelectedForeign, conditions?: ICoditionsGetEvents[]): Promise<IEvent[] | undefined> {
+    async getEvents({ assistants, moderators }: ISelectedForeign, conditions?: IWhereQuerys[]): Promise<IEvent[] | undefined> {
         const events = await this.eventService.getAll({ assistants, moderators }, conditions);
 
         return events
@@ -46,7 +46,7 @@ export class EventController {
         const event = await this.eventService.delete(eventId)
         return event
     }
-    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: ICoditionsGetEvents[], selectedForeing?: ISelectedForeign) {
+    listeningEvents(onSet: (events: IEvent[]) => void, conditions?: IWhereQuerys[], selectedForeing?: ISelectedForeign) {
         const newMenuId = this.eventService.listeningEvents(onSet, conditions, selectedForeing)
         return newMenuId
     }

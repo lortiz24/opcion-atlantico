@@ -10,7 +10,6 @@ export interface IEventListProps {
 }
 
 const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
-	// TODO: realziar paginacions
 	return (
 		<>
 			<List
