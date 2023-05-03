@@ -182,7 +182,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                             <Col span={24}>
                                 <Card.Meta
                                     title={eventItem.title}
-                                    description={<ExpandableParagraph text={eventItem.desciption} length={100} />}
+                                    description={<ExpandableParagraph text={eventItem.desciption} length={50} />}
                                     avatar={
                                         <Avatar.Group
                                             maxCount={4}
