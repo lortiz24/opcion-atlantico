@@ -89,7 +89,7 @@ const RegisterPage = () => {
                     rules={[
                       {
                         required: true,
-                        message: 'Por favor ingresa tu correo electronico!',
+                        message: 'Por favor ingresa tu correo isntitucional!',
                       },
                       {
                         type: 'email',
@@ -99,7 +99,7 @@ const RegisterPage = () => {
                   >
                     <Input
                       prefix={<UserOutlined className='site-form-item-icon' />}
-                      placeholder='Correo electronico'
+                      placeholder='Correo institucional'
                     />
                   </Form.Item>
                   <Form.Item

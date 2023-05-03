@@ -10,6 +10,7 @@ export interface IEvent {
     desciption: string;
     dateStart: Timestamp
     dateEnd: Timestamp
+    token: string;
     assistants: string[] //array de ids de user
     moderators: string[] //array de ids de user
     typeAttendance: 'invitation' | 'free' | 'hybrid'
@@ -52,7 +53,7 @@ export interface IQrCode {
 
 export type FacingMode = 'user' | 'environment'
 
-export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd'> {
+export interface IFormEvent extends Omit<IEvent, 'dateStart' | 'dateEnd' | 'token'> {
     title: string
     assistants: string[];
     place: string;

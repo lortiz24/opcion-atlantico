@@ -34,11 +34,11 @@ export class EventController {
         const event = await this.eventService.existEvent(eventId)
         return event
     }
-    async createEvent(newEvent: Omit<IEvent, 'id'>) {
+    async createEvent(newEvent: Omit<IEvent, 'id' | 'token'>) {
         const event = await this.eventService.create(newEvent)
         return event
     }
-    async updateEvent(eventId: string, newEvent: Omit<IEvent, 'id'>) {
+    async updateEvent(eventId: string, newEvent: Omit<IEvent, 'id' | 'token'>) {
         const event = await this.eventService.update(eventId, newEvent)
         return event
     }

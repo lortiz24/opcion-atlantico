@@ -101,6 +101,15 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                 }} />
                 // </Tooltip>
             )
+            //todo: crear funcionalidad de compartir url para marcar asistencia
+            actionsList.push(
+                // <Tooltip placement="topLeft" title={'Generar QR'} >
+                <Button type='text' icon={<IconsAntDesing.LinkOutlined  />} onClick={() => {
+                    const { dateStart, dateEnd, ...event } = eventItem
+                    dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                }} />
+                // </Tooltip>
+            )
         }
         //Si estas en la vida de gestion de eventos
         if (typeView === 'gestion') {

@@ -10,7 +10,7 @@ import { storageController } from "../../controllers/storage/storage.controller"
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 
 
-export const createEventAsync = (newEvent: Omit<IEvent, 'id'>, imgForm: UploadFile<any>[]): ThunkResult<void> => {
+export const createEventAsync = (newEvent: Omit<IEvent, 'id' | 'token'>, imgForm: UploadFile<any>[]): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startActionEvent());
         try {
@@ -37,7 +37,7 @@ export const createEventAsync = (newEvent: Omit<IEvent, 'id'>, imgForm: UploadFi
     };
 };
 //todo: eliminar la imagen cuando se actualiza y se quita la imagen
-export const updateEventAsync = (eventId: string, newEvent: Omit<IEvent, 'id'>, imgForm: UploadFile<any>[]): ThunkResult<void> => {
+export const updateEventAsync = (eventId: string, newEvent: Omit<IEvent, 'id' | 'token'>, imgForm: UploadFile<any>[]): ThunkResult<void> => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startActionEvent());
         try {

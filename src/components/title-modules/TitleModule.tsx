@@ -7,6 +7,7 @@ interface ITitleModuleProps {
     title: string,
     children: React.ReactElement
 }
+//tood:colocarle el header
 const TitleModule = ({ children, title }: ITitleModuleProps) => {
     return (
         <>

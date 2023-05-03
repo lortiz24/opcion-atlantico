@@ -143,6 +143,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                     </Form.Item>
 
                                 </Col>
+                                {/* todo: Crear regla de que no se pueda seleccionar fecha fin menor a fecha inicio */}
                                 <Col span={12}>
                                     <Form.Item label='Hora de inicio' name={'timeStart'}>
                                         <TimePicker

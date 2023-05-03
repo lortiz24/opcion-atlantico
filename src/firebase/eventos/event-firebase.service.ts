@@ -6,36 +6,6 @@ import { IUserInfo } from "../../interfaces/user-interfaces";
 import { ErrorFirebaseService } from "../error/error-firebase-service";
 
 
-export const createQrAttendanceFirebase = async (newQrAttendance: Omit<IQrCode, 'id'>) => {
-    try {
-        const querySnapshot = await addDoc(qrAttendanceCollectionRef, newQrAttendance);
-        const newQrAttendanceId = querySnapshot.id;
-        return newQrAttendanceId
-    } catch (error) {
-        console.error("Error al crear el codigo QR: ", error);
-        throw error;
-    }
-}
-export const deleteQrAttendanceFirebase = async (idQrAttendanceId: string) => {
-    try {
-        const moduleRef = doc(qrAttendanceCollectionRef, idQrAttendanceId);
-        await deleteDoc(moduleRef);
-    } catch (error) {
-        console.error("Error al eliminar el codigo QR: ", error);
-        throw error;
-    }
-}
-export const createEventFirebase = async (newEvent: Omit<IEvent, 'id'>) => {
-    try {
-        const querySnapshot = await addDoc(eventsCollectionRef, newEvent);
-        const newEventId = querySnapshot.id;
-        return newEventId
-    } catch (error) {
-        console.error("Error al crear el evento: ", error);
-        throw error;
-    }
-}
-
 export class EventFirebaseService {
 
     constructor(
@@ -44,6 +14,17 @@ export class EventFirebaseService {
         private readonly userService = new UserServiceFirebase(),
         private readonly eventLogger = new ErrorFirebaseService()
     ) { }
+
+
+    async create(newEvent: Omit<IEvent, 'id' | 'token'>) {
+        try {
+            const querySnapshot = await addDoc(this.eventsCollection, newEvent);
+            const newEventId = querySnapshot.id;
+            return newEventId
+        } catch (error) {
+            console.error("Error al crear evento: ", error);
+        }
+    }
 
     async getAll(selectedForeinge: ISelectedForeign, conditions?: IWhereQuerys[]) {
         try {
@@ -170,16 +151,8 @@ export class EventFirebaseService {
             console.log(error)
         }
     }
-    async create(newEvent: Omit<IEvent, 'id'>) {
-        try {
-            const querySnapshot = await addDoc(this.eventsCollection, newEvent);
-            const newEventId = querySnapshot.id;
-            return newEventId
-        } catch (error) {
-            console.error("Error al crear evento: ", error);
-        }
-    }
-    async update(eventId: string, newEvent: Omit<IEvent, 'id'>) {
+
+    async update(eventId: string, newEvent: Omit<IEvent, 'id' | 'token'>) {
         try {
             const eventRef = doc(this.eventsCollection, eventId);
             await updateDoc(eventRef, newEvent);
@@ -349,6 +322,7 @@ export class EventFirebaseService {
             this.eventLogger.hanledError(error)
         }
     }
+    //todo: crear el token al crear el evento
     async createCheck(userId: string, eventId: string) {
         try {
             const eventDocRef = doc(this.eventsCollection, eventId);
