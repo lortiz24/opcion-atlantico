@@ -6,9 +6,12 @@ import { IUserInfo, IUserInfoForm } from '../../interfaces/user-interfaces';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { startUpdateUserProfile } from '../../store/auth';
 const { Title } = Typography;
+
+
+
 const MyProfileView = () => {
 	const dispatch = useAppDispatch();
-	const { uid } = useAppSelector(sel => sel.auth);
+	const { uid, photoURL } = useAppSelector(sel => sel.auth);
 	const onSubmitForm = (values: IUserInfoForm) => {
 		const newUserInfo: IUserInfo = {
 			...values,
@@ -26,7 +29,7 @@ const MyProfileView = () => {
 				<Row justify='center' style={{ marginBottom: '3%' }}>
 					<Avatar
 						size={150}
-						src='https://i.pinimg.com/236x/38/3d/dc/383ddce37a5f0e2017736f5ba2d49ea6.jpg'
+						src={photoURL?photoURL:'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/avatar-defecto.webp?alt=media&token=dc44ebc7-da97-4d93-8a03-c8f62103054e'}
 					/>
 				</Row>
 			</Col>
