@@ -8,7 +8,8 @@ interface IShowEvents {
     eventId: string,
     isGenerateQrOpen: boolean,
     isCheckinManualOpen: boolean
-    typeView: 'gestion' | 'event-all' | 'initial'
+    typeView: 'gestion' | 'event-all' | 'initial',
+    isViewAttendence: boolean,
 }
 
 
@@ -17,7 +18,8 @@ const initialState: IShowEvents = {
     isCheckinManualOpen: false,
     eventId: '',
     typeView: 'initial',
-    event: undefined
+    event: undefined,
+    isViewAttendence: false,
 };
 
 interface IOnSetAction {
@@ -52,7 +54,16 @@ export const showEventSlice = createSlice({
             status.isGenerateQrOpen = false
             status.eventId = ''
         },
+        onViewAttendance: (status, { payload }: IOnSetAction) => {
+            status.eventId = payload.eventId
+            status.isViewAttendence = true
+        },
+
+        onCancelViewAttendance: (status) => {
+            status.isViewAttendence = false
+            status.eventId = ''
+        },
     },
 });
 
-export const { onCancelCheking, onCancelGenerateQr, onChekingOpen, onGenerateQr } = showEventSlice.actions;
+export const { onCancelCheking, onCancelGenerateQr, onChekingOpen, onGenerateQr, onCancelViewAttendance, onViewAttendance } = showEventSlice.actions;

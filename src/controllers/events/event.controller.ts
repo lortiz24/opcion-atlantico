@@ -76,12 +76,10 @@ export class EventController {
     }
     async checkingToken(token: string, userId: string, eventId: string) {
         const validToken = await this.eventService.checkingToken(token, userId, eventId)
-        if (validToken === undefined) return validToken
         return validToken
     }
     async alreadyCheck(userId: string, eventId: string) {
         const alreadycheck = await this.eventService.alreadyCheck(userId, eventId)
-        if (alreadycheck === undefined) return alreadycheck
         return alreadycheck
     }
 

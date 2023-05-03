@@ -49,7 +49,9 @@ const ModuloItem = ({ onCancel, onOk, moduleId, open }: IModuloItemProps) => {
     }
     return (
         <Modal open={open} onCancel={onCancel} onOk={onOk} destroyOnClose>
-            <Table loading={loading}
+            <Table
+                scroll={{ x: 10 }}
+                loading={loading}
                 dataSource={module.children?.map(module => ({ key: module.label + module.path, name: module.label, path: `/${module.path}`, status: StatusToRender[module.status] })) as DataType[]}
                 columns={[...columns, {
                     title: 'Acciones',

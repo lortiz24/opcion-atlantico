@@ -6,7 +6,6 @@ import { ResultStatusType } from 'antd/es/result';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import LoadingComponent from '../loading/LoadingComponent';
 import { logout } from '../../store/auth';
-import useGetEventById from '../../hooks/useGetEventById';
 
 const CheckingTokenQrView = () => {
   const { eventId = '', token = '' } = useParams();

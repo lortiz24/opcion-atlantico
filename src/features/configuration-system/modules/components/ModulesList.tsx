@@ -71,7 +71,9 @@ const ModulesList = () => {
     return (
         <>
             {showSubmodules && <ModuloItem open={showSubmodules} onCancel={onCloseShowSubmodule} onOk={onCloseShowSubmodule} moduleId={selectedModuleId} />}
-            <Table loading={loading}
+            <Table
+                scroll={{ x: 10 }}
+                loading={loading}
                 dataSource={modules.map(module => ({ key: module.id, name: module.label, path: `/${module.path}`, status: StatusToRender[module.status], subMenus: module.children.length > 0 })) as DataType[]}
                 columns={[...columns, {
                     title: 'Acciones',

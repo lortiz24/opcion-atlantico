@@ -6,15 +6,16 @@ import { useAppSelector } from '../../../store/store';
 import EventAll from './components/EventAll';
 import EventParticipants from './components/EventParticipants';
 import EventModerator from './components/EventModerator';
+import ViewAttendenceConfirmed from './components/ViewAttendenceConfirmed';
 
 const EventView = () => {
-    const { isCheckinManualOpen, isGenerateQrOpen } = useAppSelector(selector => selector.showEvents)
+    const { isCheckinManualOpen, isGenerateQrOpen, isViewAttendence } = useAppSelector(selector => selector.showEvents)
 
     return (
         <>
             {isGenerateQrOpen && <GenerateQr />}
             {isCheckinManualOpen && <Checking />}
-
+            {isViewAttendence && <ViewAttendenceConfirmed />}
 
             <Tabs items={[
                 {
