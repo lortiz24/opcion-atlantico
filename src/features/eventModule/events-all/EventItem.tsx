@@ -263,7 +263,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                                 fallback={'../../../../public/opcion.jpg'}
                                 width={'100%'}
                                 height={'100%'}
-                                src={eventItem.img?.url}
+                                src={eventItem.img?.url ?? '../../../../public/opcion.jpg'}
                                 alt="logo"
                                 preview={false}
                                 style={{ borderRadius: 20, objectFit: 'cover' }}
