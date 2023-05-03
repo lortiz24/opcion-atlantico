@@ -11,7 +11,7 @@ import GenerateUrl from './components/GenerateUrl';
 
 const EventView = () => {
     const { isCheckinManualOpen, isUrlModalOpen, isGenerateQrOpen, isViewAttendence } = useAppSelector(selector => selector.showEvents)
-
+    console.log('isViewAttendence',isViewAttendence)
     return (
         <>
             {isGenerateQrOpen && <GenerateQr />}

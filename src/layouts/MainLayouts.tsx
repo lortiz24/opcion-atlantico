@@ -55,13 +55,20 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		background: colorBgContainer
 	}
 
-	const getMarginLeft = () => {
+	/* const getWidthHeader = () => {
 		if (isMobile) {
 			if (isCollapsed)
-				return 80
-			return 0
+				return '100%'
+			else
+				return 300
+		} else {
+			if (isCollapsed) {
+				return `calc(100% - ${80}px )`
+			} else {
+				return `calc(100% - ${300}px )`
+			}
 		}
-	}
+	} */
 
 	const getTriggers = () => {
 		if (isMobile) {
@@ -103,7 +110,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 						<Layout >
 							<Header
 								className={`header`}
-								style={{ background: '#a40c4c', color: '#FFFFFF', height: '60px',  }}
+								style={{ background: '#a40c4c', color: '#FFFFFF', height: '60px', /* position: 'fixed', zIndex: 1000, width: getWidthHeader(), */ }}
 							>
 								<MenuHeaderComponent collapsed={isCollapsed} setCollapsed={setCollapsed} />
 							</Header>
