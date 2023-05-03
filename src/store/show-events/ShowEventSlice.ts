@@ -10,6 +10,7 @@ interface IShowEvents {
     isCheckinManualOpen: boolean
     typeView: 'gestion' | 'event-all' | 'initial',
     isViewAttendence: boolean,
+    isUrlModalOpen: boolean,
 }
 
 
@@ -20,6 +21,7 @@ const initialState: IShowEvents = {
     typeView: 'initial',
     event: undefined,
     isViewAttendence: false,
+    isUrlModalOpen: false,
 };
 
 interface IOnSetAction {
@@ -44,6 +46,7 @@ export const showEventSlice = createSlice({
         onCancelCheking: (status) => {
             status.isCheckinManualOpen = false
             status.eventId = ''
+            status.event = undefined
         },
         onGenerateQr: (status, { payload }: IOnSetAction) => {
             status.isGenerateQrOpen = true
@@ -53,6 +56,7 @@ export const showEventSlice = createSlice({
         onCancelGenerateQr: (status) => {
             status.isGenerateQrOpen = false
             status.eventId = ''
+            status.event = undefined
         },
         onViewAttendance: (status, { payload }: IOnSetAction) => {
             status.eventId = payload.eventId
@@ -62,8 +66,19 @@ export const showEventSlice = createSlice({
         onCancelViewAttendance: (status) => {
             status.isViewAttendence = false
             status.eventId = ''
+            status.event = undefined
+        },
+        onGenerateUrl: (status, { payload }: IOnSetAction) => {
+            status.eventId = payload.eventId
+            status.isUrlModalOpen = true
+        },
+
+        onCancelGenerateUrl: (status) => {
+            status.isUrlModalOpen = false
+            status.eventId = ''
+            status.event = undefined
         },
     },
 });
 
-export const { onCancelCheking, onCancelGenerateQr, onChekingOpen, onGenerateQr, onCancelViewAttendance, onViewAttendance } = showEventSlice.actions;
+export const { onCancelCheking, onCancelGenerateQr, onChekingOpen, onGenerateQr, onCancelViewAttendance, onViewAttendance, onCancelGenerateUrl, onGenerateUrl } = showEventSlice.actions;

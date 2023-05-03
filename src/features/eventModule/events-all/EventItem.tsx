@@ -11,7 +11,7 @@ import { openEditionModeEvent } from '../../../store/form-events/formEventSlice'
 import { deleteEventAsync } from '../../../store/form-events/event-thunk';
 import { DateAdapter } from '../../../services/date-service/Daily';
 import { eventController } from '../../../controllers/events/event.controller';
-import { onChekingOpen, onGenerateQr, onViewAttendance } from '../../../store/show-events/ShowEventSlice';
+import { onChekingOpen, onGenerateQr, onGenerateUrl, onViewAttendance } from '../../../store/show-events/ShowEventSlice';
 import { getEventStatus } from '../../../helpers/event-helpers';
 import { TransformationTypeEvent, TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
 import ExpandableParagraph from '../../../components/expandable-paragraf/ExpandableParagraphComponent';
@@ -107,7 +107,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                 // <Tooltip placement="topLeft" title={'Generar QR'} >
                 <Button type='text' icon={<IconsAntDesing.LinkOutlined />} onClick={() => {
                     const { dateStart, dateEnd, ...event } = eventItem
-                    dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                    dispatch(onGenerateUrl({ eventId: eventItem.id, typeView, event }))
                 }} />
                 // </Tooltip>
             )
