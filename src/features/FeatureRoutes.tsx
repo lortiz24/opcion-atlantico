@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayouts';
 import MyProfileView from './my-profile/MyProfileView';
 import CheckingTokenQrView from '../components/chekingTokenQr/CheckingTokenQrView';
@@ -11,12 +11,18 @@ import ConfigurationSystemRouter from './configuration-system/ConfigurationSyste
 import ConfigurationRoute from './configuration/ConfigurationRoute';
 
 export const FeatureRoutes = () => {
+	const location = useLocation();
+
+	const redirect = new URLSearchParams(location.search).get('redirect');
+	
+
+	console.log(location.pathname)
 	return (
 		<>
 			<MainLayout>
 				<Routes>
-					<Route path='/check-qr-Attendance/:eventId/:token' element={<CheckingTokenQrView />} />
-					<Route path='/auth/login' element={<Navigate to='/events/all-events' />} />
+					{/* <Route path='/check-qr-Attendance/:eventId/:token' element={<CheckingTokenQrView />} /> */}
+					<Route path='/auth/login' element={<Navigate to={redirect? redirect:'/events/all-events'} />} />
 					<Route path='/my-profile/*' element={<MyProfileView />} />
 
 					<Route path='/events' element={<TitleModule title='Todos los eventos'><EventView /></TitleModule>} />
@@ -26,6 +32,7 @@ export const FeatureRoutes = () => {
 					<Route path='/configuration/*' element={<ConfigurationRoute />} />
 					<Route path='/configuration-system/*' element={<ConfigurationSystemRouter />} />
 
+					
 					<Route path='/*' element={<Navigate to='/events' />} />
 				</Routes>
 			</MainLayout>

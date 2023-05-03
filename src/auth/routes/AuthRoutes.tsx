@@ -4,6 +4,7 @@ import RegisterPage from '../pages/RegisterPage';
 
 
 export const AuthRoutes = () => {
+  
   return (
     <Routes>
         <Route path="login" element={ <LoginPages /> } />

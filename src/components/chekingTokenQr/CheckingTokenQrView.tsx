@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { eventController } from '../../controllers/events/event.controller';
 import { Button, Result } from 'antd';
 import { ResultStatusType } from 'antd/es/result';
@@ -8,98 +8,111 @@ import LoadingComponent from '../loading/LoadingComponent';
 import { logout } from '../../store/auth';
 
 const CheckingTokenQrView = () => {
-  const { eventId = '', token = '' } = useParams();
-  const [status, setStatus] = useState<ResultStatusType | 'cheking'>('cheking')
-  const [text, setText] = useState('')
-  const { uid } = useAppSelector(selector => selector.auth)
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+	const { eventId = '', token = '' } = useParams();
+	const [status, setStatus] = useState<ResultStatusType | 'cheking'>('cheking');
+	const [text, setText] = useState('');
+	const { uid, status: statusLogin } = useAppSelector(
+		selector => selector.auth
+	);
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const location = useLocation();
 
+	if (statusLogin === 'not-authenticated') {
+		navigate(`/auth/login?redirect=${encodeURIComponent(location.pathname)}`);
+	}
 
-  if (uid === null) {
-    dispatch(logout({}))
-    return <Navigate to={'/auth/login'} />
-  }
-  const handledError = (status: '500' | '403' | 'success' | 'warning' | '404' | 'info') => {
-    switch (status) {
-      case '500':
-        setStatus('500')
-        setText('Lo sentimos, ocurrio un error inesperado al marcar su asistencia')
-        break;
-      case '403':
-        setStatus('403')
-        setText('El token es invalido, vuelva a escanearlo')
-        break;
-      case 'success':
-        console.log('epale')
-        setStatus('success')
-        setText('Se ha tomado su asistencia con exito')
-        break;
-      case 'warning':
-        setStatus('success')
-        setText('Ya se encuentra marcada su asistencia')
-        break;
-      case '404':
-        setStatus('404')
-        setText('El evento no existe')
-        break;
-      case 'info':
-        setStatus('info')
-        setText('No estas invitado a este evento')
-        break;
-      default:
-        break;
-    }
-  }
+	if (uid === null) {
+		dispatch(logout({}));
+		return <Navigate to={`/auth/login?redirect=${encodeURIComponent(location.pathname)}`} />;
+	}
+	const handledError = (
+		status: '500' | '403' | 'success' | 'warning' | '404' | 'info'
+	) => {
+		switch (status) {
+			case '500':
+				setStatus('500');
+				setText(
+					'Lo sentimos, ocurrio un error inesperado al marcar su asistencia'
+				);
+				break;
+			case '403':
+				setStatus('403');
+				setText('El token es invalido, vuelva a escanearlo');
+				break;
+			case 'success':
+				console.log('epale');
+				setStatus('success');
+				setText('Se ha tomado su asistencia con exito');
+				break;
+			case 'warning':
+				setStatus('success');
+				setText('Ya se encuentra marcada su asistencia');
+				break;
+			case '404':
+				setStatus('404');
+				setText('El evento no existe');
+				break;
+			case 'info':
+				setStatus('info');
+				setText('No estas invitado a este evento');
+				break;
+			default:
+				break;
+		}
+	};
 
-  const chekingQr = async () => {
-    if (status === 'success') return
-    const eventExist = await eventController.getEventById(eventId)
-    const isAlreadyCheck = await eventController.alreadyCheck(uid, eventId)
+	const chekingQr = async () => {
+		if (status === 'success') return;
+		const eventExist = await eventController.getEventById(eventId);
+		const isAlreadyCheck = await eventController.alreadyCheck(uid, eventId);
 
-    if (isAlreadyCheck === undefined || eventExist === undefined) {
-      handledError('500')
-    }
-    if (!eventExist) {
-      return handledError('404')
-    }
-    if (isAlreadyCheck) {
-      handledError('warning')
-      return
-    }
-    if (eventExist.typeAttendance === 'invitation') {
-      if (!eventExist.assistants.includes(uid)) {
-        return handledError('info')
-      }
-    }
+		if (isAlreadyCheck === undefined || eventExist === undefined) {
+			handledError('500');
+		}
+		if (!eventExist) {
+			return handledError('404');
+		}
+		if (isAlreadyCheck) {
+			handledError('warning');
+			return;
+		}
+		if (eventExist.typeAttendance === 'invitation') {
+			if (!eventExist.assistants.includes(uid)) {
+				return handledError('info');
+			}
+		}
 
-    if (token !== eventExist?.token) {
-      handledError('403')
-      return
-    }
-    const createAttendance = await eventController.createCheck(uid, eventId)
-    if (createAttendance === 201) handledError('success')
-    if (createAttendance === 500) handledError('500')
-  }
+		if (token !== eventExist?.token) {
+			handledError('403');
+			return;
+		}
+		const createAttendance = await eventController.createCheck(uid, eventId);
+		if (createAttendance === 201) handledError('success');
+		if (createAttendance === 500) handledError('500');
+	};
 
+	useEffect(() => {
+		chekingQr();
+	}, [uid]);
 
-  useEffect(() => {
-    chekingQr()
-  }, [uid])
+	if (status === 'cheking')
+		return <LoadingComponent isLoading={status === 'cheking'} />;
+	return (
+		<Result
+			status={status}
+			title={text}
+			extra={[
+				<Button
+					type='primary'
+					key='console'
+					onClick={() => navigate('/events/all-events')}
+				>
+					Ver todos los eventos
+				</Button>,
+			]}
+		/>
+	);
+};
 
-
-  if (status === 'cheking') return <LoadingComponent isLoading={status === 'cheking'} />
-  return (
-    <Result
-      status={status}
-      title={text}
-      extra={[
-        <Button type="primary" key="console" onClick={() => navigate('/events/all-events')}>
-          Ver todos los eventos
-        </Button>,
-      ]}
-    />
-  )
-}
-
-export default CheckingTokenQrView
+export default CheckingTokenQrView;
