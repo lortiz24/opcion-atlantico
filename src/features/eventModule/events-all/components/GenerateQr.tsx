@@ -14,33 +14,18 @@ interface IGenerateQrProps extends ModalProps {
     eventAttendanceId: string
 }
 const GenerateQr = () => {
-    const [qrCodeId, setqrCodeId] = useState<string | undefined>('')
     const { eventId, isGenerateQrOpen } = useAppSelector(selec => selec.showEvents)
-    const { loading, qrToken } = useListeningQrByEventId(eventId, qrCodeId)
+    const { loading, token } = useListeningQrByEventId(eventId)
     const dispatch = useAppDispatch()
-    const { isMobile, windowSize: { height } } = useGetMonitorSize()
-    const { token } = theme.useToken();
-    const generateToken = async () => {
-        const newToken = uuidv4()
-        const token = await eventController.getTokenByEventId(eventId)
-        if (token) {
-            setqrCodeId(token.id)
-        } else {
-            const res = await eventController.createToken(eventId, newToken)
-            setqrCodeId(res)
-        }
-    }
-    useEffect(() => {
-        generateToken()
-    }, []);
-
+    const { isMobile, } = useGetMonitorSize()
+    const { token: tokenThem } = theme.useToken();
 
     return (
         <Modal onOk={() => dispatch(onCancelGenerateQr())} destroyOnClose open={isGenerateQrOpen} onCancel={() => dispatch(onCancelGenerateQr())} bodyStyle={{ padding: 20 }} style={{ display: 'flex', justifyContent: 'center' }}>
             <QRCode
-                color={token.colorPrimary}
+                color={tokenThem.colorPrimary}
                 status={loading ? 'loading' : 'active'}
-                value={`http:\/\/${window.location.host}/#/check-qr-Attendance/${eventId}/${qrToken.token}`}
+                value={`http:\/\/${window.location.host}/#/check-qr-Attendance/${eventId}/${token}`}
                 style={{ width: '100%' }}
                 size={isMobile ? 300 : 400} />
         </Modal>

@@ -4,7 +4,7 @@ import { IAttendanceByEvent, IWhereQuerys, IEvent, IQrCode, ISelectedForeign } f
 import { UserServiceFirebase } from "../user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 import { ErrorFirebaseService } from "../error/error-firebase-service";
-
+import { v4 as uuid } from 'uuid'
 
 export class EventFirebaseService {
 
@@ -16,8 +16,12 @@ export class EventFirebaseService {
     ) { }
 
 
-    async create(newEvent: Omit<IEvent, 'id' | 'token'>) {
+    async create(event: Omit<IEvent, 'id' | 'token'>) {
         try {
+            const newEvent: Omit<IEvent, 'id'> = {
+                ...event,
+                token: uuid()
+            }
             const querySnapshot = await addDoc(this.eventsCollection, newEvent);
             const newEventId = querySnapshot.id;
             return newEventId
@@ -273,18 +277,21 @@ export class EventFirebaseService {
     }
 
 
-    listeningQrAttendanceFirebase(eventId: string, qrCodeId: string, onSet: (qrCode: IQrCode) => void) {
-        const qrCodeRef = doc(this.qrColecction, qrCodeId);
-        return onSnapshot(qrCodeRef, (doc) => {
+    listeningQrAttendanceFirebase(eventId: string, onSet: (token: string) => void) {
+        const eventDocReference = doc(this.eventsCollection, eventId);
+        return onSnapshot(eventDocReference, (doc) => {
             const data = doc.data()
-            onSet({ id: doc.id, ...data } as IQrCode)
+            onSet(data?.token ?? '')
         });
     }
+
+
     async createToken(eventId: string, token: string) {
         try {
-            const querySnapshot = await addDoc(this.qrColecction, { eventId, token });
-            const newTokenId = querySnapshot.id;
-            return newTokenId
+
+            const docReference = doc(this.eventsCollection, eventId)
+            await updateDoc(docReference, { token });
+            return token
         } catch (error) {
             console.error("Error al crear evento: ", error);
         }

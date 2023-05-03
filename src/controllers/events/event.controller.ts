@@ -58,14 +58,14 @@ export class EventController {
         const newMenuId = this.eventService.listeningUsersInfoNotCheck(eventId, onSet)
         return newMenuId
     }
-    listeningQrCode(eventId: string, qrCode: string, onSet: (events: IQrCode) => void) {
-        const newMenuId = this.eventService.listeningQrAttendanceFirebase(eventId, qrCode, onSet,)
+    listeningTokenEvent(eventId: string, onSet: (token: string) => void) {
+        const newMenuId = this.eventService.listeningQrAttendanceFirebase(eventId, onSet,)
         return newMenuId
     }
 
     async createToken(eventId: string, token: string) {
-        const qrId = await this.eventService.createToken(eventId, token)
-        return qrId
+        const newToken = await this.eventService.createToken(eventId, token)
+        return newToken
     }
     async getTokenByEventId(eventId: string) {
         const qrId = await this.eventService.getTokenByEventId(eventId)

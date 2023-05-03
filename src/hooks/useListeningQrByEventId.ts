@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { IQrCode } from '../interfaces/events-interfaces';
-import { Unsubscribe } from 'firebase/auth';
 import { eventController } from '../controllers/events/event.controller';
 
-const useListeningQrByEventId = (eventId: string, qrCodeId: string | undefined) => {
-    const [qrToken, setQrToken] = useState<IQrCode>({} as IQrCode);
+const useListeningQrByEventId = (eventId: string) => {
+    const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
 
-    const onSet = (qrCode: IQrCode) => {
-        setQrToken(qrCode)
+    const onSet = (token: string) => {
+        setToken(token)
         setLoading(false)
     }
     useEffect(() => {
-        if (!qrCodeId) return
-        let unsubscribe: Unsubscribe
-        unsubscribe = eventController.listeningQrCode(eventId, qrCodeId, onSet)
+        const unsubscribe = eventController.listeningTokenEvent(eventId, onSet)
 
         return () => {
             unsubscribe()
         }
-    }, [qrCodeId])
+    }, [eventId])
 
 
     return {
         loading,
-        qrToken
+        token
     }
 }
 

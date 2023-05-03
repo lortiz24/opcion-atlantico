@@ -16,7 +16,7 @@ const useGetEventById = (eventId: string) => {
     }
     useEffect(() => {
         getDate()
-    }, [])
+    }, [eventId])
 
 
     return {

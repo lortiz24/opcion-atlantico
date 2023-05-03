@@ -14,6 +14,7 @@ import { eventController } from '../../../controllers/events/event.controller';
 import { onChekingOpen, onGenerateQr } from '../../../store/show-events/ShowEventSlice';
 import { getEventStatus } from '../../../helpers/event-helpers';
 import { TransformationTypeEvent, TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
+import ExpandableParagraph from '../../../components/expandable-paragraf/ExpandableParagraphComponent';
 
 interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
     eventItem: IEvent
@@ -104,7 +105,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
             //todo: crear funcionalidad de compartir url para marcar asistencia
             actionsList.push(
                 // <Tooltip placement="topLeft" title={'Generar QR'} >
-                <Button type='text' icon={<IconsAntDesing.LinkOutlined  />} onClick={() => {
+                <Button type='text' icon={<IconsAntDesing.LinkOutlined />} onClick={() => {
                     const { dateStart, dateEnd, ...event } = eventItem
                     dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
                 }} />
@@ -179,7 +180,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                             <Col span={24}>
                                 <Card.Meta
                                     title={eventItem.title}
-                                    description={eventItem.desciption}
+                                    description={<ExpandableParagraph text={eventItem.desciption} length={100} />}
                                     avatar={
                                         <Avatar.Group
                                             maxCount={4}

@@ -6,6 +6,7 @@ import { ResultStatusType } from 'antd/es/result';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import LoadingComponent from '../loading/LoadingComponent';
 import { logout } from '../../store/auth';
+import useGetEventById from '../../hooks/useGetEventById';
 
 const CheckingTokenQrView = () => {
   const { eventId = '', token = '' } = useParams();
@@ -14,6 +15,7 @@ const CheckingTokenQrView = () => {
   const { uid } = useAppSelector(selector => selector.auth)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+
 
   if (uid === null) {
     dispatch(logout({}))
@@ -53,9 +55,9 @@ const CheckingTokenQrView = () => {
 
   const chekingQr = async () => {
     if (status === 'success') return
-
     const eventExist = await eventController.getEventById(eventId)
     const isAlreadyCheck = await eventController.alreadyCheck(uid, eventId)
+
     if (isAlreadyCheck === undefined || eventExist === undefined) {
       handledError('500')
     }
@@ -71,13 +73,8 @@ const CheckingTokenQrView = () => {
         return handledError('info')
       }
     }
-    const validToken = await eventController.checkingToken(token, uid, eventId)
-    if (validToken === undefined) {
-      handledError('500')
-      return
-    }
 
-    if (!validToken) {
+    if (token !== eventExist?.token) {
       handledError('403')
       return
     }
