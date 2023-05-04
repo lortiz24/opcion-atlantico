@@ -3,14 +3,16 @@ interface IMyGradiantBackgroundProps {
     colorLeft: string;
     opacityRight?: number;
     opacityLeft?: number;
+    borderRadius?: string
 }
 
-const MyGradiantBackground = ({ colorRight, colorLeft, opacityLeft = 1, opacityRight = 0.8995973389355743 }: IMyGradiantBackgroundProps) => {
+const MyGradiantBackground = ({ colorRight, colorLeft, opacityLeft = 1, opacityRight = 0.8995973389355743, borderRadius = '15px 15px 0 0' }: IMyGradiantBackgroundProps) => {
+    console.log('borderRadius',borderRadius)
     return (
         <div
             style={{
                 border: '0px solid',
-                borderRadius: '15px 15px 0 0',
+                borderRadius,
                 position: 'absolute',
                 top: 0,
                 left: 0,

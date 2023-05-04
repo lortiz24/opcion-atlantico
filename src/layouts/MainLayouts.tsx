@@ -14,6 +14,7 @@ import useGetMonitorSize from '../hooks/useGetMonitorSize';
 import useIsCollapseMenu from '../components/menu/hooks/useIsCollapseMenu';
 import * as IconsAntDesing from '@ant-design/icons';
 import MenuHeaderMobileComponent from '../components/menu/mobile/MenuHeaderMobileComponent';
+import MenuMobileComponent from '../components/menu/mobile/MenuMobileComponent';
 
 const { Header, Content, Sider } = Layout;
 
@@ -90,7 +91,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 							>
 								<MenuComponent setCollapsed={setCollapsed} />
 							</Sider> :
-							<MenuHeaderMobileComponent isCollapsed={isCollapsed} setCollapsed={setCollapsed} />}
+							<MenuMobileComponent isCollapsed={isCollapsed} setCollapsed={setCollapsed} />}
 						<Layout >
 							<Header
 								className={`header`}
