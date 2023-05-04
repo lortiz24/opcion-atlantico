@@ -6,7 +6,6 @@ import opcion_logo from '../../assets/Logo-Opcion-Atlantico-2022.svg';
 import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { startLoginWithEmailPassword } from '../../store/auth';
-import LoadingComponent from '../../components/loading/LoadingComponent';
 import { useNavigate } from 'react-router-dom';
 import { LayoutCss } from '../../layouts/MainLayout.style';
 
