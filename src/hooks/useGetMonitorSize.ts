@@ -22,7 +22,7 @@ const useGetMonitorSize = () => {
                 height: window.innerHeight,
             });
             setisMobile(window.innerWidth < 500)
-            setIsTable(window.innerWidth < 900)
+            setIsTable(window.innerWidth < 1000)
         }
 
         window.addEventListener('resize', handleResize);

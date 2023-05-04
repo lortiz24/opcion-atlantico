@@ -13,6 +13,7 @@ import MenuHeaderComponent from '../components/menu/MenuHeaderComponent';
 import useGetMonitorSize from '../hooks/useGetMonitorSize';
 import useIsCollapseMenu from '../components/menu/hooks/useIsCollapseMenu';
 import * as IconsAntDesing from '@ant-design/icons';
+import MenuHeaderMobileComponent from '../components/menu/mobile/MenuHeaderMobileComponent';
 
 const { Header, Content, Sider } = Layout;
 
@@ -24,8 +25,8 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { userInfo } = useAppSelector(selec => selec.auth)
 	const dispatch = useAppDispatch();
 	const [scrollPosition, setScrollPosition] = useState(0);
-	const { isCollapsed, setCollapsed, siderRef, collapseButtonRef } = useIsCollapseMenu()
-	const { isMobile } = useGetMonitorSize()
+	const { isCollapsed, setCollapsed } = useIsCollapseMenu()
+	const { isMobile, isTable } = useGetMonitorSize()
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
@@ -47,28 +48,10 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	}, []);
 
 
-	const styleSidebarMobile = {
-		position: 'fixed', zIndex: 1000, width: 300, height: '100%', background: colorBgContainer, display: isCollapsed ? 'none' : 'block'
-	}
 
 	const styleSidebarDesktop = {
 		background: colorBgContainer
 	}
-
-	/* const getWidthHeader = () => {
-		if (isMobile) {
-			if (isCollapsed)
-				return '100%'
-			else
-				return 300
-		} else {
-			if (isCollapsed) {
-				return `calc(100% - ${80}px )`
-			} else {
-				return `calc(100% - ${300}px )`
-			}
-		}
-	} */
 
 	const getTriggers = () => {
 		if (isMobile) {
@@ -88,7 +71,6 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 		}
 		return null
 	}
-
 	return (
 		<>
 			{isLoading ? (
@@ -97,16 +79,18 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 				<Layout style={LayoutCss}>
 					<InternetConnectionAlert />
 					<Layout>
-						<Sider
-							style={isMobile ? styleSidebarMobile : styleSidebarDesktop}
-							width={300}
-							trigger={getTriggers()}
-							collapsible
-							onCollapse={(value) => setCollapsed(value)}
-							collapsed={isCollapsed}
-						>
-							<MenuComponent setCollapsed={setCollapsed} />
-						</Sider>
+						{!isTable ?
+							<Sider
+								style={styleSidebarDesktop}
+								width={300}
+								trigger={getTriggers()}
+								collapsible
+								onCollapse={(value) => setCollapsed(value)}
+								collapsed={isCollapsed}
+							>
+								<MenuComponent setCollapsed={setCollapsed} />
+							</Sider> :
+							<MenuHeaderMobileComponent isCollapsed={isCollapsed} setCollapsed={setCollapsed} />}
 						<Layout >
 							<Header
 								className={`header`}

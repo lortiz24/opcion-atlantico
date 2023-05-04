@@ -5,7 +5,7 @@ import './css/Login-css.css';
 import opcion_logo from '../../assets/Logo-Opcion-Atlantico-2022.svg';
 import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import { startCreatingUserWithEmailPassword, startLoginWithEmailPassword } from '../../store/auth';
+import { startCreatingUserWithEmailPassword } from '../../store/auth';
 import { useNavigate } from 'react-router-dom';
 import { LayoutCss } from '../../layouts/MainLayout.style';
 import useGetValueParametro from '../../hooks/useGetValueParametro';

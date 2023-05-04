@@ -7,7 +7,7 @@ import * as IconsAntDesing from '@ant-design/icons';
 import useGetMonitorSize from '../../hooks/useGetMonitorSize';
 
 
-interface IMenuComponentProps {
+export interface IMenuComponentProps {
 	setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
 }
 

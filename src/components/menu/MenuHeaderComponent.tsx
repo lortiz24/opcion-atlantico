@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, Badge, Button, Col, Dropdown, Row, Space, Typography } from 'antd'
+import { Avatar, Col, Dropdown, Row, Space, Typography } from 'antd'
 import * as IconsAntDesing from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { startLogout } from '../../store/auth';
@@ -36,7 +36,7 @@ const MenuHeaderComponent = ({ collapsed, setCollapsed }: IMenuHeaderComponentPr
                 )}
             </Col>
             <Col>
-                {((isTable && collapsed) || !isMobile) && <Dropdown
+                <Dropdown
                     children={
                         <Space >
                             <Avatar src={photoURL ? photoURL : 'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/avatar-defecto.webp?alt=media&token=dc44ebc7-da97-4d93-8a03-c8f62103054e'} />{!isMobile ? <Typography.Text style={{ color: '#FFFFFF' }}>{displayName}</Typography.Text> : null}
@@ -44,7 +44,7 @@ const MenuHeaderComponent = ({ collapsed, setCollapsed }: IMenuHeaderComponentPr
                     menu={{
                         items: [{
                             key: '1',
-                            label:<Space style={{ width: '100%', }}><Typography.Text>Mi perfil</Typography.Text></Space>,
+                            label: <Space style={{ width: '100%', }}><Typography.Text>Mi perfil</Typography.Text></Space>,
                             icon: <IconsAntDesing.UserOutlined />,
                             onClick: () => navigate('/my-profile')
                         },
@@ -65,7 +65,6 @@ const MenuHeaderComponent = ({ collapsed, setCollapsed }: IMenuHeaderComponentPr
                     placement="bottom"
                     arrow={{ pointAtCenter: true }}
                 />
-                }
             </Col>
         </Row>
     )
