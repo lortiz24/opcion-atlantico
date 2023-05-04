@@ -1,11 +1,9 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayouts';
 import MyProfileView from './my-profile/MyProfileView';
-import CheckingTokenQrView from '../components/chekingTokenQr/CheckingTokenQrView';
 import TitleModule from '../components/title-modules/TitleModule';
 import MyEventView from './eventModule/my-events/MyEventView';
 import EventView from './eventModule/events-all/EventView';
-import UsersView from './users/UsersView';
 import PageInDeveloper from '../components/results/PageInDeveloper';
 import ConfigurationSystemRouter from './configuration-system/ConfigurationSystemRouter';
 import ConfigurationRoute from './configuration/ConfigurationRoute';
@@ -15,8 +13,6 @@ export const FeatureRoutes = () => {
 
 	const redirect = new URLSearchParams(location.search).get('redirect');
 	
-
-	console.log(location.pathname)
 	return (
 		<>
 			<MainLayout>

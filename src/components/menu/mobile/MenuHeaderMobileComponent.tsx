@@ -7,7 +7,6 @@ import MenuList from './MenuList'
 const MenuHeaderMobileComponent = () => {
     const [openMenuUser, setopenMenuUser] = useState(false)
     const { photoURL, displayName } = useAppSelector(selector => selector.auth)
-    const { isMobile, isTable } = useGetMonitorSize()
 
 
     return (

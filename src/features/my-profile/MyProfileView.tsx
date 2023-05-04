@@ -21,7 +21,7 @@ const MyProfileView = () => {
 	};
 
 	return (
-		<Row justify='center' style={{ marginTop: '3%' }}>
+		<Row justify='center' style={{ marginTop: '3%', height: '100vh', paddingBottom:20 }}>
 			<Col xs={24} md={12} lg={8}>
 				<Space style={{ display: 'flex', justifyContent: 'center' }}>
 					<Title level={1}>Editar Perfil</Title>
