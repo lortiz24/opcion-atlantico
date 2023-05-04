@@ -81,7 +81,6 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                 )
             }
         }
-
         if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
             //todo: realizar ver asistentes y descargar asistentes
             if (!(uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? ''))) return
