@@ -58,7 +58,7 @@ const MyTransferComponent = <T extends TransferItem,>({ data, targetKeys, onSetT
                 onSelectChange={onSelectChange}
                 render={propertyRender}
                 oneWay={true}
-                showSelectAll={false}
+                showSelectAll={true}
             />
         </Form.Item>
     )
