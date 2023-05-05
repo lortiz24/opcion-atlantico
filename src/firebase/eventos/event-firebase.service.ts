@@ -84,7 +84,7 @@ export class EventFirebaseService {
             const queryData = query<Omit<IAttendanceByEvent, "id">>(this.attendanceByEvent, where('eventId', '==', eventId))
             const querySnapshot = await getDocs(queryData)
             querySnapshot.forEach(snapshot => {
-                usersByEvent.push(snapshot.id)
+                usersByEvent.push(snapshot.data().userId)
             })
             const usesInfoConfirmed = await this.userService.getUsersInfoByIdList(usersByEvent)
             return usesInfoConfirmed
@@ -94,7 +94,6 @@ export class EventFirebaseService {
     }
     async getUsersIdAttendanceByEventId(eventId: string) {
         try {
-            const eventDocRef = doc(this.eventsCollection, eventId);
             const usersByEvent: string[] = []
 
 

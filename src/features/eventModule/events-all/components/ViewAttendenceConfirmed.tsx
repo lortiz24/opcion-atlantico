@@ -7,6 +7,7 @@ import useGetUsersAttendanceByEventId from '../../../../hooks/useGetUsersAttenda
 import { DispatchMessageService } from '../../../../components/message-response/DispatchMessageService'
 import { ColumnsType } from 'antd/es/table'
 import useGetMonitorSize from '../../../../hooks/useGetMonitorSize'
+import useGetValueParametro from '../../../../hooks/useGetValueParametro'
 
 
 
@@ -19,38 +20,36 @@ interface DataType {
 }
 
 
-const columns: ColumnsType<DataType> = [
-    {
-        title: 'Nombre',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => text
-    },
-    {
-        title: 'Promocion',
-        dataIndex: 'promocion',
-        key: 'promocion',
-    },
-    {
-        title: 'Ciudad',
-        dataIndex: 'city',
-        key: 'city',
-    },
-    {
-        title: 'Correo electrónico',
-        dataIndex: 'email',
-        key: 'email',
-    },
-
-
-
-];
-
 const ViewAttendenceConfirmed = () => {
     const { isViewAttendence, eventId } = useAppSelector(selector => selector.showEvents)
     const dispatch = useDispatch()
     const { error, isLoading, userAttendance } = useGetUsersAttendanceByEventId(eventId)
     const { isMobile, isTable, windowSize } = useGetMonitorSize()
+    const { parametre } = useGetValueParametro({ parameter: 'promociones' })
+
+
+    const columns: ColumnsType<DataType> = [
+        {
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text) => text,
+        },
+        {
+            title: 'Promocion',
+            dataIndex: 'promocion',
+            key: 'promocion',
+            sorter: (a, b) => a.promocion - b.promocion,
+            filterMode: 'tree',
+            filterSearch: true,
+            onFilter: (value: string | number | boolean, record) => record.promocion === value,
+            filters: parametre?.map(parameter => ({
+                text: parseInt(parameter.value),
+                value: parseInt(parameter.value),
+            }))
+        },
+    ];
+
 
     if (error) {
         dispatch(onCancelViewAttendance())
