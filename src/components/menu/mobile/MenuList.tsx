@@ -1,6 +1,6 @@
 import React from 'react'
 import * as IconsAntDesing from '@ant-design/icons'
-import { Card, Col, List, Row, Space, Typography } from 'antd'
+import { Avatar, Button, Card, Col, List, Row, Space, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../store/store'
 import { startLogout } from '../../../store/auth'
@@ -63,7 +63,7 @@ const MenuList = ({ setopenMenuUser }: IMenuListProps) => {
                         hoverable
                         style={{
                             margin: 10,
-                            height: 100,
+                            height: 60,
                             cursor: 'default',
                             borderRadius: 16,
                             backgroundPosition: 'center',
@@ -82,17 +82,14 @@ const MenuList = ({ setopenMenuUser }: IMenuListProps) => {
                         }}
                     >
                         <MyGradiantBackground colorLeft='#FAF9F7' colorRight='#E9BDCF' borderRadius='15px' />
-                        <Row >
-                            <Col span={24}>
-                                <Space style={{ display: 'flex', justifyContent: 'center' }}>
-                                    {menu.icon}
-                                </Space>
-                            </Col>
-                            <Col span={24}>
-                                <Typography.Title level={5} style={{ textAlign: 'center' }}>{menu.label}</Typography.Title>
-                            </Col>
+                        <Space style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Button size='large' type='text' icon={menu.icon}>{menu.label}</Button>
+                        </Space>
+                        {/* <Space >
+                            {menu.icon}
+                            <Typography.Title level={3}>{menu.label}</Typography.Title>
+                        </Space> */}
 
-                        </Row>
                     </Card>
                 )}
             />

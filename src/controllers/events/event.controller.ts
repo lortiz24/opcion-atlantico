@@ -1,5 +1,5 @@
 import { EventFirebaseService } from "../../firebase/eventos/event-firebase.service";
-import { IWhereQuerys, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
+import { IWhereQuerys, IEvent, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 
 export class EventController {

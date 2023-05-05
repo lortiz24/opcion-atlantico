@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Pagination } from 'antd';
+import { List } from 'antd';
 import EventItem from './EventItem';
 import { IEvent } from '../../../interfaces/events-interfaces';
 

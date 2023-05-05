@@ -10,11 +10,10 @@ interface IMenuHeaderMobileComponentProps extends IMenuComponentProps {
 
 const MenuMobileComponent = ({ setCollapsed, isCollapsed }: IMenuHeaderMobileComponentProps) => {
     const { windowSize: { width } } = useGetMonitorSize()
-    const { token: { colorBgContainer }, } = theme.useToken()
     const { displayName, photoURL } = useAppSelector(sel => sel.auth)
     return (
         <Drawer
-            width={'80%'}
+            width={330}
             height={'100%'}
             closable={width < 390 ? true : false}
             placement='left'

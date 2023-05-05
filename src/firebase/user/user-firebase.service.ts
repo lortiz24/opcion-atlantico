@@ -1,4 +1,4 @@
-import { deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { userInfoCollectionRef } from "../providers";
 import { IUserInfo } from "../../interfaces/user-interfaces";
 
@@ -40,6 +40,23 @@ export class UserServiceFirebase {
 
             const querySnapshot = await getDoc<Omit<IUserInfo, 'id'>>(moduleRef);
             return { id: querySnapshot.id, ...querySnapshot.data() } as IUserInfo
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getUsersInfoByIdList(userInfoId: string[]) {
+        try {
+            const usersInfo: IUserInfo[] = []
+
+            const queryData = query<Omit<IUserInfo, "id">>(this.userInfoCollection, where('id', 'in', userInfoId))
+
+            const querySnapshot = await getDocs<Omit<IUserInfo, 'id'>>(queryData);
+
+            querySnapshot.forEach((doc) => {
+                const data: Omit<IUserInfo, 'id'> = doc.data();
+                usersInfo.push({ id: doc.id, ...data })
+            });
+            return usersInfo
         } catch (error) {
             console.log(error)
         }

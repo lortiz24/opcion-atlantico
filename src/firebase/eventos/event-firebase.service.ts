@@ -36,36 +36,31 @@ export class EventFirebaseService {
             conditions?.map((condition) => {
                 queryList.push(where(condition.nameProperty, condition.operation, condition.value));
             });
-
             let queryData = query<Omit<IEvent, "id">>(this.eventsCollection, ...queryList);
-
             const querySnapshot = await getDocs<Omit<IEvent, "id">>(queryData);
             let events: IEvent[] = [];
-            let moderatorsPromises: Promise<IUserInfo[]>[] = [];
-            let assitantsPromises: Promise<IUserInfo[]>[] = [];
 
             querySnapshot.forEach(async (doc) => {
                 const data: Omit<IEvent, "id"> = doc.data();
-                let moderatorsList: IUserInfo[] = [];
-                let assistansList: IUserInfo[] = [];
-
-                if (selectedForeinge) {
-                    const moderatorsData = Promise.all(
-                        data.moderators.map(async (moderatorId) => await this.userService.getUserInfo(moderatorId) as IUserInfo)
-                    );
-                    const assistansData = Promise.all(
-                        data.assistants.map(async (assistantsId) => await this.userService.getUserInfo(assistantsId) as IUserInfo)
-                    );
-                    moderatorsPromises.push(moderatorsData);
-                    moderatorsList = selectedForeinge.moderators === true ? await moderatorsData : [];
-
-                    assitantsPromises.push(assistansData);
-                    assistansList = selectedForeinge.assistants === true ? await assistansData : [];
-                }
-                events.push({ id: doc.id, ...data, forengData: { moderators: moderatorsList, assistants: assistansList } });
+                events.push({ id: doc.id, ...data, forengData: { assistants: [], moderators: [] } });
             });
-            await Promise.all(moderatorsPromises);
-            await Promise.all(assitantsPromises);
+
+            if (selectedForeinge) {
+                for (const evento of events) {
+                    const foreingData: any = {}
+                    if (selectedForeinge.moderators) {
+                        const moderators = await this.userService.getUsersInfoByIdList(evento.moderators)
+                        foreingData.moderators = moderators
+                    }
+
+                    if (selectedForeinge.assistants) {
+                        const assistants = await this.userService.getUsersInfoByIdList(evento.assistants)
+                        foreingData.moderators = assistants
+                    }
+
+                    evento.forengData = foreingData
+                }
+            }
             return events;
         } catch (error) {
             console.log(error);

@@ -3,7 +3,7 @@ import useGetEvents from '../../../../hooks/useGetEvents'
 import EventList from '../EventList'
 
 const EventAll = () => {
-    const { events, loading } = useGetEvents(undefined, { moderators: true, assistants: false })
+    const { events, loading } = useGetEvents(undefined, { moderators: true })
 
     return (
         <EventList eventList={events} isLoading={loading} typeView={'event-all'} />

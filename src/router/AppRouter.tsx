@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthRoutes } from '../auth/routes/AuthRoutes';
 import { FeatureRoutes } from '../features/FeatureRoutes';
 import { useCheckAuth } from '../hooks/useCheckAuth';
@@ -11,7 +11,7 @@ export const AppRouter = () => {
 		return <LoadingComponent isLoading={status === 'checking'} />;
 	}
 
-	
+
 	return (
 		<>
 			<Routes>
