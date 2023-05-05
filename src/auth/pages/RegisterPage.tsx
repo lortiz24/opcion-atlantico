@@ -81,7 +81,7 @@ const RegisterPage = () => {
                   >
                     <Select
                       placeholder='Promocion'
-                      options={parametre?.map(item => ({ label: `Promocion ${item.value}`, value: item.value }))}
+                      options={parametre?.map(item => ({ label: `Promocion ${item.value}`, value: item.value as number }))}
                     />
                   </Form.Item>
                   <Form.Item

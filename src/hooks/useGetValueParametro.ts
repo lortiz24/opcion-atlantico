@@ -8,30 +8,30 @@ interface IParametres {
 const listOpcion = [
     {
         parametre: 'promocion',
-        value: '2019'
+        value: 2019
     },
     {
         parametre: 'promocion',
-        value: '2020'
+        value: 2020
     },
     {
         parametre: 'promocion',
-        value: '2021'
+        value: 2021
     },
     {
         parametre: 'promocion',
-        value: '2022'
+        value: 2022
     },
     {
         parametre: 'promocion',
-        value: '2023'
+        value: 2023
     },
 ]
 
 const useGetValueParametro = ({ parameter }: IParametres) => {
     const [parametre, setParametre] = useState<{
         parametre: string;
-        value: string;
+        value: any;
     }[]>()
     const [isLoading, setIsLoading] = useState(true)
 

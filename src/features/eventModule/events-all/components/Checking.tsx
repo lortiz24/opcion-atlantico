@@ -8,6 +8,8 @@ import useListeningUsersCheckedByEvent from '../../../../hooks/useListeningUsers
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { onCancelCheking } from '../../../../store/show-events/ShowEventSlice'
 import { userInfoController } from '../../../../controllers/userInfo/user-info.controller'
+import useGetValueParametro from '../../../../hooks/useGetValueParametro'
+import { ColumnFilterItem } from 'antd/es/table/interface'
 
 interface ICheckingProps extends ModalProps {
     isChecking: boolean
@@ -20,22 +22,36 @@ interface DataType {
     check: boolean
 }
 
-
-const columns: ColumnsType<DataType> = [
-    {
-        title: 'Nombre',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => text
-    },
-    {
-        title: 'Promocion',
-        dataIndex: 'promocion',
-        key: 'promocion',
-        sorter: (a, b) => a.promocion - b.promocion,
-    },
-
+const abecedario: ColumnFilterItem[] = [
+    { value: 'A', text: 'A' },
+    { value: 'B', text: 'B' },
+    { value: 'C', text: 'C' },
+    { value: 'D', text: 'D' },
+    { value: 'E', text: 'E' },
+    { value: 'F', text: 'F' },
+    { value: 'G', text: 'G' },
+    { value: 'H', text: 'H' },
+    { value: 'I', text: 'I' },
+    { value: 'J', text: 'J' },
+    { value: 'K', text: 'K' },
+    { value: 'L', text: 'L' },
+    { value: 'M', text: 'M' },
+    { value: 'N', text: 'N' },
+    { value: 'Ñ', text: 'Ñ' },
+    { value: 'O', text: 'O' },
+    { value: 'P', text: 'P' },
+    { value: 'Q', text: 'Q' },
+    { value: 'R', text: 'R' },
+    { value: 'S', text: 'S' },
+    { value: 'T', text: 'T' },
+    { value: 'U', text: 'U' },
+    { value: 'V', text: 'V' },
+    { value: 'W', text: 'W' },
+    { value: 'X', text: 'X' },
+    { value: 'Y', text: 'Y' },
+    { value: 'Z', text: 'Z' }
 ];
+
 
 
 const Checking = () => {
@@ -44,6 +60,31 @@ const Checking = () => {
     const [usersAsistentesInfo, setusersAsistentesInfo] = useState<IUserInfo[]>([])
     const { userInfoCheck, loading } = useListeningUsersCheckedByEvent({ eventId: eventId ?? '' })
     const dispatch = useAppDispatch()
+    const { parametre } = useGetValueParametro({ parameter: 'promociones' })
+
+    const columns: ColumnsType<DataType> = [
+        {
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text) => text,
+        },
+        {
+            title: 'Promocion',
+            dataIndex: 'promocion',
+            key: 'promocion',
+            sorter: (a, b) => a.promocion - b.promocion,
+            filterMode: 'tree',
+            filterSearch: true,
+            onFilter: (value: string | number | boolean, record) => record.promocion === value,
+            filters: parametre?.map(parameter => ({
+                text: parseInt(parameter.value),
+                value: parseInt(parameter.value),
+            }))
+        },
+    ];
+
+
 
     useEffect(() => {
         if (event?.typeAttendance === 'hybrid' || event?.typeAttendance === 'free') {

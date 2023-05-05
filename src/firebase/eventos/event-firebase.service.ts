@@ -306,7 +306,6 @@ export class EventFirebaseService {
             this.eventLogger.hanledError(error)
         }
     }
-    //todo: crear el token al crear el evento
     async createCheck(userId: string, eventId: string) {
         try {
             const isAlreadyCheck = await this.alreadyCheck(userId, eventId)
