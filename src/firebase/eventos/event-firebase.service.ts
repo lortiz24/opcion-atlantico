@@ -80,21 +80,16 @@ export class EventFirebaseService {
     async getUsersAttendanceByEventId(eventId: string) {
         try {
             const eventDocRef = doc(this.eventsCollection, eventId);
-            const usersByEvent: IAttendanceByEvent[] = []
-            const promiseUsersInfo: Promise<IUserInfo | undefined>[] = []
+            const usersByEvent: string[] = []
 
             const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
             const queryData = query<Omit<IAttendanceByEvent, "id">>(attendanceByEvent)
             const querySnapshot = await getDocs(queryData)
-
             querySnapshot.forEach(snapshot => {
-                const data: Omit<IAttendanceByEvent, "id"> = snapshot.data()
-                usersByEvent.push({ id: snapshot.id, ...data })
-                promiseUsersInfo.push(this.userService.getUserInfo(snapshot.id))
+                usersByEvent.push(snapshot.id)
             })
-
-            const usersInfoByEvent = await Promise.all(promiseUsersInfo)
-            return usersInfoByEvent
+            const usesInfoConfirmed = await this.userService.getUsersInfoByIdList(usersByEvent)
+            return usesInfoConfirmed
         } catch (error) {
             console.log(error)
         }

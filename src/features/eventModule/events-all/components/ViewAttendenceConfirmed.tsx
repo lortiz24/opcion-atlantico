@@ -67,7 +67,7 @@ const ViewAttendenceConfirmed = () => {
             <Table
                 scroll={{ x: 10 }}
                 loading={isLoading}
-                dataSource={userAttendance.map(assistan => ({ key: assistan.id, name: assistan.displayName, promocion: assistan.promocion, city: assistan.city, email: assistan.email })) as DataType[]}
+                dataSource={userAttendance?.map(assistan => ({ key: assistan.id, name: assistan.displayName, promocion: assistan.promocion, city: assistan.city, email: assistan.email })) as DataType[]}
                 columns={columns}
             />
 
