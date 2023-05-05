@@ -31,7 +31,7 @@ const FormProfileComponent = ({ onSubmitForm }: IFormProfileComponentProps) => {
 			email: email ? email : '',
 			rols: userInfo?.rols,
 			displayName: displayName ?? undefined,
-			promocion: `Promocion ${userInfo?.promocion}`,
+			promocion: userInfo?.promocion,
 			gender: userInfo?.gender,
 			city: userInfo?.city,
 			address: userInfo?.address

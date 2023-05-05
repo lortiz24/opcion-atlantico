@@ -10,7 +10,7 @@ export interface IUserInfo extends Omit<IUser, 'password'> {
 	dateCreated: Timestamp | null;
 	address: string | null;
 	city: string | null;
-	promocion: string | null;
+	promocion: number;
 	gender: string | null;
 }
 

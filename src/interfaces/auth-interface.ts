@@ -3,7 +3,7 @@ export interface IStartCreatingUserWithEmailPasswordParams {
     email: string;
     password: string;
     displayName: string;
-    promocion: string;
+    promocion: number;
 }
 
 export interface IStartLoginWithEmailPasswordParams extends Omit<IStartCreatingUserWithEmailPasswordParams, 'displayName' | 'promocion'> { }

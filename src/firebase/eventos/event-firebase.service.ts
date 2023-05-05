@@ -1,4 +1,4 @@
-import { qrAttendanceCollectionRef, eventsCollectionRef } from "../providers";
+import { qrAttendanceCollectionRef, eventsCollectionRef, attendanceByEventCollectionRef } from "../providers";
 import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, collection, CollectionReference, setDoc, } from "firebase/firestore";
 import { IAttendanceByEvent, IWhereQuerys, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { UserServiceFirebase } from "../user/user-firebase.service";
@@ -11,6 +11,7 @@ export class EventFirebaseService {
     constructor(
         private readonly eventsCollection = eventsCollectionRef,
         private readonly qrColecction = qrAttendanceCollectionRef,
+        private readonly attendanceByEvent = attendanceByEventCollectionRef,
         private readonly userService = new UserServiceFirebase(),
         private readonly eventLogger = new ErrorFirebaseService()
     ) { }
@@ -79,11 +80,8 @@ export class EventFirebaseService {
     }
     async getUsersAttendanceByEventId(eventId: string) {
         try {
-            const eventDocRef = doc(this.eventsCollection, eventId);
             const usersByEvent: string[] = []
-
-            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
-            const queryData = query<Omit<IAttendanceByEvent, "id">>(attendanceByEvent)
+            const queryData = query<Omit<IAttendanceByEvent, "id">>(this.attendanceByEvent, where('eventId', '==', eventId))
             const querySnapshot = await getDocs(queryData)
             querySnapshot.forEach(snapshot => {
                 usersByEvent.push(snapshot.id)
@@ -100,8 +98,7 @@ export class EventFirebaseService {
             const usersByEvent: string[] = []
 
 
-            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
-            const queryData = query<Omit<IAttendanceByEvent, "id">>(attendanceByEvent)
+            const queryData = query<Omit<IAttendanceByEvent, "id">>(this.attendanceByEvent, where('eventId', '==', eventId))
             const querySnapshot = await getDocs(queryData)
 
             querySnapshot.forEach(snapshot => {
@@ -207,9 +204,7 @@ export class EventFirebaseService {
     }
     listeningUsersInfoCheck(eventId: string, onSet: (usersInfo: IUserInfo[]) => void) {
 
-        const eventDocRef = doc(this.eventsCollection, eventId);
-        const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
-        let queryData = query<Omit<IAttendanceByEvent, "id">>(attendanceByEvent);
+        let queryData = query<Omit<IAttendanceByEvent, "id">>(this.attendanceByEvent, where('eventId', '==', eventId));
 
         return onSnapshot(queryData, async (querySnapshot) => {
             if (!querySnapshot.empty) {
@@ -315,10 +310,10 @@ export class EventFirebaseService {
     //todo: crear el token al crear el evento
     async createCheck(userId: string, eventId: string) {
         try {
-            const eventDocRef = doc(this.eventsCollection, eventId);
-            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
-            const docRef = doc(attendanceByEvent, userId)
-            await setDoc(docRef, { userId })
+            const isAlreadyCheck = await this.alreadyCheck(userId, eventId)
+            if (isAlreadyCheck) return 403
+            const docRef = doc(this.attendanceByEvent)
+            await setDoc(docRef, { userId, eventId })
             return 201
         } catch (error) {
             return this.eventLogger.hanledError(error)
@@ -326,25 +321,32 @@ export class EventFirebaseService {
     }
     async deleteCheck(userId: string, eventId: string) {
         try {
-            const eventDocRef = doc(this.eventsCollection, eventId);
-            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
-            const docRef = doc(attendanceByEvent, userId)
-            await deleteDoc(docRef)
-            return 201
+            const queryData = query(this.attendanceByEvent, where('userId', '==', userId), where('eventId', '==', eventId))
+
+
+            const docRef = await getDocs(queryData)
+
+            if (docRef.docs.length > 0) {
+                const document = docRef.docs[0];
+                const documentRef = doc(this.attendanceByEvent, document.id);
+                await deleteDoc(documentRef);
+                return 201
+            } else {
+                return 404
+            }
         } catch (error) {
             return this.eventLogger.hanledError(error)
         }
     }
     async alreadyCheck(userId: string, eventId: string) {
         try {
-            const eventDocRef = doc(this.eventsCollection, eventId);
+            const queryData = query(this.attendanceByEvent, where('userId', '==', userId), where('eventId', '==', eventId))
 
-            const attendanceByEvent = collection(eventDocRef, 'attendanceByEvent') as CollectionReference<Omit<IAttendanceByEvent, 'id'>>;
-
-            const attendancRef = doc(attendanceByEvent, userId)
-
-            const querySnapshot = await getDoc<Omit<IAttendanceByEvent, 'id'>>(attendancRef);
-            return querySnapshot.exists()
+            const querySnapshot = await getDocs<Omit<IAttendanceByEvent, 'id'>>(queryData);
+            if (querySnapshot.docs.length > 0)
+                return true
+            else
+                return false
 
         } catch (error) {
             console.log(error)

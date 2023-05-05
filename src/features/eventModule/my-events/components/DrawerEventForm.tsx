@@ -26,13 +26,16 @@ const DrawerEventForm = ({ placement = 'right', width }: IDrawerEventFormProps) 
 
         if (formEvent.moderators) {
             moderators = formEvent?.moderators?.includes(uid ?? '') ? formEvent.moderators : [...formEvent.moderators, uid]
+        } else {
+            moderators = [uid]
         }
         const newEvent: Omit<IEvent, 'id' | 'token'> = {
             ...formEvent,
             dateStart: Timestamp.fromDate(dateStart.hour(timeStart.hour()).minute(timeStart.second()).minute(timeStart.minute()).toDate()),
             dateEnd: Timestamp.fromDate(dateEnd.hour(timeEnd.hour()).minute(timeEnd.second()).minute(timeEnd.minute()).toDate()),
             anfitrion: uid,
-            moderators
+            moderators,
+            assistants: formEvent.assistants ?? []
         }
         if (isEditFormEvent) return dispatch(updateEventAsync(eventId, newEvent, imgForm))
         dispatch(createEventAsync(newEvent, imgForm))

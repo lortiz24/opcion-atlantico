@@ -78,7 +78,8 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                 timeEnd: dateEnd.toDayjs(),
                 typeAttendance: event.typeAttendance,
                 typeEvent: event.typeEvent,
-                assistants: event.assistants
+                assistants: event.assistants,
+                moderators: event.moderators
             })
             setTypeInvitation(event?.typeAttendance)
             if (event.moderators.length > 0) setHaveChildrens(true)

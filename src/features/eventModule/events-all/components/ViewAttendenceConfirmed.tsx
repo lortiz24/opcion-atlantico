@@ -13,7 +13,7 @@ import useGetMonitorSize from '../../../../hooks/useGetMonitorSize'
 interface DataType {
     key: string;
     name: string;
-    promocion: string
+    promocion: number
     city: string;
     email: string;
 }

@@ -16,7 +16,7 @@ interface ICheckingProps extends ModalProps {
 interface DataType {
     key: string;
     name: string;
-    promocion: string
+    promocion: number
     check: boolean
 }
 
@@ -32,6 +32,7 @@ const columns: ColumnsType<DataType> = [
         title: 'Promocion',
         dataIndex: 'promocion',
         key: 'promocion',
+        sorter: (a, b) => a.promocion - b.promocion,
     },
 
 ];

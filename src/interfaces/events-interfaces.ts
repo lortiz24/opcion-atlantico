@@ -73,5 +73,6 @@ export interface IWhereQuerys {
 
 export interface IAttendanceByEvent {
     id: string;
-    userId: string
+    userId: string,
+    eventId:string
 }
