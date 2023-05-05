@@ -209,23 +209,22 @@ export class EventFirebaseService {
         return onSnapshot(queryData, async (querySnapshot) => {
             if (!querySnapshot.empty) {
 
-                const userInfo: IUserInfo[] = [];
-
-                const promises: Promise<IUserInfo | undefined>[] = []
+                const attendancesByEvent: IAttendanceByEvent[] = [];
 
                 querySnapshot.forEach(async (doc) => {
 
                     const data: Omit<IAttendanceByEvent, "id"> = doc.data();
 
-                    promises.push(this.userService.getUserInfo(doc.id))
-
-                    const moderatorsData = await this.userService.getUserInfo(doc.id)
-
-                    if (moderatorsData)
-                        userInfo.push(moderatorsData);
+                    const attendanceByEvent: IAttendanceByEvent = {
+                        eventId: data.eventId,
+                        userId: data.userId,
+                        id: doc.id
+                    }
+                    attendancesByEvent.push(attendanceByEvent)
                 });
-                await Promise.all(promises)
-                onSet(userInfo);
+
+                const usersInfo = await this.userService.getUsersInfoByIdList(attendancesByEvent.map(attendanceByEvent => attendanceByEvent.userId))
+                onSet(usersInfo as IUserInfo[]);
             } else {
                 onSet([]);
             }
