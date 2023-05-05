@@ -54,10 +54,6 @@ export class EventController {
         const newMenuId = this.eventService.listeningUsersInfoCheck(eventId, onSet)
         return newMenuId
     }
-    listeningUsersNotCheckedByEvent(eventId: string, onSet: (events: IUserInfo[]) => void) {
-        const newMenuId = this.eventService.listeningUsersInfoNotCheck(eventId, onSet)
-        return newMenuId
-    }
     listeningTokenEvent(eventId: string, onSet: (token: string) => void) {
         const newMenuId = this.eventService.listeningQrAttendanceFirebase(eventId, onSet,)
         return newMenuId

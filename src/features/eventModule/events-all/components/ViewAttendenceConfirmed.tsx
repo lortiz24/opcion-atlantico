@@ -24,7 +24,7 @@ const ViewAttendenceConfirmed = () => {
     const { isViewAttendence, eventId } = useAppSelector(selector => selector.showEvents)
     const dispatch = useDispatch()
     const { error, isLoading, userAttendance } = useGetUsersAttendanceByEventId(eventId)
-    const { isMobile, isTable, windowSize } = useGetMonitorSize()
+    const { isTable } = useGetMonitorSize()
     const { parametre } = useGetValueParametro({ parameter: 'promociones' })
 
 

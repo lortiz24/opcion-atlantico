@@ -229,28 +229,6 @@ export class EventFirebaseService {
             }
         });
     }
-    listeningUsersInfoNotCheck(eventId: string, onSet: (usersInfo: IUserInfo[]) => void) {
-        const eventDocRef = doc(this.eventsCollection, eventId);
-        return onSnapshot(eventDocRef, async (querySnapshot) => {
-
-            const usersInfo: IUserInfo[] = [];
-
-            const promises: Promise<IUserInfo | undefined>[] = []
-
-            const data = querySnapshot.data();
-
-            data?.assistants.forEach(async (asistente) => {
-                const userInfo = await this.userService.getUserInfo(asistente)
-                if (userInfo)
-                    usersInfo.push(userInfo)
-
-                promises.push(this.userService.getUserInfo(asistente))
-            })
-
-            await Promise.all(promises)
-            onSet(usersInfo);
-        });
-    }
 
 
     listeningQrAttendanceFirebase(eventId: string, onSet: (token: string) => void) {
