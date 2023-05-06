@@ -12,8 +12,8 @@ const EventView = () => {
         <>
             {isGenerateQrOpen && <GenerateQr />}
             {isCheckinManualOpen && <Checking />}
-            {isViewAttendence && <ViewAttendenceConfirmed />}
             {isUrlModalOpen && <GenerateUrl />}
+            {isViewAttendence && <ViewAttendenceConfirmed />}
 
             <EventAll />
 

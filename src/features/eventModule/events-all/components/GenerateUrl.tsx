@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { onCancelGenerateUrl } from '../../../../store/show-events/ShowEventSlice'
 import useListeningQrByEventId from '../../../../hooks/useListeningQrByEventId'
 import useGetMonitorSize from '../../../../hooks/useGetMonitorSize'
+import Paragraph from 'antd/es/typography/Paragraph'
 
 const GenerateUrl = () => {
     const { isUrlModalOpen, eventId } = useAppSelector(selector => selector.showEvents)
@@ -17,6 +18,7 @@ const GenerateUrl = () => {
 
     return (
         <Modal
+            title='URL de asistencia'
             open={isUrlModalOpen}
             onCancel={() => dispatch(onCancelGenerateUrl())}
             onOk={() => dispatch(onCancelGenerateUrl())}
@@ -26,7 +28,8 @@ const GenerateUrl = () => {
             <Spin
                 spinning={loading}
             >
-                {!loading && <Input value={url} />}
+                {!loading && <Paragraph copyable>{url}</Paragraph>}
+                
             </Spin>
         </Modal>
     )

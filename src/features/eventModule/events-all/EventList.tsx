@@ -22,8 +22,6 @@ const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
 	const [libre, setlibre] = useState(false);
 	const [invitacion, setinvitacion] = useState(false);
 	const [hibrido, sethibrido] = useState(false);
-	const [checkEvents, setcheckEvents] = useState(true);
-	const [notCheck, setnotCheck] = useState(false);
 
 	const panelStyle = {
 		marginBottom: 24,
@@ -112,7 +110,7 @@ const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
 					sm: 1,
 					md: 1,
 					lg: 1,
-					xl: 1,
+					xl: 2,
 					xxl: 2,
 				}}
 				loading={isLoading}

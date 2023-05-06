@@ -21,7 +21,9 @@ const GenerateQr = () => {
     const { token: tokenThem } = theme.useToken();
 
     return (
-        <Modal onOk={() => dispatch(onCancelGenerateQr())} destroyOnClose open={isGenerateQrOpen} onCancel={() => dispatch(onCancelGenerateQr())} bodyStyle={{ padding: 20 }} style={{ display: 'flex', justifyContent: 'center' }}>
+        <Modal 
+            title='Generate QR de asistencia'
+            onOk={() => dispatch(onCancelGenerateQr())} destroyOnClose open={isGenerateQrOpen} onCancel={() => dispatch(onCancelGenerateQr())} bodyStyle={{ padding: 20 }} style={{ display: 'flex', justifyContent: 'center' }}>
             <QRCode
                 color={tokenThem.colorPrimary}
                 status={loading ? 'loading' : 'active'}
