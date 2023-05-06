@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Checkbox, Collapse, Input, List, theme } from 'antd';
 import EventItem from './EventItem';
 import { IEvent } from '../../../interfaces/events-interfaces';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../../store/store';
+import { eventController } from '../../../controllers/events/event.controller';
 
 export interface IEventListProps {
 	eventList: IEvent[];
@@ -14,69 +15,89 @@ export interface IEventListProps {
 const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
 	const [searchText, setSearchText] = useState('');
 	const { token } = theme.useToken();
-	const [moderator, setmoderator] = useState(false)
-	const [invitado, setinvitado] = useState(false)
-	const { uid } = useAppSelector(sel => sel.auth)
+	const { uid } = useAppSelector(sel => sel.auth);
+
+	const [moderator, setmoderator] = useState(false);
+	const [invitado, setinvitado] = useState(false);
+	const [libre, setlibre] = useState(false);
+	const [invitacion, setinvitacion] = useState(false);
+	const [hibrido, sethibrido] = useState(false);
+	const [checkEvents, setcheckEvents] = useState(true);
+	const [notCheck, setnotCheck] = useState(false);
+
 	const panelStyle = {
 		marginBottom: 24,
 		background: token.colorFillAlter,
 		borderRadius: token.borderRadiusLG,
 		border: 'none',
 	};
+
 	return (
 		<>
 			<Input.Search
-				placeholder="Buscar evento"
+				placeholder='Buscar evento'
 				onChange={e => setSearchText(e.target.value)}
 				style={{ marginBottom: '16px' }}
 			/>
 			<Collapse
 				bordered={false}
-				expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+				expandIcon={({ isActive }) => (
+					<CaretRightOutlined rotate={isActive ? 90 : 0} />
+				)}
 				style={{ background: token.colorBgContainer }}
 			>
-				<Collapse.Panel header="Filtros" key="1" style={panelStyle}>
+				<Collapse.Panel header='Filtros' key='1' style={panelStyle}>
 					<p>Mi rol</p>
-					<Checkbox.Group options={[
-						{
-							label: 'Soy moderador',
-							value: 'soy-moderador',
-							onChange: (e) => setmoderator(e.target.checked)
-						},
-						{
-							label: 'Soy invitado',
-							value: 'soy-invitado',
-							onChange: (e) => setinvitado(e.target.checked)
-						},
-					]} />
+					<Checkbox.Group
+						options={[
+							{
+								label: 'Soy moderador',
+								value: 'soy-moderador',
+								onChange: e => setmoderator(e.target.checked),
+							},
+							{
+								label: 'Soy invitado',
+								value: 'soy-invitado',
+								onChange: e => setinvitado(e.target.checked),
+							},
+						]}
+					/>
 					<p>Tipo de asistencia</p>
-					<Checkbox.Group  options={[
-						{
-							label: 'Libre',
-							value: 'free',
-							onChange: (e) => setmoderator(e.target.checked)
-						},
-						{
-							label: 'Invitacion',
-							value: 'invitation',
-							onChange: (e) => setinvitado(e.target.checked)
-						},
-					]} />
-					<p>Estado de mi asistencia</p>
-					<Checkbox.Group options={[
-						{
-							label: 'Asistencia',
-							value: 'attendance',
-							onChange: (e) => setmoderator(e.target.checked)
-						},
-						{
-							label: 'No asistencia',
-							value: 'invitation',
-							onChange: (e) => setinvitado(e.target.checked)
-						},
-					]} />
+					<Checkbox.Group
+						options={[
+							{
+								label: 'Libre',
+								value: 'free',
+								onChange: e => setlibre(e.target.checked),
+							},
+							{
+								label: 'Invitacion',
+								value: 'invitation',
+								onChange: e => setinvitacion(e.target.checked),
+							},
+							{
+								label: 'Hibrido',
+								value: 'hybrid',
+								onChange: e => sethibrido(e.target.checked),
+							},
+						]}
+					/>
+					{/* <p>Estado de mi asistencia</p>
+					<Checkbox.Group
+						options={[
+							{
+								label: 'Asistencia',
+								value: 'attendance',
+								onChange: e => setcheckEvents(e.target.checked),
+							},
+							{
+								label: 'No asistencia',
+								value: 'invitation',
+								onChange: e => setnotCheck(e.target.checked),
+							},
+						]}
+					/> */}
 				</Collapse.Panel>
-
 			</Collapse>
 			<List
 				pagination={{
@@ -91,26 +112,35 @@ const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
 					sm: 1,
 					md: 1,
 					lg: 1,
-					xl: 2,
+					xl: 1,
 					xxl: 2,
 				}}
 				loading={isLoading}
 				dataSource={eventList.filter(event => {
-					let filtro = true
+					let filtro = true;
 
 					if (searchText)
-						filtro = event.title.toLowerCase().includes(searchText.toLowerCase())
-					if (!filtro) return filtro
+						filtro = event.title
+							.toLowerCase()
+							.includes(searchText.toLowerCase());
+					if (!filtro) return filtro;
 
-					if (moderator)
-						filtro = event.moderators.includes(uid as string)
-					if (!filtro) return filtro
+					if (moderator) filtro = event.moderators.includes(uid as string);
+					if (!filtro) return filtro;
 
-					if (invitado)
-						filtro = event.assistants.includes(uid as string)
-					if (!filtro) return filtro
+					if (invitado) filtro = event.assistants.includes(uid as string);
+					if (!filtro) return filtro;
 
-					return filtro
+					if (libre) filtro = event.typeAttendance === 'free';
+					if (!filtro) return filtro;
+
+					if (invitacion) filtro = event.typeAttendance === 'invitation';
+					if (!filtro) return filtro;
+
+					if (hibrido) filtro = event.typeAttendance === 'hybrid';
+					if (!filtro) return filtro;
+
+					return filtro;
 				})}
 				renderItem={eventItem => (
 					<EventItem
