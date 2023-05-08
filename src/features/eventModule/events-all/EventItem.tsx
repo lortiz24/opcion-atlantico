@@ -62,15 +62,15 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     useEffect(() => {
         const actionsList = []
         if (getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'in-progress') {
-            actionsList.push(
-                // <Tooltip placement="topLeft" title={'Generar QR'} >
-                <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
-                    const { dateStart, dateEnd, ...event } = eventItem
-                    dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
-                }} />
-                // </Tooltip>
-            )
             if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
+                actionsList.push(
+                    // <Tooltip placement="topLeft" title={'Generar QR'} >
+                    <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
+                        const { dateStart, dateEnd, ...event } = eventItem
+                        dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                    }} />
+                    // </Tooltip>
+                )
                 actionsList.push(
                     // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
                     <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
@@ -154,6 +154,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
 
     return (
         <List.Item
+        
         >
             <Card
                 hoverable
@@ -271,7 +272,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                                 fallback={'../../../../public/opcion.jpg'}
                                 width={'100%'}
                                 height={'100%'}
-                                src={eventItem.img?.url!==null ?eventItem.img?.url: '../../../../public/opcion.jpg'}
+                                src={eventItem.img?.url !== null ? eventItem.img?.url : '../../../../public/opcion.jpg'}
                                 alt="logo"
                                 preview={false}
                                 style={{ borderRadius: 20, objectFit: 'cover' }}
