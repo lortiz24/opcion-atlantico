@@ -9,10 +9,6 @@ import { onCancelGenerateQr } from '../../../../store/show-events/ShowEventSlice
 import useGetMonitorSize from '../../../../hooks/useGetMonitorSize';
 
 
-
-interface IGenerateQrProps extends ModalProps {
-    eventAttendanceId: string
-}
 const GenerateQr = () => {
     const { eventId, isGenerateQrOpen } = useAppSelector(selec => selec.showEvents)
     const { loading, token } = useListeningQrByEventId(eventId)

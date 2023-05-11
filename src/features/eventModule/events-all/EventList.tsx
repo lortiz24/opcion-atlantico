@@ -50,7 +50,7 @@ const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
 						},
 					]} />
 					<p>Tipo de asistencia</p>
-					<Checkbox.Group  options={[
+					<Checkbox.Group options={[
 						{
 							label: 'Libre',
 							value: 'free',
@@ -80,10 +80,10 @@ const EventList = ({ eventList, isLoading, typeView }: IEventListProps) => {
 			</Collapse>
 			<List
 				pagination={{
-					position: 'both',
+					position: 'bottom',
 					align: 'end',
 					pageSize: 6,
-					style: { marginTop: '16px', marginBottom: '16px' },
+					style: { paddingBottom: '16px' },
 				}}
 				grid={{
 					gutter: 8,

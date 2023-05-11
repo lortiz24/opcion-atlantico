@@ -9,12 +9,12 @@ import MyGradiantBackground from '../../../components/gradiant-bacground/MyGradi
 import { useAppSelector, useAppDispatch } from '../../../store/store';
 import { openEditionModeEvent } from '../../../store/form-events/formEventSlice';
 import { deleteEventAsync } from '../../../store/form-events/event-thunk';
-import { DateAdapter } from '../../../services/date-service/Daily';
 import { eventController } from '../../../controllers/events/event.controller';
 import { onChekingOpen, onGenerateQr, onGenerateUrl, onViewAttendance } from '../../../store/show-events/ShowEventSlice';
 import { getEventStatus } from '../../../helpers/event-helpers';
 import { TransformationTypeEvent, TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
 import ExpandableParagraph from '../../../components/expandable-paragraf/ExpandableParagraphComponent';
+import useGetMonitorSize from '../../../hooks/useGetMonitorSize';
 
 interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
     eventItem: IEvent
@@ -28,6 +28,9 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     const [actionsList, setActionsList] = useState<JSX.Element[]>([])
     const { uid } = useAppSelector(selector => selector.auth)
     const [checkUsersEvent, setcheckUsersEvent] = useState<'checking' | 'check' | 'not-check'>('checking')
+    const { isMobile } = useGetMonitorSize()
+
+
 
     const userAlreadyCheck = async () => {
         const alreadyCheck = await eventController.alreadyCheck(uid ?? '', eventItem.id)
@@ -110,19 +113,8 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                 }} />
                 // </Tooltip>
             )
-            /* if (getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'in-progress') {
-
-                actionsList.push(
-                    // <Tooltip placement="topLeft" title={'Generar QR'} >
-                    <Button type='text' icon={<IconsAntDesing.LinkOutlined />} onClick={() => {
-                        const { dateStart, dateEnd, ...event } = eventItem
-                        dispatch(onGenerateUrl({ eventId: eventItem.id, typeView, event }))
-                    }} />
-                    // </Tooltip>
-                )
-            } */
         }
-        //Si estas en la vida de gestion de eventos
+        //Si estas en la vista de gestion de eventos
         if (typeView === 'gestion') {
             actionsList.push(
                 // <Tooltip placement="topLeft" title={'Editar evento'} >
@@ -154,37 +146,35 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
 
     return (
         <List.Item
-        
+
         >
-            <Card
-                hoverable
-                style={{
-                    cursor: 'default',
-                    borderRadius: 16,
-                    // backgroundImage: `url(${eventItem.img})`,
-                    backgroundPosition: 'center',
-                    height: '100%',
-                    position: 'relative',
-                    zIndex: 1,
-                }}
-                bodyStyle={{
-                    width: '100%',
-                    borderRadius: 15,
-                    position: 'relative',
-                    zIndex: 1,
-                }}
-                bordered={false}
-                actions={actionsList}
+            <Badge.Ribbon
+                /* todo: Alguien corriga esta empanadas aaaaaa */
+                style={{ zIndex: 10000, display: (checkUsersEvent === 'checking' || (eventItem.typeAttendance === 'invitation' && !eventItem.assistants.includes(uid ?? ''))) ? 'none' : 'block' }}
+                text={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'Asistencia' : 'Sin asistir'}
+                color={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'green' : 'red'}
             >
-
-                <MyGradiantBackground colorLeft='#FAF9F7' colorRight='#E9BDCF' />
-                <Badge.Ribbon
-                    /* todo: Alguien corriga esta empanadas aaaaaa */
-                    style={{ display: (checkUsersEvent === 'checking' || (eventItem.typeAttendance === 'invitation' && !eventItem.assistants.includes(uid ?? ''))) ? 'none' : 'block' }}
-                    text={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'Asistencia' : 'Sin asistir'}
-                    color={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'green' : 'red'}
+                <Card
+                    hoverable
+                    style={{
+                        cursor: 'default',
+                        borderRadius: 16,
+                        // backgroundImage: `url(${eventItem.img})`,
+                        backgroundPosition: 'center',
+                        height: '100%',
+                        position: 'relative',
+                        zIndex: 1,
+                    }}
+                    bodyStyle={{
+                        width: '100%',
+                        borderRadius: 15,
+                        position: 'relative',
+                        zIndex: 1,
+                    }}
+                    bordered={false}
+                    actions={actionsList}
                 >
-
+                    <MyGradiantBackground colorLeft='#FAF9F7' colorRight='#E9BDCF' />
                     <Row justify={'center'} style={{ width: '100%' }} gutter={[8, 8]}>
                         <Col xs={24} sm={24} md={14} lg={16} xl={15} xxl={17}
                         >
@@ -193,6 +183,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                                     title={eventItem.title}
                                     description={<ExpandableParagraph text={eventItem.desciption} length={50} />}
                                     avatar={
+                                        !isMobile &&
                                         <Avatar.Group
                                             maxCount={4}
                                             maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
@@ -280,9 +271,9 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                         </Col>
 
                     </Row>
-                </Badge.Ribbon>
 
-            </Card>
+                </Card>
+            </Badge.Ribbon>
         </List.Item >
 
     )

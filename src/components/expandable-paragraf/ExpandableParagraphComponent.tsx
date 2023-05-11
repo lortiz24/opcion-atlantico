@@ -16,7 +16,7 @@ const ExpandableParagraph = ({ text, length }: IExpandableParagraphProps) => {
 
     return (
         <Paragraph >
-            {expanded ? text : `${text.slice(0, length)}...`}
+            {(expanded || (text.length <= length)) ? text : `${text.slice(0, length)}...`}
             {text.length > length && (
                 <>
                     <br />

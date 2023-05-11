@@ -15,6 +15,7 @@ import useIsCollapseMenu from '../components/menu/hooks/useIsCollapseMenu';
 import * as IconsAntDesing from '@ant-design/icons';
 import MenuHeaderMobileComponent from '../components/menu/mobile/MenuHeaderMobileComponent';
 import MenuMobileComponent from '../components/menu/mobile/MenuMobileComponent';
+import FloatButtonToUp from '../components/float-buttons/FloatButtonToUp';
 
 const { Header, Content, Sider } = Layout;
 
@@ -25,7 +26,6 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { isLoading } = useAppSelector(selector => selector.menu);
 	const { userInfo } = useAppSelector(selec => selec.auth)
 	const dispatch = useAppDispatch();
-	const [scrollPosition, setScrollPosition] = useState(0);
 	const { isCollapsed, setCollapsed } = useIsCollapseMenu()
 	const { isMobile, isTable } = useGetMonitorSize()
 	const {
@@ -37,15 +37,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	}, [statusConection]);
 
 	useEffect(() => {
-		//todo: hacer transparente el header al hacer scroll
-		const handleScroll = () => {
-			setScrollPosition(window.scrollY);
-		};
 		dispatch(getModules(userInfo));
-		window.addEventListener('scroll', handleScroll);
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-		};
 	}, []);
 
 
@@ -92,7 +84,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 								<MenuComponent setCollapsed={setCollapsed} />
 							</Sider> :
 							<MenuMobileComponent isCollapsed={isCollapsed} setCollapsed={setCollapsed} />}
-						<Layout >
+						<Layout style={{ overflowY: 'inherit' }}>
 							<Header
 								className={`header`}
 								style={{ background: '#a40c4c', color: '#FFFFFF', height: '60px', /* position: 'fixed', zIndex: 1000, width: getWidthHeader(), */ }}
@@ -102,7 +94,6 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 							<Content
 								style={{
 									height: `calc(100vh - ${60}px )`,
-									overflowY: 'auto',
 									padding: 25,
 									margin: 0,
 									background: colorBgContainer,
@@ -110,6 +101,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 							>
 								{children}
 							</Content>
+							<FloatButtonToUp />
 						</Layout>
 					</Layout>
 				</Layout>
