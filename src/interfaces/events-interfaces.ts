@@ -18,7 +18,8 @@ export interface IEvent {
     urlMeet?: string
     img?: IImageEvent | undefined | null;
     anfitrion: string;
-    forengData?: IForenData
+    forengData?: IForenData;
+    status: 'active' | 'in-active'
 }
 export interface IImageEvent { url: string, name: string }
 interface IForenData {
@@ -74,5 +75,5 @@ export interface IWhereQuerys {
 export interface IAttendanceByEvent {
     id: string;
     userId: string,
-    eventId:string
+    eventId: string
 }

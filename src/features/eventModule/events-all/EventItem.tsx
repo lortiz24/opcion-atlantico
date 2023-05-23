@@ -150,7 +150,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
         >
             <Badge.Ribbon
                 /* todo: Alguien corriga esta empanadas aaaaaa */
-                style={{ zIndex: 10000, display: (checkUsersEvent === 'checking' || (eventItem.typeAttendance === 'invitation' && !eventItem.assistants.includes(uid ?? ''))) ? 'none' : 'block' }}
+                style={{ zIndex: 2, display: (checkUsersEvent === 'checking' || (eventItem.typeAttendance === 'invitation' && !eventItem.assistants.includes(uid ?? ''))) ? 'none' : 'block' }}
                 text={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'Asistencia' : 'Sin asistir'}
                 color={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'green' : 'red'}
             >
@@ -260,7 +260,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
 
                         <Col xs={0} sm={0} md={10} lg={8} xl={9} xxl={7}
                         > <Image
-                                fallback={'../../../../public/opcion.jpg'}
+                                fallback={'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/events-image%2Fmaraton.jpg?alt=media&token=7a5ae84c-cf69-42ad-9c79-a8d34753a8d0'}
                                 width={'100%'}
                                 height={'100%'}
                                 src={eventItem.img?.url !== null ? eventItem.img?.url : '../../../../public/opcion.jpg'}

@@ -20,6 +20,7 @@ import { onCancelCheking } from '../../../../store/show-events/ShowEventSlice';
 import { userInfoController } from '../../../../controllers/userInfo/user-info.controller';
 import useGetValueParametro from '../../../../hooks/useGetValueParametro';
 import { ColumnFilterItem } from 'antd/es/table/interface';
+import useGetMonitorSize from '../../../../hooks/useGetMonitorSize';
 
 interface ICheckingProps extends ModalProps {
 	isChecking: boolean;
@@ -48,7 +49,7 @@ const Checking = () => {
 	const { parametre } = useGetValueParametro({ parameter: 'promociones' });
 
 	const searchInputRef = useRef<InputRef>({} as InputRef);
-
+	const { isTable } = useGetMonitorSize()
 	useEffect(() => {
 		if (searchInputRef.current) searchInputRef.current.focus();
 	}, []);
@@ -116,7 +117,7 @@ const Checking = () => {
 			onOk={() => dispatch(onCancelCheking())}
 		>
 			<Input.Search
-				ref={searchInputRef}
+				ref={isTable ? null : searchInputRef}
 				placeholder='Buscar usuario'
 				onChange={e => setSearchText(e.target.value)}
 				style={{ marginBottom: '16px' }}

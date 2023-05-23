@@ -1,5 +1,5 @@
 import { qrAttendanceCollectionRef, eventsCollectionRef, attendanceByEventCollectionRef } from "../providers";
-import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, collection, CollectionReference, setDoc, } from "firebase/firestore";
+import { query, where, addDoc, deleteDoc, doc, onSnapshot, getDocs, getDoc, QueryFieldFilterConstraint, updateDoc, orderBy, setDoc, } from "firebase/firestore";
 import { IAttendanceByEvent, IWhereQuerys, IEvent, IQrCode, ISelectedForeign } from "../../interfaces/events-interfaces";
 import { UserServiceFirebase } from "../user/user-firebase.service";
 import { IUserInfo } from "../../interfaces/user-interfaces";
@@ -37,6 +37,7 @@ export class EventFirebaseService {
             conditions?.map((condition) => {
                 queryList.push(where(condition.nameProperty, condition.operation, condition.value));
             });
+            queryList.push(where('status', '==', 'active'))
             let queryData = query<Omit<IEvent, "id">>(this.eventsCollection, ...queryList);
             const querySnapshot = await getDocs<Omit<IEvent, "id">>(queryData);
             let events: IEvent[] = [];
@@ -149,7 +150,7 @@ export class EventFirebaseService {
     async delete(eventId: string) {
         try {
             const eventRef = doc(this.eventsCollection, eventId);
-            await deleteDoc(eventRef);
+            await updateDoc(eventRef, {status:"in-active"});
             return { ok: true }
         } catch (error) {
             console.error("Error al eliminar el evento: ", error);
@@ -161,7 +162,7 @@ export class EventFirebaseService {
         conditions?.map((condition) => {
             queryList.push(where("anfitrion", condition.operation, condition.value));
         });
-
+        queryList.push(where('status', '==', 'active'))
         let queryData = query<Omit<IEvent, "id">>(this.eventsCollection, orderBy("dateStart", "asc"), ...queryList);
 
         return onSnapshot(queryData, async (querySnapshot) => {
@@ -327,8 +328,4 @@ export class EventFirebaseService {
             console.log(error)
         }
     }
-
-
-
-
 }

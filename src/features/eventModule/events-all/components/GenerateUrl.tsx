@@ -1,4 +1,4 @@
-import { Input, Modal, Spin } from 'antd'
+import { Modal, Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { onCancelGenerateUrl } from '../../../../store/show-events/ShowEventSlice'
