@@ -65,7 +65,9 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     useEffect(() => {
         const actionsList = []
         if (getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'in-progress') {
-            if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
+            if (eventItem.typeAttendance === 'free' || eventItem.typeAttendance === 'hybrid') {
+
+            } else if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
                 actionsList.push(
                     // <Tooltip placement="topLeft" title={'Generar QR'} >
                     <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {

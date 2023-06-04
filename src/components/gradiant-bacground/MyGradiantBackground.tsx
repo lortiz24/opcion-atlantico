@@ -3,7 +3,7 @@ interface IMyGradiantBackgroundProps {
     colorLeft: string;
     opacityRight?: number;
     opacityLeft?: number;
-    borderRadius?: string
+    borderRadius?: string;
 }
 
 const MyGradiantBackground = ({ colorRight, colorLeft, opacityLeft = 1, opacityRight = 0.8995973389355743, borderRadius = '15px 15px 0 0' }: IMyGradiantBackgroundProps) => {
