@@ -10,9 +10,8 @@ import { useAppSelector, useAppDispatch } from '../../../store/store';
 import { openEditionModeEvent } from '../../../store/form-events/formEventSlice';
 import { deleteEventAsync } from '../../../store/form-events/event-thunk';
 import { eventController } from '../../../controllers/events/event.controller';
-import { onChekingOpen, onGenerateQr, onGenerateUrl, onViewAttendance } from '../../../store/show-events/ShowEventSlice';
 import { getEventStatus } from '../../../helpers/event-helpers';
-import { TransformationTypeEvent, TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
+import {TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
 import ExpandableParagraph from '../../../components/expandable-paragraf/ExpandableParagraphComponent';
 import useGetMonitorSize from '../../../hooks/useGetMonitorSize';
 
@@ -68,31 +67,31 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
             if (eventItem.typeAttendance === 'free' || eventItem.typeAttendance === 'hybrid') {
 
             } else if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
-                actionsList.push(
-                    // <Tooltip placement="topLeft" title={'Generar QR'} >
-                    <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
-                        const { dateStart, dateEnd, ...event } = eventItem
-                        dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
-                    }} />
-                    // </Tooltip>
-                )
-                actionsList.push(
-                    // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
-                    <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
-                        const { dateStart, dateEnd, ...event } = eventItem
-                        dispatch(onChekingOpen({ eventId: eventItem.id, typeView, event }))
-                    }} />
-                    // </Tooltip>
-                )
-
-                actionsList.push(
-                    // <Tooltip placement="topLeft" title={'Generar QR'} >
-                    <Button type='text' icon={<IconsAntDesing.LinkOutlined />} onClick={() => {
-                        const { dateStart, dateEnd, ...event } = eventItem
-                        dispatch(onGenerateUrl({ eventId: eventItem.id, typeView, event }))
-                    }} />
-                    // </Tooltip>
-                )
+                /*  actionsList.push(
+                     // <Tooltip placement="topLeft" title={'Generar QR'} >
+                     <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
+                         const { dateStart, dateEnd, ...event } = eventItem
+                         dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                     }} />
+                     // </Tooltip>
+                 )
+                 actionsList.push(
+                     // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
+                     <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
+                         const { dateStart, dateEnd, ...event } = eventItem
+                         dispatch(onChekingOpen({ eventId: eventItem.id, typeView, event }))
+                     }} />
+                     // </Tooltip>
+                 )
+ 
+                 actionsList.push(
+                     // <Tooltip placement="topLeft" title={'Generar QR'} >
+                     <Button type='text' icon={<IconsAntDesing.LinkOutlined />} onClick={() => {
+                         const { dateStart, dateEnd, ...event } = eventItem
+                         dispatch(onGenerateUrl({ eventId: eventItem.id, typeView, event }))
+                     }} />
+                     // </Tooltip>
+                 ) */
             }
         }
         if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
@@ -100,19 +99,19 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
             if (!(uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? ''))) return
             actionsList.push(
                 // <Tooltip placement="topLeft" title={'Generar QR'} >
-                <Button type='text' icon={<IconsAntDesing.DownCircleOutlined />} onClick={() => {
-                    const { dateStart, dateEnd, ...event } = eventItem
-                    dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
-                }} />
+                /*  <Button type='text' icon={<IconsAntDesing.DownCircleOutlined />} onClick={() => {
+                     const { dateStart, dateEnd, ...event } = eventItem
+                     dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                 }} /> */
                 // </Tooltip>
             )
 
             actionsList.push(
                 // <Tooltip placement="topLeft" title={'Generar QR'} >
-                <Button type='text' icon={<IconsAntDesing.UserOutlined />} onClick={() => {
-                    const { dateStart, dateEnd, ...event } = eventItem
-                    dispatch(onViewAttendance({ eventId: eventItem.id, typeView, event }))
-                }} />
+                /*   <Button type='text' icon={<IconsAntDesing.UserOutlined />} onClick={() => {
+                      const { dateStart, dateEnd, ...event } = eventItem
+                      dispatch(onViewAttendance({ eventId: eventItem.id, typeView, event }))
+                  }} /> */
                 // </Tooltip>
             )
         }
@@ -243,12 +242,6 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                                     <Typography.Text strong>Lugar: </Typography.Text>
                                     <Typography.Text code style={{ textTransform: 'uppercase' }}>
                                         {eventItem.place}
-                                    </Typography.Text>
-                                </Space>
-                                <Space wrap>
-                                    <Typography.Text strong>Tipo de evento: </Typography.Text>
-                                    <Typography.Text code style={{ textTransform: 'uppercase' }}>
-                                        {TransformationTypeEvent[eventItem.typeEvent]}
                                     </Typography.Text>
                                 </Space>
                                 <Space wrap>

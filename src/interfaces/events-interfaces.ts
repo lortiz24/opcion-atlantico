@@ -14,7 +14,6 @@ export interface IEvent {
     assistants: string[] //array de ids de user
     moderators: string[] //array de ids de user
     typeAttendance: 'invitation' | 'free' | 'hybrid'
-    typeEvent: 'face-to-face' | 'virtual' | 'hybrid'
     urlMeet?: string
     img?: IImageEvent | undefined | null;
     anfitrion: string;

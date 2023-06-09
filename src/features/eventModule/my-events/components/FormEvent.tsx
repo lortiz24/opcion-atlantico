@@ -77,7 +77,6 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                 dateEnd: dateEnd.toDayjs(),
                 timeEnd: dateEnd.toDayjs(),
                 typeAttendance: event.typeAttendance,
-                typeEvent: event.typeEvent,
                 assistants: event.assistants,
                 moderators: event.moderators
             })
@@ -92,19 +91,19 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
         <>
             <Fragment >
                 <Row justify='center' wrap gutter={[8, 8]}>
-                    <Col span={16}>
+                    <Col xs={24} sm={20} md={18} lg={16}>
                         <Form form={form} onFinish={onSetDataForm} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
                             <Row gutter={[8, 8]}>
                                 <Col span={24}>
                                     <Form.Item label='Nombre del evento' name={'title'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                        <Input prefix={<IconsAntDesing.FormOutlined />} />
+                                        <Input suffix={<IconsAntDesing.FormOutlined />} />
                                     </Form.Item>
                                 </Col>
                                 <Col span={24}>
 
                                     <Form.Item label='Lugar del evento' name={'place'} rules={[{ required: true, message: 'Es requerido' }]}>
                                         <Input
-                                            prefix={<IconsAntDesing.EnvironmentOutlined />}
+                                            suffix={<IconsAntDesing.EnvironmentOutlined />}
                                             disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'} />
                                     </Form.Item>
                                 </Col>
@@ -238,27 +237,6 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                         }}
                                     />
                                 </Col>}
-
-                                <Col span={24}>
-                                    <Form.Item label='Tipo de evento' name={'typeEvent'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                        <Select options={
-                                            [{
-                                                label: 'Presencial',
-                                                value: 'face-to-face'
-                                            },
-                                            {
-                                                label: 'Virtual',
-                                                value: 'virtual'
-                                            },
-                                            {
-                                                label: 'Hibrido',
-                                                value: 'hybrid'
-                                            }
-                                            ]
-                                        }
-                                        />
-                                    </Form.Item>
-                                </Col>
                                 <Col span={24}>
                                     <MyUploadComponent onSetFile={setImage} maxFiles={1} label='Imagen de perfil' name='img' currentFiles={currenImage} />
                                 </Col>
