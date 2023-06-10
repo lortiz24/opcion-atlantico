@@ -164,8 +164,8 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                     style={{
                         cursor: 'default',
                         borderRadius: 16,
-                        backgroundImage: `url(${eventItem.img?.url ?? 'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/events-image%2Fmaraton.jpg?alt=media&token=7a5ae84c-cf69-42ad-9c79-a8d34753a8d0'})`,
-                        backgroundPosition: 'center',
+                    /*     backgroundImage: `url(${eventItem.img?.url ?? 'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/events-image%2Fmaraton.jpg?alt=media&token=7a5ae84c-cf69-42ad-9c79-a8d34753a8d0'})`,
+                        backgroundPosition: 'center', */
                         height: '100%',
                         position: 'relative',
                         zIndex: 1,
