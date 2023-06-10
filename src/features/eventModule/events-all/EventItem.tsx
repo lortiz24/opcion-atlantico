@@ -11,9 +11,11 @@ import { openEditionModeEvent } from '../../../store/form-events/formEventSlice'
 import { deleteEventAsync } from '../../../store/form-events/event-thunk';
 import { eventController } from '../../../controllers/events/event.controller';
 import { getEventStatus } from '../../../helpers/event-helpers';
-import {TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
+import { TransformationTypeInvitationEvent } from '../../../utils/events-utils/transformation-types.utils';
 import ExpandableParagraph from '../../../components/expandable-paragraf/ExpandableParagraphComponent';
 import useGetMonitorSize from '../../../hooks/useGetMonitorSize';
+import { onChekingOpen, onGenerateQr, onGenerateUrl, onViewAttendance } from '../../../store/show-events/ShowEventSlice';
+import { TooltipAdaptative } from '../../../components/toltop-custome/TooltipAdaptative';
 
 interface IEventItemProps extends Omit<IEventListProps, 'eventList'> {
     eventItem: IEvent
@@ -27,7 +29,7 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
     const [actionsList, setActionsList] = useState<JSX.Element[]>([])
     const { uid } = useAppSelector(selector => selector.auth)
     const [checkUsersEvent, setcheckUsersEvent] = useState<'checking' | 'check' | 'not-check'>('checking')
-    const { isMobile } = useGetMonitorSize()
+    const { isMobile, isTable } = useGetMonitorSize()
 
 
 
@@ -63,65 +65,67 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
 
     useEffect(() => {
         const actionsList = []
-        if (getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'in-progress') {
-            if (eventItem.typeAttendance === 'free' || eventItem.typeAttendance === 'hybrid') {
+        if (getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'in-progress' || getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting') {
+            if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
+                actionsList.push(
+                    <TooltipAdaptative placement="topLeft" title={'Generar QR'} >
+                        <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
+                            const { dateStart, dateEnd, ...event } = eventItem
+                            dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                        }} />
+                    </TooltipAdaptative>
+                )
+                actionsList.push(
+                    <TooltipAdaptative placement="topLeft" title={'Marcar asistencias'} >
+                        <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
+                            const { dateStart, dateEnd, ...event } = eventItem
+                            dispatch(onChekingOpen({ eventId: eventItem.id, typeView, event }))
+                        }} />
+                    </TooltipAdaptative>
+                )
 
-            } else if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
-                /*  actionsList.push(
-                     // <Tooltip placement="topLeft" title={'Generar QR'} >
-                     <Button type='text' icon={<IconsAntDesing.QrcodeOutlined />} onClick={() => {
-                         const { dateStart, dateEnd, ...event } = eventItem
-                         dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
-                     }} />
-                     // </Tooltip>
-                 )
-                 actionsList.push(
-                     // <Tooltip placement="topLeft" title={'Cheking de asistentes'} >
-                     <Button disabled={getEventStatus(eventItem.dateStart, eventItem.dateEnd) === 'before-starting'} type='text' icon={<IconsAntDesing.CheckCircleOutlined />} onClick={() => {
-                         const { dateStart, dateEnd, ...event } = eventItem
-                         dispatch(onChekingOpen({ eventId: eventItem.id, typeView, event }))
-                     }} />
-                     // </Tooltip>
-                 )
- 
-                 actionsList.push(
-                     // <Tooltip placement="topLeft" title={'Generar QR'} >
-                     <Button type='text' icon={<IconsAntDesing.LinkOutlined />} onClick={() => {
-                         const { dateStart, dateEnd, ...event } = eventItem
-                         dispatch(onGenerateUrl({ eventId: eventItem.id, typeView, event }))
-                     }} />
-                     // </Tooltip>
-                 ) */
+                actionsList.push(
+                    <TooltipAdaptative placement="topLeft" title={'Generar URL'} >
+                        <Button type='text' icon={<IconsAntDesing.LinkOutlined />} onClick={() => {
+                            const { dateStart, dateEnd, ...event } = eventItem
+                            dispatch(onGenerateUrl({ eventId: eventItem.id, typeView, event }))
+                        }} />
+                    </TooltipAdaptative>
+                )
+            }
+
+            if (eventItem.typeAttendance === 'free' || eventItem.typeAttendance === 'hybrid') {
+                //todo: poner boton de asistir para participantes
             }
         }
         if (uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? '')) {
             //todo: realizar ver asistentes y descargar asistentes
-            if (!(uid === eventItem.anfitrion || eventItem.moderators.includes(uid ?? ''))) return
             actionsList.push(
-                // <Tooltip placement="topLeft" title={'Generar QR'} >
-                /*  <Button type='text' icon={<IconsAntDesing.DownCircleOutlined />} onClick={() => {
-                     const { dateStart, dateEnd, ...event } = eventItem
-                     dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
-                 }} /> */
-                // </Tooltip>
+                <TooltipAdaptative placement="topLeft" title={'Descargar asistentes'} >
+                    <Button type='text' icon={<IconsAntDesing.DownCircleOutlined />} onClick={() => {
+                        const { dateStart, dateEnd, ...event } = eventItem
+                        dispatch(onGenerateQr({ eventId: eventItem.id, typeView, event }))
+                    }} />
+                </TooltipAdaptative>
             )
 
             actionsList.push(
-                // <Tooltip placement="topLeft" title={'Generar QR'} >
-                /*   <Button type='text' icon={<IconsAntDesing.UserOutlined />} onClick={() => {
-                      const { dateStart, dateEnd, ...event } = eventItem
-                      dispatch(onViewAttendance({ eventId: eventItem.id, typeView, event }))
-                  }} /> */
-                // </Tooltip>
+                <TooltipAdaptative placement="topLeft" title={'Ver asistentes'} >
+                    <Button type='text' icon={<IconsAntDesing.UserOutlined />} onClick={() => {
+                        const { dateStart, dateEnd, ...event } = eventItem
+                        dispatch(onViewAttendance({ eventId: eventItem.id, typeView, event }))
+                    }} />
+                </TooltipAdaptative>
             )
         }
         //Si estas en la vista de gestion de eventos
         if (typeView === 'gestion') {
             actionsList.push(
-                // <Tooltip placement="topLeft" title={'Editar evento'} >
-                <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={() => dispatch(openEditionModeEvent({ eventId: eventItem.id }))} />
-                // </Tooltip>
+                <TooltipAdaptative placement="topLeft" title={'Editar evento'}>
+                    <Button type='text' icon={<IconsAntDesing.EditOutlined />} onClick={() => dispatch(openEditionModeEvent({ eventId: eventItem.id }))} />
+                </TooltipAdaptative>
             )
+
             actionsList.push(
                 <Popconfirm
                     placement="bottom"
@@ -131,11 +135,13 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                     okText="Si"
                     cancelText="No"
                 >
-                    {/* <Tooltip placement="topLeft" title={'Eliminar evento'} > */}
-                    <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} />
-                    {/* </Tooltip> */}
+                    <TooltipAdaptative placement="topLeft" title={'Eliminar evento'} >
+                        <Button type='text' icon={<IconsAntDesing.DeleteOutlined />} />
+                    </TooltipAdaptative>
                 </Popconfirm>
             )
+
+
         }
 
         setActionsList(actionsList)
@@ -147,10 +153,8 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
 
     return (
         <List.Item
-
         >
             <Badge.Ribbon
-                /* todo: Alguien corriga esta empanadas aaaaaa */
                 style={{ zIndex: 2, display: (checkUsersEvent === 'checking' || (eventItem.typeAttendance === 'invitation' && !eventItem.assistants.includes(uid ?? ''))) ? 'none' : 'block' }}
                 text={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'Asistencia' : 'Sin asistir'}
                 color={checkUsersEvent !== 'checking' && checkUsersEvent === 'check' ? 'green' : 'red'}
@@ -160,13 +164,14 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                     style={{
                         cursor: 'default',
                         borderRadius: 16,
-                        // backgroundImage: `url(${eventItem.img})`,
+                        backgroundImage: `url(${eventItem.img?.url ?? 'https://firebasestorage.googleapis.com/v0/b/opcion-atlantico.appspot.com/o/events-image%2Fmaraton.jpg?alt=media&token=7a5ae84c-cf69-42ad-9c79-a8d34753a8d0'})`,
                         backgroundPosition: 'center',
                         height: '100%',
                         position: 'relative',
                         zIndex: 1,
                     }}
                     bodyStyle={{
+                        minHeight: 350,
                         width: '100%',
                         borderRadius: 15,
                         position: 'relative',
@@ -190,11 +195,11 @@ const EventItem = ({ eventItem, typeView }: IEventItemProps) => {
                                             maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
                                             {eventItem.forengData?.moderators?.map((moderator, key) => {
                                                 return (
-                                                    <Tooltip key={moderator.id} title={moderator.displayName} placement='top'>
+                                                    <TooltipAdaptative key={moderator.id} title={moderator.displayName} placement='top'>
                                                         <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
                                                             {moderator.displayName.charAt(0).toUpperCase()}
                                                         </Avatar>
-                                                    </Tooltip>
+                                                    </TooltipAdaptative>
                                                 )
                                             })}
                                         </Avatar.Group>}

@@ -26,7 +26,7 @@ const FloatButtonToUp = () => {
 
     return (
 
-        <Space style={{ position: "fixed", right: "7%", bottom: "10%", zIndex: 200 }}>
+        <Space style={{ position: "fixed", right: "1%", bottom: "10%", zIndex: 200 }}>
             <Button
                 type='primary'
                 onClick={scrollToTop}

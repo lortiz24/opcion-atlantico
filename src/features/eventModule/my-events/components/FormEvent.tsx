@@ -15,6 +15,7 @@ import { DateAdapter } from '../../../../services/date-service/Daily'
 import { getEventStatus } from '../../../../helpers/event-helpers'
 import { Timestamp } from 'firebase/firestore'
 import locale from 'antd/es/date-picker/locale/es_ES';
+import { Dayjs } from 'dayjs'
 
 interface IEventFormProps {
     event?: IEvent
@@ -104,7 +105,8 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                     <Form.Item label='Lugar del evento' name={'place'} rules={[{ required: true, message: 'Es requerido' }]}>
                                         <Input
                                             suffix={<IconsAntDesing.EnvironmentOutlined />}
-                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'} />
+                                            // disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'} 
+                                            />
                                     </Form.Item>
                                 </Col>
 
@@ -114,21 +116,13 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                         />
                                     </Form.Item>
                                 </Col>
-                                {/* <Col span={24}>
-                                    <Form.Item label='Rango de fecha' name={'dateRange'} rules={[{ required: true, message: 'Es requerido' }]}>
-                                        <DatePicker.RangePicker
-                                            inputReadOnly
-                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
-                                            showTime={{ format: 'HH:mm A', defaultValue: [new DateAdapter().setHour(0).setMinute(0).setSeconds(0).toDayjs(), new DateAdapter().setHour(0).setMinute(0).setSeconds(0).toDayjs()] }}
-                                            format='YYYY-MM-DD h:mm A'
-                                            style={{ width: '100%' }}
-                                            locale={locale} />
-                                    </Form.Item>
-                                </Col> */}
 
-                                <Col span={12}>
+
+                                <Col xs={24} sm={12}>
                                     <Form.Item
-                                        label='Fecha inicio' name={'dateStart'} rules={[{ required: true, message: 'Es requerido' }]}
+                                        label='Fecha inicio'
+                                        name={'dateStart'}
+                                        rules={[{ required: true, message: 'Es requerido' }]}
                                     >
                                         <DatePicker
                                             disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
@@ -139,13 +133,15 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                             popupStyle={{ position: 'fixed' }}
                                             locale={locale}
                                         />
-
                                     </Form.Item>
-
                                 </Col>
-                                {/* todo: Crear regla de que no se pueda seleccionar fecha fin menor a fecha inicio */}
-                                <Col span={12}>
-                                    <Form.Item label='Hora de inicio' name={'timeStart'}>
+
+                                <Col xs={24} sm={12}>
+                                    <Form.Item
+                                        label='Hora de inicio'
+                                        name={'timeStart'}
+                                        rules={[{ required: true, message: 'Es requerido' }]}
+                                    >
                                         <TimePicker
                                             inputReadOnly
                                             disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
@@ -154,12 +150,32 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item
-                                        label='Fecha fin' name={'dateEnd'} rules={[{ required: true, message: 'Es requerido' }]}
+                                        label='Fecha fin'
+                                        name={'dateEnd'}
+                                        rules={[
+                                            { required: true, message: 'Es requerido' },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    if (!value || !getFieldValue('dateStart')) {
+                                                        // Si no hay fecha de inicio o fecha de fin, no hay nada que validar
+                                                        return Promise.resolve();
+                                                    }
+
+                                                    if (value.isSameOrAfter(getFieldValue('dateStart'))) {
+                                                        // Si la fecha de fin es igual o posterior a la fecha de inicio, la validación es exitosa
+                                                        return Promise.resolve();
+                                                    }
+
+                                                    // Si la fecha de fin es anterior a la fecha de inicio, se devuelve un error
+                                                    return Promise.reject(new Error('La fecha de fin no puede ser anterior a la fecha de inicio'));
+                                                },
+                                            }),
+                                        ]}
                                     >
                                         <DatePicker
-                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            // disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
                                             style={{ width: '100%' }}
                                             picker='date'
                                             inputReadOnly
@@ -167,16 +183,36 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                             popupStyle={{ position: 'fixed' }}
                                             locale={locale}
                                         />
-
                                     </Form.Item>
-
                                 </Col>
-                                <Col span={12}>
-                                    <Form.Item label='Hora
-                                     fin' name={'timeEnd'}>
+
+                                <Col xs={24} sm={12}>
+                                    <Form.Item
+                                        label='Hora fin'
+                                        name={'timeEnd'}
+                                        rules={[
+                                            { required: true, message: 'Es requerido' },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value: Dayjs) {
+                                                    if (!value || !getFieldValue('timeStart')) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    const startDate = getFieldValue('dateStart') as Dayjs;
+                                                    const endDate = getFieldValue('dateEnd') as Dayjs;;
+                                                    const timeStart = getFieldValue('timeStart')
+
+                                                    if (startDate && endDate && startDate.isSame(endDate, 'day') && value.isBefore(timeStart)) {
+                                                        return Promise.reject(new Error('La hora de fin debe ser mayor o igual a la hora de inicio'));
+                                                    }
+
+                                                    return Promise.resolve();
+                                                },
+                                            }),
+                                        ]}
+                                    >
                                         <TimePicker
                                             inputReadOnly
-                                            disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
+                                            // disabled={isEditFormEvent && getEventStatus(event?.dateStart as Timestamp, event?.dateEnd as Timestamp) !== 'before-starting'}
                                             placeholder='Seleccione la hora fin'
                                             style={{ width: '100%' }}
                                             format={'h:mm A'}
@@ -184,6 +220,7 @@ const FormEvent = ({ onSetValuesForm }: IEventFormProps) => {
                                         />
                                     </Form.Item>
                                 </Col>
+
                                 <Col span={24}>
                                     <Form.Item label='Tipo de asistencia' name={'typeAttendance'} rules={[{ required: true, message: 'Es requerido' }]}>
                                         <Select
